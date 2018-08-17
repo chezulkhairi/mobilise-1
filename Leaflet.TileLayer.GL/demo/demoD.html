@@ -72,7 +72,10 @@ void main(void) {
 		var tileSize = 256;
 
 		//var map = L.map('map').fitWorld();
-    
+    // You will need to replace the 'api_key' and all 'L.TileLayer' ID's with your own. get your keys here: http://developer.digitalglobe.com/docs/maps-api
+maptiks.trackcode='cd02c3aa-6877-4413-b792-edaa23a83b14';
+var map;
+var zoom = 15;
     var api_key = 'pk.eyJ1IjoiZGlnaXRhbGdsb2JlIiwiYSI6ImNqNTVqMmFicDA3czcycXRnczQxZGp3MTIifQ.EFzs_DptLlv-kMXVHGnRIA';
 var terrain = new L.tileLayer('https://{s}.tiles.mapbox.com/v4/digitalglobe.nako1fhg/{z}/{x}/{y}.png?access_token=' + api_key, {
     minZoom: 1,
