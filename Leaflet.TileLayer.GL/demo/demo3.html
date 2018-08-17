@@ -58,7 +58,16 @@ void main(void) {
 
 		var tileSize = 256;
 
-		var map = L.map('map').fitWorld();
+		//var map = L.map('map').fitWorld();
+		
+		var map = new mapboxgl.Map({
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-74.0066, 40.7135],
+    zoom: 15.5,
+    pitch: 45,
+    bearing: -17.6,
+    container: 'map'
+});
 
 		var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
 
