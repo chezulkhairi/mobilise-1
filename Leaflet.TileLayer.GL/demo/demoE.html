@@ -62,6 +62,17 @@ void main(void) {
 		var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
 			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
 		}).addTo(map);
+		
+		mapquestLink = '<a href="http://www.mapquest.com//">MapQuest</a>';
+mapquestPic = '<img src="http://developer.mapquest.com/content/osm/mq_logo.pn\
+g">';
+L.tileLayer(
+    'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', {
+    attribution: 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agri\
+culture, Farm Service Agency. Tiles courtesy of '+mapquestLink+mapquestPic,
+    maxZoom: 18,
+    subdomains: '1234',
+    }).addTo(map);
 
 		var antitoner = L.tileLayer.gl({
 			fragmentShader: fragmentShader,
