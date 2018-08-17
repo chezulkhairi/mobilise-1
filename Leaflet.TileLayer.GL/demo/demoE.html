@@ -70,17 +70,12 @@ void main(void) {
     		//subdomains: '1234',
     		//}).addTo(map);
 		
-		mapLink = 
-  '<a href="http://www.esri.com/">Esri</a>';
-wholink = 
-  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP,\
- and the GIS User Community';
-L.tileLayer(
-  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServe\
-r/tile/{z}/{y}/{x}', {
-  attribution: '&copy; '+mapLink+', '+wholink,
-  maxZoom: 18,
-  }).addTo(map);
+		mapLink = '<a href="http://www.esri.com/">Esri</a>';
+		wholink = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP,and the GIS User Community';
+		L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  		attribution: '&copy; '+mapLink+', '+wholink,
+  		maxZoom: 18,
+  		}).addTo(map);
 
 		var antitoner = L.tileLayer.gl({
 			fragmentShader: fragmentShader,
@@ -88,12 +83,11 @@ r/tile/{z}/{y}/{x}', {
 		}).addTo(map);
 		
 		mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-translink = '<a href="http://thunderforest.com/">Thunderforest</a>';
-L.tileLayer(
-    'http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-        attribution: '&copy; '+mapLink+' Contributors & '+translink,
-        maxZoom: 18,
-    }).addTo(map);
+		translink = '<a href="http://thunderforest.com/">Thunderforest</a>';
+		L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+        	attribution: '&copy; '+mapLink+' Contributors & '+translink,
+        	maxZoom: 18,
+    		}).addTo(map);
 
 		function logEvent(e) { console.log(e.type); }
 
