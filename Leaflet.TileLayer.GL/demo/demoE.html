@@ -63,16 +63,24 @@ void main(void) {
 			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
 		}).addTo(map);
 		
-		mapquestLink = '<a href="http://www.mapquest.com//">MapQuest</a>';
-mapquestPic = '<img src="http://developer.mapquest.com/content/osm/mq_logo.pn\
-g">';
+		//mapquestLink = '<a href="http://www.mapquest.com//">MapQuest</a>';
+		//mapquestPic = '<img src="http://developer.mapquest.com/content/osm/mq_logo.pn\g">';
+		//L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', {attribution: 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agri\culture, Farm Service Agency. Tiles courtesy of '+mapquestLink+mapquestPic,
+    		//maxZoom: 18,
+    		//subdomains: '1234',
+    		//}).addTo(map);
+		
+		mapLink = 
+  '<a href="http://www.esri.com/">Esri</a>';
+wholink = 
+  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP,\
+ and the GIS User Community';
 L.tileLayer(
-    'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', {
-    attribution: 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agri\
-culture, Farm Service Agency. Tiles courtesy of '+mapquestLink+mapquestPic,
-    maxZoom: 18,
-    subdomains: '1234',
-    }).addTo(map);
+  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServe\
+r/tile/{z}/{y}/{x}', {
+  attribution: '&copy; '+mapLink+', '+wholink,
+  maxZoom: 18,
+  }).addTo(map);
 
 		var antitoner = L.tileLayer.gl({
 			fragmentShader: fragmentShader,
