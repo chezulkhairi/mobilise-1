@@ -8,9 +8,9 @@
 <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
 <link href="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet">
 
-  <script src="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-  <script src="https://cdn.osmbuildings.org/classic/0.2.2b/OSMBuildings-Leaflet.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="OSMBuildings-Leaflet.js"></script>
 
 	<script src="../src/Leaflet.TileLayer.GL.js"></script>
 </head>
@@ -59,6 +59,7 @@ void main(void) {
 		var tileSize = 256;
 
 		var map = L.map('map').fitWorld();
+		
 
 		var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
 
@@ -71,21 +72,40 @@ void main(void) {
 			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
 		}).addTo(map);
     
-    new L.TileLayer('https://{s}.tiles.mapbox.com/v3/[YOUR_MAPBOX_KEY]/{z}/{x}/{y}.png', {
+    //new L.TileLayer('https://{s}.tiles.mapbox.com/v3/[YOUR_MAPBOX_KEY]/{z}/{x}/{y}.png', {
+    //attribution: '© Map tiles <a href="https://mapbox.com">Mapbox</a>',
+    //maxZoom: 18,
+    //maxNativeZoom: 20
+  //}).addTo(map);
+  //var osmb = new OSMBuildings(map).load('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
 
-    attribution: '© Map tiles <a href="https://mapbox.com">Mapbox</a>',
+  new OSMBuildings(map).load();
+  var geoJSON = {
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "id": 134,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[
+        [13.37356, 52.52064],
+        [13.37350, 52.51971],
+        [13.37664, 52.51973],
+        [13.37594, 52.52062],
+        [13.37356, 52.52064]
+      ]]
+    },
+    "properties": {
+      "wallColor": "rgb(255,0,0)",
+      "roofColor": "rgb(255,128,0)",
+      "height": 500,
+      "minHeight": 0
+    }
+  }]
+};
 
-    maxZoom: 18,
-
-    maxNativeZoom: 20
-
-  }).addTo(map);
-
-
-
-  var osmb = new OSMBuildings(map).load('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
-
-  
+new OSMBuildings(map).set(geoJSON);		
+		
 
 		function logEvent(e) { console.log(e.type); }
 
