@@ -67,6 +67,14 @@ void main(void) {
 			fragmentShader: fragmentShader,
 			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
 		}).addTo(map);
+		
+		mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+translink = '<a href="http://thunderforest.com/">Thunderforest</a>';
+L.tileLayer(
+    'http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+        attribution: '&copy; '+mapLink+' Contributors & '+translink,
+        maxZoom: 18,
+    }).addTo(map);
 
 		function logEvent(e) { console.log(e.type); }
 
