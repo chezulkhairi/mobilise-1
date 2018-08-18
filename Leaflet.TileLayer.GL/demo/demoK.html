@@ -19,17 +19,19 @@
 	<p>In this demo, a WebGL shader uses the elevation provided in <a href='https://www.mapbox.com/blog/terrain-rgb/'>Mapbox's "Terrain-RGB" map tiles</a>  to colour areas depending on their elevation (below 0 meters, between 0 and 5 meters, between 5 and 10 meters, above 10 meters).</p>
 
  
-  <script>
- 
-    var fragmentShader = `
+  <script type="text/javascript">
+
+var fragmentShader = `
 void main(void) {
 	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+
 	// Height is represented in TENTHS of a meter
 	highp float height = (
 		texelColour.r * 255.0 * 256.0 * 256.0 +
 		texelColour.g * 255.0 * 256.0 +
 		texelColour.b * 255.0 )
 	-100000.0;
+
 	if (height > 100.0) {
 		// High (>30m) over ground, transparent
 		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
@@ -44,7 +46,9 @@ void main(void) {
 		gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
 	}
 }
-'
+`
+</script>
+<script>
     
   // initialize the map
   var map = L.map('map').setView([42.35, -71.08], 13);
