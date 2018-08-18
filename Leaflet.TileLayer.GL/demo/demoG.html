@@ -92,15 +92,15 @@ void main(void) {
 
 		var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
 
-		//var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
-		//	attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
-		//}).addTo(map);
+		var base = L.tileLayer("https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+		}).addTo(map);
 		
-		var base =  L.TileLayer("https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
-  attribution: '© Map <a href="https://mapbox.com">Mapbox</a>',
-  maxZoom: 18,
-  maxNativeZoom: 20
-}).addTo(map);
+		//var base =  L.TileLayer("https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+  		//attribution: '© Map <a href="https://mapbox.com">Mapbox</a>',
+ 		//maxZoom: 18,
+  		//maxNativeZoom: 20
+		//}).addTo(map);
 
 var osmb = new OSMBuildings(map).load();
 
