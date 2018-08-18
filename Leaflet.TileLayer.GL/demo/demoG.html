@@ -86,7 +86,9 @@ void main(void) {
 
 		var tileSize = 256;
 
-		var map = L.map('map').fitWorld();
+		//var map = L.map('map').fitWorld();
+		var map = new L.Map('map');
+		map.setView([52.52111, 13.40988], 16, false);
 
 		var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
 
