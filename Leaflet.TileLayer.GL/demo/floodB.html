@@ -74,11 +74,24 @@ void main(void) {
 		</script>
   <script>
     L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
-    map = L.mapbox.map('map', 'zetter.i73ka9hn')
+    var map = L.mapbox.map('map', 'zetter.i73ka9hn')
       .fitBounds([[59.355596 , -9.052734], [49.894634 , 3.515625]]);
     url = 'supermarkets.csv';
     initialSelection = d3.set(['Tesco', 'Sainsburys']);
     voronoiMap(map, url, initialSelection);
+	  
+	//var map = L.map('map').fitWorld();
+	//var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
+	//var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+	//attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+	//}).addTo(map);
+	  
+	  
+	var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw'] //?access_token=' + mapboxAccessToken]
+		}).addTo(map);
+	  
   </script>
 </body>
 </html>
