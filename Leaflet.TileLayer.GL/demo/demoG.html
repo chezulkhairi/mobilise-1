@@ -103,7 +103,10 @@ void main(void) {
 		//}).addTo(map);
 
 		var osmb = new OSMBuildings(map).load();
-		
+		var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+		}).addTo(map);
 		//********************************************************
 
 var
@@ -201,18 +204,15 @@ osmb.click(function(e) {
       .setLatLng(L.latLng(e.lat, e.lon))
       .setContent(content)
       .openOn(map);
-  //});
-//});	
+  });
+});	
 //************************************************************
 
 		
 		
 		
 
-		var antitoner = L.tileLayer.gl({
-			fragmentShader: fragmentShader,
-			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
-		}).addTo(map);
+		
 
 		function logEvent(e) { console.log(e.type); }
 
