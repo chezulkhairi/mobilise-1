@@ -96,7 +96,7 @@ void main(void) {
 		//	attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
 		//}).addTo(map);
 		
-		var base =  L.TileLayer('https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png', {
+		var base =  L.TileLayer("https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
   attribution: '© Map <a href="https://mapbox.com">Mapbox</a>',
   maxZoom: 18,
   maxNativeZoom: 20
