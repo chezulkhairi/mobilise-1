@@ -22,7 +22,7 @@
 
 	<p>In this demo, a WebGL shader uses the elevation provided in <a href='https://www.mapbox.com/blog/terrain-rgb/'>Mapbox's "Terrain-RGB" map tiles</a>  to colour areas depending on their elevation (below 0 meters, between 0 and 5 meters, between 5 and 10 meters, above 10 meters).</p>
   <div id='selections' class="selections">
-    <a href='#' class="show">Choose what supermarkets to display *56*</a>
+    <a href='#' class="show">Choose what supermarkets to display *57*</a>
     <div class='content'>
       <a href='#' class="hide">Hide</a>
       <div id="toggles">
@@ -46,8 +46,7 @@
   <script src="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
   <script src="voronoi_map.js"></script>
 	
-	<script type="text/javascript">
-
+<script type="text/javascript">
 var fragmentShader = `
 void main(void) {
 	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
@@ -73,7 +72,8 @@ void main(void) {
 		gl_FragColor = vec4(0.05, 0.1, 0.9, 0.9);
 	}
 }
-`</script>
+`
+</script>
 		
   <script>
     L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
