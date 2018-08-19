@@ -242,6 +242,21 @@ function initMap() {
 	var esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg", {
 		maxZoom: 19, attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 	});
+	
+	var GeoportailFrance_orthos = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+	attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+	bounds: [[-75, -180], [81, 180]],
+	minZoom: 2,
+	maxZoom: 19,
+	apikey: 'choisirgeoportail',
+	format: 'image/jpeg',
+	style: 'normal'
+	});
+	
+	var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+	});
 
 	// Get your own free OWM API key at https://www.openweathermap.org/appid - please do not re-use mine!
 	// You don't need an API key for this to work at the moment, but this will change eventually.
@@ -307,7 +322,9 @@ function initMap() {
 	var baseMaps = {
 		"OSM Standard": standard
 		, "OSM Humanitarian": humanitarian
-	//	, "ESRI Aerial": esri
+		, "ESRI Aerial": esri
+		, "GeoportailFrance_orthos": GeoportailFrance_orthos
+		, "OpenInfraMap_Power": OpenInfraMap_Power
 	};
 
 	var overlayMaps = {};
