@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>ボロノイ図 - 最近傍探索</title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
+<style>
+html, body{
+    padding: 0px;
+    margin:  0px;
+    width:100%;
+    height: 100%;
+}
+#map {
+  width:100%;
+  height: 488px;
+}
+</style>
+</head>
+
+<body>
+Click on the map
+<input name="volonoi_togle" type="radio" value="true">show
+<input name="volonoi_togle"  type="radio" value="false" checked="checked">hidden
+<div id="map"></div>
+
+<script src="//unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+<script src="//unpkg.com/d3@4.12.2/build/d3.min.js"></script>    
+<script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet-src.js"></script>
+
+<script type="text/babel">
+    
+const map = L.map("map")
+let markers    
+
+L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+  attribution: "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+}).addTo(map);
+
+map.setView([36.322356, 139.013057], 14)
+
+map._initPathRoot()
+
+const svg = d3.select("#map").select("svg")
+
+const voloLayer = svg.append("g")
+    .attr("class", "leaflet-zoom-hide")
+    .attr("id", "voloLayer")
+    
+    
+d3.json("point.geojson", main)			
+
+
+function main(data) {
+    
+    const positions = getPositions(data)
+           
+    addMakers(positions)
+    drawVolonoi(positions)
+    setEvent(data)
+}
+
+ 
+function getPositions(data) {
+    const result = []
+    //位置情報→座標変換
+    data.features.forEach(d =>  {
+        const latlng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0])                    
+        result.push({
+            "id": d.id,
+            latlng: latlng
+        })
+    })
+    
+    return result
+    
+}  
+
+function addMakers(positions) {
+    positions.forEach(d => {
+        L.marker(d.latlng).addTo(map)
+    })
+}
+
+
+function setEvent(data) {
+    map.on("viewreset moveend", function(){
+        d3.selectAll(".saitan").remove()
+        const positions = getPositions(data)
+        drawVolonoi(positions)	
+    })
+        
+    const volonoi_toggle = function(){
+        if(this.value === "true"){
+            d3.selectAll(".volonoi").attr("stroke-opacity", 1)
+        }else{
+            d3.selectAll(".volonoi").attr("stroke-opacity", 0)			
+        }
+    }
+    
+    const elm = d3.selectAll("input[name=volonoi_togle]")
+    elm.on("change", volonoi_toggle)    
+    
+}
+
+
+function drawVolonoi(data){
+    
+    data.forEach(d => {
+        d.x = map.latLngToLayerPoint(d.latlng).x
+        d.y = map.latLngToLayerPoint(d.latlng).y
+    })
+
+    const voronoi = d3.voronoi()
+        .x(d => d.x )
+        .y(d => d.y )
+        
+    
+    const polygons = voronoi(data).polygons()
+
+    voloLayer.selectAll(".volonoi").remove()
+    
+    voloLayer.selectAll("path")
+        .data(polygons)
+        .enter()
+        .append("svg:path")
+        .attr("class", "volonoi")
+        .attr("id", (d, i) => `volo${i}` )
+        .attr("d", d => {
+            if(!d) return null
+            return "M" + d.filter( df => df != null ).join("L") + "Z"
+        })
+        .attr("stroke", "black")
+        .attr("fill", "white")
+        .attr("fill-opacity", 0)
+        .on("click", function(d){
+            voloLayer.selectAll(".saitan").remove()
+            addCircle(d.data.x, d.data.y, 20)
+            const mouseXY = d3.mouse(this)
+            addLine(d.data.x, d.data.y, mouseXY[0], mouseXY[1])
+            addCircle(mouseXY[0], mouseXY[1], 4)						
+        })
+        
+    const elm = document.querySelector("input[name=volonoi_togle]:checked")
+    if(elm.value === "true"){
+        d3.selectAll(".volonoi").attr("stroke-opacity", 1)
+    }else{
+        d3.selectAll(".volonoi").attr("stroke-opacity", 0)			
+    }
+        
+        
+}
+
+
+function addCircle(x, y, r){
+    voloLayer.append("circle")
+        .attr("class", "saitan")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("r", 0)
+        .transition()
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("r", r)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", 5)
+}
+
+function addLine(x1, y1, x2, y2){
+        voloLayer.append("line")
+            .attr("class", "saitan")
+            .attr("x1", x2)
+            .attr("y1", y2)
+            .attr("x2", x2)
+            .attr("y2", y2)
+            .transition()
+            .attr("x1", x1)
+            .attr("y1", y1)
+            .attr("x2", x2)
+            .attr("y2", y2)
+            .attr("stroke", "red")
+            .attr("stroke-width", 5)
+}
+   
+</script>
+    
+</body>
+</html>
