@@ -1,0 +1,1205 @@
+// URL: https://beta.observablehq.com/d/b7d9a24cf39a5917
+// Title: Rainfall in Malaysia
+// Author: chezulkhairi (@chezulkhairi)
+// Version: 721
+// Runtime version: 1
+
+const m0 = {
+  id: "b7d9a24cf39a5917@721",
+  variables: [
+    {
+      inputs: ["md","combined","rainfall_only"],
+      value: (function(md,combined,rainfall_only){return(
+md`# Rainfall in Malaysia`)})
+    },
+    {
+      inputs: ["html","mapboxgl","voronoi2","Promises","invalidation"],
+      value: (async function*(html,mapboxgl,voronoi2,Promises,invalidation)
+{ 
+  // the map lives in a div, which I generate using the \`html\` template
+  // literal function and yield immediately, thus giving it offsetWidth
+  // and offsetHeight.
+  let container = html`<div style='height:600px;'></div>`;
+  yield container;
+  
+  // Create the \`map\` object with the mapboxgl.Map constructor, referencing
+  // the container div
+  let map = new mapboxgl.Map({
+    container,
+    center: [
+      112, 2
+    ],
+    zoom: 5,
+    style: 'mapbox://styles/mapbox/light-v9',
+    scrollZoom: true
+  });
+  map.on('load', () => {
+    map.addLayer({
+      id: 'voronoi',
+      type: 'fill',
+      source: {
+     	type: 'geojson',
+     	data: voronoi2
+      },
+      paint: {
+       	"fill-color": ['get', 'color'],
+        "fill-opacity": 0.8
+      }
+    });
+    
+    map.on('click', 'voronoi', function (e) {
+      	const {rainfall, rainfallmsg, rfstationstatus, stationname, district} = e.features[0].properties;
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`<table style="max-width: 380px">
+						<tr><th>Rainfall Level</th><td>${rainfall}</td></tr>
+                        <tr><th>Level</th><td>${rainfallmsg}</td></tr>
+      					<tr><th>Status</th><td>${rfstationstatus}</td></tr>
+						<tr><th>Station Name</th><td>${stationname}</td></tr>
+						<tr><th>District</th><td>${district}</td></tr>
+			</table>`)
+            .addTo(map);
+    });
+  })
+  await Promises.delay(10);
+  map.resize();
+ 
+  
+  // Be careful to clean up the map's resources using \`map.remove()\` whenever
+  // this cell is re-evaluated.
+  try {
+    yield invalidation;
+  } finally {
+    map.remove();
+  }
+}
+)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`To see the status off the rainfall stations in a more quantitative way, I've shown the same data below in a traditional chart:`
+)})
+    },
+    {
+      inputs: ["vegalite","rainfall_only"],
+      value: (function(vegalite,rainfall_only)
+{
+  const transform = ({rfstationstatus, rainfallmsg}) => {
+    if (rfstationstatus == 'ON') {
+      switch(rainfallmsg) {
+        case 'NODATA':
+          return 'no rainfall';
+        case null:
+          return 'sensor off';
+        default:
+          return rainfallmsg.toLowerCase();
+      }
+    }
+    return 'sensor off';
+  };
+  return vegalite({
+  data: {values: rainfall_only.features.map(({properties}) => ({result: transform(properties)}))},
+  mark: 'bar',
+  width: 500,
+  encoding: {
+   y: {field: 'result', type: 'nominal', scale: {domain: ["no rainfall", "light", "moderate", "heavy", "very heavy", "sensor off"]}, axis: {title:'Rainfall status'} },
+   x: {aggregate: 'count', field: '*', type: "quantitative", axis: {title: 'Count'}},
+   color: {field: 'result', type: 'nominal', "scale": {domain: ["no rainfall", "light", "moderate", "heavy", "very heavy", "sensor off"], "range": ["rgb(73, 143, 226)", "#7ED321", "#FFEF00", "#FF9B00", "#FF0012", "rgba(0,0,0,0.6)"]}}
+  }
+})
+}
+
+)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`## Resolution
+
+Let's figure out how much resolution this has. For comparison, Edinburgh has an area of 264km². Use the bottom histogram to zoom the top one.`
+)})
+    },
+    {
+      inputs: ["vegalite","voronoi2"],
+      value: (function(vegalite,voronoi2){return(
+vegalite({
+  	data: {values: voronoi2.features.map(f=>f.properties)},
+  	vconcat: [{
+      	width: 600,
+    	mark: 'bar',
+      	"transform": [{"filter": {"selection": "brush"}}],
+  		encoding: {
+   			x: {bin: {base: 50, maxbins: 100}, field: 'area', type: 'quantitative', axis:  {title: null} },
+   			y: {aggregate: 'count', field: '*', type: "quantitative", axis: {title: 'Count'}}
+   		}
+    }, {
+      	width: 600,
+      	height: 80,
+    	mark: 'bar',
+      	selection: {
+      		brush: {"type": "interval", "encodings": ["x"]}
+    	},
+  		encoding: {
+   			x: {bin: {base: 50, maxbins: 100}, field: 'area', type: 'quantitative', axis:  {title: 'Area (km²)'} },
+   			y: {aggregate: 'count', field: '*', type: "quantitative", axis: {title: 'Count'}}
+   		}
+    }]
+})
+
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`Based on this, we can attempt a slightly different visualization, where we exclude the sensors that are off (since these don't really contribute to the picture). This may grow the Voronoi cells significantly, so we cap them to a circle with the folling radius:`
+)})
+    },
+    {
+      name: "viewof radius",
+      inputs: ["html"],
+      value: (function(html){return(
+html`<input type="range" min="1" max=100 value=31 />`
+)})
+    },
+    {
+      name: "radius",
+      inputs: ["Generators","viewof radius"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md","radius","voronoi1"],
+      value: (function(md,radius,voronoi1){return(
+md`A radius of ${radius}km, yielding an area not exceeding ${Math.round(Math.PI * radius * radius)}km² per Voronoi cell (in theory; the biggest cell is actually ${Math.round(voronoi1.features.reduce((max, item) => Math.max(max, item.properties.area), 0))}km²), which covers ${(voronoi1.features.reduce((sum, item) => sum + item.properties.area, 0) / 330803 * 100).toFixed(2)}% of Malaysia's landmass. 
+
+This leads to the following map:`
+)})
+    },
+    {
+      inputs: ["html","width","mapboxgl","voronoi1","Promises","invalidation"],
+      value: (async function*(html,width,mapboxgl,voronoi1,Promises,invalidation)
+{ 
+  // the map lives in a div, which I generate using the \`html\` template
+  // literal function and yield immediately, thus giving it offsetWidth
+  // and offsetHeight.
+  let container = html`<div style='height:600px;width:${width}px'></div>`;
+  yield container;
+  
+  // Create the \`map\` object with the mapboxgl.Map constructor, referencing
+  // the container div
+  let map = new mapboxgl.Map({
+    container,
+    center: [
+      112, 2
+    ],
+    zoom: 5,
+    style: 'mapbox://styles/mapbox/light-v9',
+    scrollZoom: true
+  });
+  map.on('load', () => {
+    map.addLayer({
+      id: 'voronoi',
+      type: 'fill',
+      source: {
+     	type: 'geojson',
+     	data: voronoi1
+      },
+      paint: {
+       	"fill-color": ['get', 'color'],
+        "fill-opacity": 0.8
+      }
+    });
+    
+    map.on('click', 'voronoi', function (e) {
+      	const {rainfall, rainfallmsg, rfstationstatus, stationname, district} = e.features[0].properties;
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`<table style="max-width: 380px">
+						<tr><th>Rainfall Level</th><td>${rainfall}</td></tr>
+                        <tr><th>Level</th><td>${rainfallmsg}</td></tr>
+      					<tr><th>Status</th><td>${rfstationstatus}</td></tr>
+						<tr><th>Station Name</th><td>${stationname}</td></tr>
+						<tr><th>District</th><td>${district}</td></tr>
+			</table>`)
+            .addTo(map);
+    });
+  });
+  await Promises.delay(10);
+  map.resize();
+  // Be careful to clean up the map's resources using \`map.remove()\` whenever
+  // this cell is re-evaluated.
+  try {
+    yield invalidation;
+  } finally {
+    map.remove();
+  }
+}
+)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`## Adding River levels
+
+There are also many stations that measure the level of water in rivers. This visualizes the river level gauges as little circles with the same color coding.`
+)})
+    },
+    {
+      inputs: ["html","width","mapboxgl","voronoi1","combined","Promises","invalidation"],
+      value: (async function*(html,width,mapboxgl,voronoi1,combined,Promises,invalidation)
+{ 
+  // the map lives in a div, which I generate using the \`html\` template
+  // literal function and yield immediately, thus giving it offsetWidth
+  // and offsetHeight.
+  let container = html`<div style='height:600px;width:${width}px'></div>`;
+  yield container;
+  
+  // Create the \`map\` object with the mapboxgl.Map constructor, referencing
+  // the container div
+  let map = new mapboxgl.Map({
+    container,
+    center: [
+      112, 2
+    ],
+    zoom: 5,
+    style: 'mapbox://styles/mapbox/light-v9',
+    scrollZoom: true
+  });
+  map.on('load', () => {
+    map.addLayer({
+      id: 'voronoi',
+      type: 'fill',
+      source: {
+     	type: 'geojson',
+     	data: voronoi1
+      },
+      paint: {
+       	"fill-color": ['get', 'color'],
+        "fill-opacity": 0.8
+      }
+    });
+    
+    const data = {
+          type: 'FeatureCollection',
+          features: combined.features.filter(f => f.properties.stationtype !== 'RF' && f.properties.wlstationstatus === 'ON').map(f => {
+          	f.properties.circleColor = (function(level) {
+              switch(level) {
+                case "NORMAL":
+                 return "rgb(73, 143, 226)";
+                case "ALERT":
+                  return "#FFEF00"
+                case "WARNING":
+                  return "#FF9B00"
+                case "DANGER":
+                  return "#FF0012"
+                default:
+                   return "rgba(0,0,0,0)";
+              }
+            })(f.properties.waterlevelmsg);
+            return f;
+        	})
+        };
+    
+    console.log(data)
+    
+    map.addLayer({
+      id: 'riverLevel',
+      type: 'circle',
+      source: {
+        type: 'geojson',
+        data: data
+      },
+      paint: {
+       	 "circle-color": ['get', 'circleColor'],
+          "circle-radius": 3,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#fff"
+      },
+      filter: ["==", "$type", "Point"]
+    });
+    
+    map.on('click', 'voronoi', function (e) {
+      	const {rainfall, rainfallmsg, rfstationstatus, stationname, district} = e.features[0].properties;
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`<table style="max-width: 380px">
+						<tr><th>Rainfall Level</th><td>${rainfall}</td></tr>
+                        <tr><th>Level</th><td>${rainfallmsg}</td></tr>
+      					<tr><th>Status</th><td>${rfstationstatus}</td></tr>
+						<tr><th>Station Name</th><td>${stationname}</td></tr>
+						<tr><th>District</th><td>${district}</td></tr>
+			</table>`)
+            .addTo(map);
+    });
+  });
+  await Promises.delay(10);
+  map.resize();
+  // Be careful to clean up the map's resources using \`map.remove()\` whenever
+  // this cell is re-evaluated.
+  try {
+    yield invalidation;
+  } finally {
+    map.remove();
+  }
+}
+)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`## Appendix
+
+Some stuff needed to render this. Perhaps the most notable here is that many of the computations run in a separate thread to keep the UI of the notebook responsive. I wonder if this is something that could be built in?
+
+### Data
+
+First let's fetch all the data that we need for this:`
+)})
+    },
+    {
+      name: "viewof combined",
+      inputs: ["timer","fetchGeoJSON"],
+      value: (function(timer,fetchGeoJSON){return(
+timer, fetchGeoJSON('https://data.easos.my/geoserver/easos-flooding/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=easos-flooding:rainfall_latest&outputFormat=application%2Fjson')
+)})
+    },
+    {
+      name: "combined",
+      inputs: ["Generators","viewof combined"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`This is the map that we use for clipping, as you can see it is not a very detailed shape, so this introduces plenty of the artifacts visible:`
+)})
+    },
+    {
+      name: "viewof malaysia",
+      inputs: ["fetchGeoJSON"],
+      value: (function(fetchGeoJSON){return(
+fetchGeoJSON('https://gist.githubusercontent.com/gampleman/0903af7279c6c60e6d5c85ca33361960/raw/b21a86ceb808307208970b24045cfe9bc9a6f744/malaysia.geojson')
+)})
+    },
+    {
+      name: "malaysia",
+      inputs: ["Generators","viewof malaysia"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`For some futher analysis of the quality of the dataset, here it is in a convenient tabular format:`
+)})
+    },
+    {
+      inputs: ["table","combined"],
+      value: (function(table,combined)
+{
+  const formatLevel = (v) => {
+    const getColor = (msg) => {
+      switch (msg) {
+        case 'LIGHT':
+        case 'NORMAL':
+          return "#7ED321";
+        case 'MODERATE': 
+        case "ALERT":
+          return "#FFEF00";
+        case 'HEAVY': 
+        case "WARNING":
+          return "#FF9B00";
+        case 'VERY HEAVY': 
+        case 'DANGER':
+          return "#FF0012; color: white";
+        case "NODATA":
+          return 'rgba(49, 93, 107, 0.2)';
+        case "OFF":
+          return 'rgba(0,0,0,0)';
+      }
+    }
+    
+    if (v) {
+      return `<span style="background-color: ${getColor(v)}; display: block">${v}</span>`; 
+    } else {
+     return '<span style="opacity: 0.5">-</span>'; 
+    }
+  };
+  const formatDate = (v) => {
+      var now = new Date();
+      var then = new Date(v);
+      var diff = now - then;
+      var out = "";
+      var years, days, hours, mins, sec;
+      if ((years = diff / (365 * 24 * 60 * 60 * 1000)) > 1) {
+        out += Math.round(years) + ' year' + (Math.round(years) > 1 ? 's ' : ' ');
+      } else if ((days = diff / (24 * 60 * 60 * 1000)) > 1) {
+        out += Math.floor(days) + 'd ';
+        diff = diff % (24 * 60 * 60 * 1000);
+      } else if ((hours = diff / (60 * 60 * 1000)) > 1) {
+        out += Math.floor(hours) + 'h ';
+        diff = diff % (60 * 60 * 1000);
+        if (hours < 10) {
+          if ((mins = diff / (60 * 1000)) > 1) {
+          out += Math.floor(mins) + 'm ';
+          diff = diff % (60 * 1000);
+          }
+          if (hours < 1 && (sec = diff / 1000)  > 1) {
+            out += Math.floor(sec) + 's ';
+          }
+        }
+      }
+      if (out == '') {
+       	out = `<span style="color: red">${v}</span>`; 
+      } else {
+       out += 'ago'; 
+      }
+      return `<span title="${v}">${out}</span>`;
+    }
+  
+  return table(combined.features.map(({properties}) => Object.assign({}, properties, {
+	water_level_status:  properties.stationtype === 'RF' ? null : properties.wlstationstatus === "ON" ? properties.waterlevelmsg : 'OFF',
+  	rainfall_status: properties.stationtype === 'WL' ? null : properties.rfstationstatus === "ON" ? properties.rainfallmsg : 'OFF',
+})), {columns: [
+	'stationid', 'district', {key: 'lastupdate', name: 'Updated', render: formatDate}, 'stationtype', {key: 'water_level_status', render: formatLevel}, {key: 'rainfall_status', render: formatLevel}, 'waterlevel', 'rainfall', 'last1hrf'
+], limit: 1000})
+}
+)
+    },
+    {
+      name: "rainfall_only",
+      inputs: ["combined"],
+      value: (function(combined){return(
+{type: 'FeatureCollection', features: combined.features.filter(({properties}) => properties.stationtype !== 'WL')}
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`Finally let's compute this altoghether into the actual shapes we want (this part runs in a bunch of webworkers)`
+)})
+    },
+    {
+      name: "voronoi1Precomputed",
+      inputs: ["greenlet","rainfall_only","malaysia"],
+      value: (function(greenlet,rainfall_only,malaysia)
+{
+  let importScripts, _, turf; // this is actually ignored to escape the static analyser
+ 
+  return greenlet(async function(rainfallOnly, malaysia, radius) {
+  
+  importScripts('https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js', 'https://npmcdn.com/@turf/turf/turf.min.js')
+
+	
+  const malaysiaGeojson = turf.flatten(malaysia);
+  
+  const activeOnly = rainfallOnly.features.filter(f => f.properties.rfstationstatus === 'ON')
+    
+  const voronoi = 
+  	_.zip(turf.voronoi(turf.featureCollection(activeOnly)).features, activeOnly)
+  		.filter(([v, r]) => v)
+ 		.map(([v, r]) => turf.feature(v.geometry, Object.assign({center: r.geometry}, r.properties)))
+  
+  
+  const clippedVoronoi = 
+	voronoi.map(feature => 
+      Object.assign(
+      	malaysiaGeojson.features
+      		.map(mg => turf.intersect(mg, feature))
+        	.filter(_.identity)
+        	.reduce((a,b) => turf.union(a,b))
+         
+         
+      , {properties: feature.properties})
+    );
+  
+  const getColor = (msg, status) => {
+    switch (msg) {
+      case 'LIGHT': return "#7ED321";
+      case 'MODERATE': return "#FFEF00";
+      case 'HEAVY': return "#FF9B00";
+      case 'VERY HEAVY': return "#FF0012";
+      default: 
+        if (status === 'ON') {
+          return 'rgb(73, 143, 226)'; //#315D6B
+        } else {
+          return 'rgba(0,0,0,0)';
+        }
+    }
+  }
+  return turf.featureCollection(
+    clippedVoronoi.map(f => 
+       _.merge({}, f, {properties: {
+         color: getColor(f.properties.rainfallmsg, f.properties.rfstationstatus)
+       }})
+    ))
+})(rainfall_only, malaysia)
+}
+)
+    },
+    {
+      name: "voronoi1",
+      inputs: ["greenlet","voronoi1Precomputed","radius"],
+      value: (function(greenlet,voronoi1Precomputed,radius)
+{
+  let importScripts,turf; // this is actually ignored to escape the static analyser
+ 
+  return greenlet(async function(voronoi1Precomputed, radius) {
+  
+  importScripts('https://npmcdn.com/@turf/turf/turf.min.js')
+
+	
+  return turf.featureCollection(
+    voronoi1Precomputed.features.map(feature => 
+    	Object.assign(
+      		turf.intersect(feature ,turf.circle(feature.properties.center, radius)) || {},
+      		{properties: feature.properties}
+   		)
+    ).filter(f => f.geometry)
+    .map(f => Object.assign(f, {properties: Object.assign(f.properties, {area: turf.area(f) / 1000000})}))
+   )
+  
+})(voronoi1Precomputed, radius)
+}
+)
+    },
+    {
+      name: "voronoi2",
+      inputs: ["greenlet","rainfall_only","malaysia"],
+      value: (function(greenlet,rainfall_only,malaysia)
+{
+  let importScripts, _, turf; // this is actually ignored to escape the static analyser
+ 
+  return greenlet(async function(rainfallOnly, malaysia) {
+  
+  importScripts('https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js', 'https://npmcdn.com/@turf/turf/turf.min.js')
+
+
+  const malaysiaGeojson = turf.flatten(malaysia)
+  
+  const voronoi = 
+  	_.zip(turf.voronoi(rainfallOnly).features, rainfallOnly.features)
+  		.filter(([v, r]) => v)
+ 		.map(([v, r]) => turf.feature(v.geometry, r.properties))
+  
+  
+  const clippedVoronoi = 
+	voronoi.map(feature => 
+      Object.assign(malaysiaGeojson.features
+      	.map(mg => turf.intersect(mg, feature))
+        .filter(_.identity)
+        .reduce((a,b) => turf.union(a,b)), {properties: feature.properties})
+    );
+  
+  const getColor = (msg, status) => {
+    switch (msg) {
+      case 'LIGHT': return "#7ED321";
+      case 'MODERATE': return "#FFEF00";
+      case 'HEAVY': return "#FF9B00";
+      case 'VERY HEAVY': return "#FF0012";
+      default: 
+        if (status === 'ON') {
+          return 'rgb(73, 143, 226)'; //#315D6B
+        } else {
+          return 'rgba(0,0,0,0)';
+        }
+    }
+  }
+  return turf.featureCollection(
+    clippedVoronoi.map(f => 
+       _.merge({}, f, {properties: {
+         color: getColor(f.properties.rainfallmsg, f.properties.rfstationstatus),
+         area: turf.area(f) / 1000000
+       }})
+    ))
+})(rainfall_only, malaysia)
+}
+)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`### Dependencies
+
+Here we include all the stuff needed to run this notebook.`
+)})
+    },
+    {
+      name: "mapboxgl",
+      inputs: ["require"],
+      value: (async function(require)
+{
+  let mapboxgl = await require('mapbox-gl@0.43.0');
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FtcGxlbWFuIiwiYSI6ImNpaDZieDFkMjBhNGp1amx4bXJyc3p3YTIifQ.UGhclQinv28O-CJDScQe_w';
+  return mapboxgl;
+}
+)
+    },
+    {
+      inputs: ["html"],
+      value: (function(html){return(
+html`<link href='https://unpkg.com/mapbox-gl@0.43.0/dist/mapbox-gl.css' rel='stylesheet' /><style>.mapboxgl-popup {
+        max-width: 400px;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }</style><p>Some CSS included here</p>`
+)})
+    },
+    {
+      name: "timer",
+      inputs: ["Promises"],
+      value: (function*(Promises)
+{ 
+  yield;
+  while (true) {
+      yield Promises.delay(15 * 60 * 1000);
+   }
+}
+)
+    },
+    {
+      name: "vegalite",
+      inputs: ["require"],
+      value: (function(require){return(
+require("@observablehq/vega-lite@0.1")
+)})
+    },
+    {
+      name: "greenlet",
+      inputs: ["require"],
+      value: (function(require){return(
+require('https://wzrd.in/standalone/greenlet')
+)})
+    },
+    {
+      from: "@gampleman/fetch-geojson",
+      name: "fetchJSON",
+      remote: "fetchJSON"
+    },
+    {
+      from: "@gampleman/fetch-geojson",
+      name: "fetchGeoJSON",
+      remote: "fetchGeoJSON"
+    },
+    {
+      from: "@nitaku/checkbox",
+      name: "checkbox",
+      remote: "checkbox"
+    },
+    {
+      from: "@gampleman/table",
+      name: "table",
+      remote: "table"
+    }
+  ]
+};
+
+const m1 = {
+  id: "@gampleman/fetch-geojson",
+  variables: [
+    {
+      name: "fetchJSON",
+      value: (function(){return(
+url =>  fetch(url).then(r => r.json())
+)})
+    },
+    {
+      name: "fetchGeoJSON",
+      inputs: ["html","width","fetchJSON","mapboxgl","bbox","Promises","invalidation"],
+      value: (function(html,width,fetchJSON,mapboxgl,bbox,Promises,invalidation){return(
+async function*(url) {
+  
+  
+  let container = html`<div style="width:${width}px; height:${width/4}px; padding: 0">
+		<style>
+			.loader,
+            .loader:before,
+            .loader:after {
+              background: #333333;
+              -webkit-animation: load1 1s infinite ease-in-out;
+              animation: load1 1s infinite ease-in-out;
+              width: 1em;
+              height: 2em;
+            }
+            .loader {
+			  display: block;
+              color: #333333;
+              text-indent: -9999em;
+              margin: 88px auto;
+              position: relative;
+              font-size: 11px;
+              -webkit-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              transform: translateZ(0);
+              -webkit-animation-delay: -0.16s;
+              animation-delay: -0.16s;
+            }
+            .loader:before,
+            .loader:after {
+              position: absolute;
+              top: 0;
+              content: '';
+            }
+            .loader:before {
+              left: -1.5em;
+              -webkit-animation-delay: -0.32s;
+              animation-delay: -0.32s;
+            }
+            .loader:after {
+              left: 1.5em;
+            }
+            @-webkit-keyframes load1 {
+              0%,
+              80%,
+              100% {
+                box-shadow: 0 0;
+                height: 2em;
+              }
+              40% {
+                box-shadow: 0 -1em;
+                height: 2.5em;
+              }
+            }
+            @keyframes load1 {
+              0%,
+              80%,
+              100% {
+                box-shadow: 0 0;
+                height: 2em;
+              }
+              40% {
+                box-shadow: 0 -1em;
+                height: 2.5em;
+              }
+            }
+		</style>
+		<span style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;"><i class="loader">Loading...</i></span>
+		<link href='https://unpkg.com/mapbox-gl@0.43.0/dist/mapbox-gl.css' rel='stylesheet' />
+		<div style="width: 100%; height: 100%;" />
+	</div>`
+	
+  const geoJSONPromise = fetchJSON(url);
+  container.value = geoJSONPromise;
+
+  yield container;
+  
+  const geoJSON = await geoJSONPromise;
+  container.querySelector('span').style.display = 'none';
+  // Create the \`map\` object with the mapboxgl.Map constructor, referencing
+  // the container div
+  let map = new mapboxgl.Map({
+    container: container.querySelector('div'),
+    center: [
+      -73.61457, 45.524149
+    ],
+    zoom: 10,
+    style: 'mapbox://styles/mapbox/light-v9',
+    // scrollZoom: false
+  });
+  
+  map.on('load', () => {
+    map.addSource('geojson', {type: 'geojson', data: geoJSON});
+    map.addLayer({
+      id: 'geojson-polygon',
+      type: 'fill',
+      source: 'geojson',
+      paint: {
+       	"fill-color": '#003300',
+        "fill-opacity": 0.5
+      },
+      filter: ["==", "$type", "Polygon"]
+    });
+    map.addLayer({
+      id: 'geojson-point',
+      type: 'circle',
+      source: 'geojson',
+      paint: {
+       	 "circle-color": "#11b4da",
+          "circle-radius": 4,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#fff"
+      },
+      filter: ["==", "$type", "Point"]
+    });
+    map.addLayer({
+      id: 'geojson-line',
+      type: 'circle',
+      source: 'geojson',
+      layout: {
+            "line-join": "round",
+            "line-cap": "round"
+        },
+      paint: {
+            "line-color": "#888",
+            "line-width": 3
+        },
+      filter: ["==", "$type", "Line"]
+    });
+        
+    map.fitBounds(bbox(geoJSON), {
+        padding: 20,
+      	animate: false
+    });
+  });
+  await Promises.delay(10);
+  map.resize()
+  // Be careful to clean up the map's resources using \`map.remove()\` whenever
+  // this cell is re-evaluated.
+  try {
+    yield invalidation;
+  } finally {
+    map.remove();
+  }
+}
+)})
+    },
+    {
+      from: "@tmcw/using-mapbox-gl-js",
+      name: "mapboxgl",
+      remote: "mapboxgl"
+    },
+    {
+      name: "bbox",
+      inputs: ["require"],
+      value: (function(require){return(
+require("https://wzrd.in/standalone/@turf%2fbbox")
+)})
+    }
+  ]
+};
+
+const m2 = {
+  id: "@tmcw/using-mapbox-gl-js",
+  variables: [
+    {
+      name: "mapboxgl",
+      inputs: ["require"],
+      value: (async function(require)
+{
+  let mapboxgl = await require('mapbox-gl@0.43.0');
+  mapboxgl.accessToken = 'pk.eyJ1IjoidG1jdyIsImEiOiJjamN0Z3ZiOXEwanZkMnh2dGFuemkzemE3In0.gibebYiJ5TEdXvwjpCY0jg';
+  return mapboxgl;
+}
+)
+    }
+  ]
+};
+
+const m3 = {
+  id: "@nitaku/checkbox",
+  variables: [
+    {
+      name: "checkbox",
+      inputs: ["html"],
+      value: (function(html){return(
+({label = '', value = false} = {}) => {
+  let wrapper = html`<label></label>`
+  let check = html`<input type=checkbox>`
+  wrapper.append(check)
+  wrapper.append(label || '')
+  
+  check.checked = value
+  
+  check.addEventListener('change', (e) => {
+    wrapper.value = check.checked
+    wrapper.dispatchEvent(new CustomEvent('input'))
+  })
+  
+  // we need to have a starting value
+  wrapper.value = check.checked
+  
+  return wrapper
+}
+)})
+    }
+  ]
+};
+
+const m4 = {
+  id: "@gampleman/table",
+  variables: [
+    {
+      name: "table",
+      inputs: ["loader","defaultHumanize","html","parseQuery","DOM","CSV"],
+      value: (function(loader,defaultHumanize,html,parseQuery,DOM,CSV){return(
+async function*(dataPromise, options = {}) {
+  yield loader;
+  
+  const dataO = await Promise.resolve(dataPromise);
+  
+  let filter = () => true;
+  
+  const data = Array.isArray(dataO) ? dataO : Object.entries(dataO).map(([key,v]) => Object.assign({key}, v));
+  
+  let {humanize, nully, limit, columns, enableFilter, enableCSVDownload} = Object.assign({ 
+    humanize: defaultHumanize, 
+    nully: () => '<span style="opacity: 0.5">-</span>', 
+    limit: 250,
+    columns: Object.keys(data[0]),
+    enableFilter: data.length > 50,
+    enableCSVDownload: true
+  }, (options || {}));
+  
+  columns = columns.map(column => {
+    let key;
+    if (typeof column == 'string') {
+      key = column; 
+      column = {key};
+    } else {
+      key = column.key;
+    }
+    
+    const decimalNumber = data.reduce((memo, d) => {
+      if (typeof d[key] === 'number') {
+        let frac = (d[key] || '').toString().split('.')[1];
+        if (frac) return Math.max(memo, frac.length);
+      }
+      return memo;
+    }, 0);
+    
+    return Object.assign({
+      name: humanize(key),
+      type: typeof data[0][key],
+      render: val => {
+        if (decimalNumber && typeof val === 'number') {
+          return val.toFixed(decimalNumber);
+        } 
+      	if (val == null || val == undefined) {
+          return nully(val);
+        } 
+        return val;
+      }
+    }, column);
+  });
+  const renderTable = () => {
+    return `${data.filter(filter).slice(0, limit).map(datum =>
+        `<tr>
+           ${columns.map(c => {
+             let val = datum[c.key];
+             return `<td class=${c.type}>${c.render(val)}</td>`;
+           }).join('')}
+         </tr>`).join('')}`;
+  };
+  const output = html`<div>
+<style>
+table {
+  min-width: 100%;
+}
+td { vertical-align: top; }
+th:not(:first-child):not(:last-child), td:not(:first-child):not(:last-child) { padding: 0 10px; }
+th { vertical-align: bottom; }
+th 
+.number {
+  text-align: right;
+  font-feature-settings: 'tnum';
+}
+tbody tr td.with-decimal {
+  padding-left:10px !important;
+  padding-right:0px !important;
+}
+tbody tr td.decimal {
+  padding-left:0 !important;
+  padding-right:10px !important;
+}
+details {
+	position: absolute;
+	bottom: 0;
+	border-radius: 15px;
+	background: white;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	width: 30px;
+}
+details[open] {
+	width: 360px;
+}
+summary {
+	list-style-type: none;
+	display: inline-block;
+	line-height: 28px;
+	
+	width: 30px;
+	height: 30px;
+	
+	text-align: center;
+}
+details summary::-webkit-details-marker {
+	display: none;
+}
+details input {
+	position: absolute;
+	top: 3px;
+	left: 25px;
+}
+a[download] {
+	position: absolute;
+	bottom: 0;
+	right: 5px;
+	border-radius: 15px;
+	background: white;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	line-height: 28px;
+}
+a[download] button {
+	border: none;
+	background: transparent;
+}
+</style>
+<div>
+<div style="max-height: 400px; overflow: auto; position: relative;">
+	
+    <table>
+      <thead>
+        <tr>
+          ${columns.map(c => `<th class="${c.type}" data-key="${c.key}">${c.name}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+      	${renderTable()}
+      </tbody>
+    </table>${data.filter(filter).length > limit ? `<p><em>This table has been truncated from ${data.length} rows to ${limit}</em></p>` : ''}
+</div>
+${enableFilter ? '<details><summary>🔎</summary><input type="search" placeholder="Type in a filter query" /></details>' : ''}
+</div>
+
+    `
+  output.value = dataO;
+  yield output;
+  
+  output.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    const order = th.dataset.order === 'ascending' ? -1 : 1;
+    data.sort((a,b) =>  a[key] > b[key]  ? order : b[key] > a[key] ? -order : 0);
+    output.querySelector('tbody').innerHTML = renderTable();
+    th.dataset.order = order === -1 ? 'descending' : 'ascending';
+  }));
+  if (enableFilter) {
+    const search = output.querySelector('input[type=search]');
+    search.addEventListener('input', e => {
+      filter = parseQuery(search.value, columns);
+      output.querySelector('tbody').innerHTML = renderTable();
+    });
+  }
+  if (enableCSVDownload) {
+  	output.appendChild(
+      DOM.download(
+        new Blob([
+          CSV(data,{
+            fields: columns.map(c => ({label: c.name, value: c.key}))
+          })]
+        , {type: "application/json"}), 'data.csv', '⬇'));
+  }
+}
+)})
+    },
+    {
+      name: "loader",
+      inputs: ["html"],
+      value: (function(html){return(
+html`<style>
+			.loader,
+            .loader:before,
+            .loader:after {
+              background: #333333;
+              -webkit-animation: load1 1s infinite ease-in-out;
+              animation: load1 1s infinite ease-in-out;
+              width: 1em;
+              height: 2em;
+            }
+            .loader {
+			  display: block;
+              color: #333333;
+              text-indent: -9999em;
+              margin: 88px auto;
+              position: relative;
+              font-size: 11px;
+              -webkit-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              transform: translateZ(0);
+              -webkit-animation-delay: -0.16s;
+              animation-delay: -0.16s;
+            }
+            .loader:before,
+            .loader:after {
+              position: absolute;
+              top: 0;
+              content: '';
+            }
+            .loader:before {
+              left: -1.5em;
+              -webkit-animation-delay: -0.32s;
+              animation-delay: -0.32s;
+            }
+            .loader:after {
+              left: 1.5em;
+            }
+            @-webkit-keyframes load1 {
+              0%,
+              80%,
+              100% {
+                box-shadow: 0 0;
+                height: 2em;
+              }
+              40% {
+                box-shadow: 0 -1em;
+                height: 2.5em;
+              }
+            }
+            @keyframes load1 {
+              0%,
+              80%,
+              100% {
+                box-shadow: 0 0;
+                height: 2em;
+              }
+              40% {
+                box-shadow: 0 -1em;
+                height: 2.5em;
+              }
+            }
+		</style>
+		<span style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;"><i class="loader">Loading...</i></span>`
+)})
+    },
+    {
+      name: "defaultHumanize",
+      value: (function(){return(
+str => str.replace(/[-_]/g, ' ')
+)})
+    },
+    {
+      name: "parseQuery",
+      value: (function(){return(
+(q, headers) => {
+  if (q == '') {
+    return () => true;
+  } else if (q.match(/[=<>]/)) {
+      try {
+        const code = headers.reduce((q, {key, name}) => q.replace(new RegExp(`\\b(${key}|${name})\\b`, 'g'), `data['${key}']`), q).replace(/([^=<>!])=([^=<>!]|$)/g, '$1===$2');
+        return new Function('data', `try { return ${code} } catch(e) { return false; }` );
+      } catch (e) {
+          return () => true;
+      }
+  } else {
+    const re = new RegExp(q, 'i');
+  	return data => headers.some(({key}) => (data[key] || '').toString().match(re))
+  }
+}
+)})
+    },
+    {
+      name: "CSV",
+      inputs: ["require"],
+      value: (function(require){return(
+require('json2csv@4.0.0').then(a => a.parse)
+)})
+    }
+  ]
+};
+
+const notebook = {
+  id: "b7d9a24cf39a5917@721",
+  modules: [m0,m1,m2,m3,m4]
+};
+
+export default notebook;
