@@ -533,8 +533,8 @@ function initMap() {
 
 	var useGeolocation = true;
 	var zoom = 6;
-	var lat = 51.58;
-	var lon = 10.1;
+	var lat = 101.44724;
+	var lon = 2.7465;
 	var urlParams = getUrlParameters();
 	if (typeof urlParams.zoom != "undefined" && typeof urlParams.lat != "undefined" && typeof urlParams.lon != "undefined") {
 		zoom = urlParams.zoom;
