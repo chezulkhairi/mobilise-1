@@ -165,4 +165,4 @@ voronoiMap = function(map, url, initialSelections) {
       map.addLayer(mapLayer);
     })
   });
-}
+} 
