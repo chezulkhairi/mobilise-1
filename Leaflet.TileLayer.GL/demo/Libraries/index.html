@@ -465,8 +465,12 @@
 				var MakeMarker = document.getElementById("MakeMarker");
 				if (MakeMarker.checked) AddPoint(e.latLng);
 			});
+			//google.maps.event.addDomListener(mapDiv, 'click', function() {window.alert('Map was clicked!');});
 		}
-		google.maps.event.addDomListener(window, 'load', MapInit);
+		//google.maps.event.addDomListener(window, 'load', MapInit);
+	<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvvLfsqnDzgL4oe6HhKgVpmlosjKGME8E&callback=MapInit">
+    </script>
 		
 		//]]>
 		</script>
