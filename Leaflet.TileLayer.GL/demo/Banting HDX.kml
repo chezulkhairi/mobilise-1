@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Banting HDX</name>
+    <description>Banting HDX GGT2018 cocreation seminar</description>
+    <Style id="icon-1558-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1558-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1558-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1558-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1558-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1657-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1657-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1657-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1657-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1657-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1748-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1748-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1748-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1748-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1748-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1751-C2185B-normal">
+      <IconStyle>
+        <color>ff5b18c2</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1751-C2185B-highlight">
+      <IconStyle>
+        <color>ff5b18c2</color>
+        <scale>1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1751-C2185B">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1751-C2185B-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1751-C2185B-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>First Responder</name>
+      <Placemark>
+        <name>Police headquarters in Kuala Langat</name>
+        <description>4</description>
+        <styleUrl>#icon-1657-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.4944861,2.80495,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Banting Fire and Rescue Station</name>
+        <description>5</description>
+        <styleUrl>#icon-1748-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.5058569,2.8145504,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Klinik Desa Morib</name>
+        <description>2</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.4472454,2.7465054,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Klinik Kesihatan Kanchong Darat</name>
+        <description>2</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.4885906,2.7888128,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Banting Health Office</name>
+        <description>1</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.493342,2.80222,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pusat Promosi Kesihatan Komuniti</name>
+        <description>1</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.5172342,2.8189276,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Klinik Kesihatan Telok Datok</name>
+        <description>2</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.5175279,2.819548,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Klinik Kesihatan Kampung Bandar</name>
+        <description>2</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.4444968,2.851134,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Klinik Kesihatan Jenjarom</name>
+        <description>2</description>
+        <styleUrl>#icon-1558-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.5004566,2.8784339,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jabatan Pertahanan Awam Malaysia</name>
+        <description>4</description>
+        <styleUrl>#icon-1657-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            101.4446913,2.7539652,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Crisis</name>
+      <Placemark>
+        <name>PPU MORIB</name>
+        <description>3</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.4456159,2.7495956,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Genting Sanyen Power Sdn Bhd</name>
+        <description>5</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.495796,2.803589,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PMU BANTING</name>
+        <description>3</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5357937,2.8346014,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pmu Olak Lempit</name>
+        <description>3</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5790202,2.8460588,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Titron Rubber Industries (M) Sdn Bhd</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.4705759,2.8499104,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NY CONTAINER SPECIALIST SDN. BHD.</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.50903,2.863436,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Express Mix Concrete (M) S/B</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5163578,2.8550036,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Boh Plantation Sdn Bhd</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5766099,2.915919,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SHOWA DENKO CARBON Malaysia Sdn. Bhd.</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5533646,2.8339468,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kilang Kopi Fama</name>
+        <description>3</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.4781128,2.7806734,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bridgex Sdn. Bhd (Precast Factory)</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.599467,2.8251682,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ice Factory</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.6318205,2.8265261,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Genting Sanyen Power Sdn Bhd</name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.649799,2.79789,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[GS Paperboard & Packaging Sdn Bhd]]></name>
+        <description>4</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.651312,2.802718,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TNB Large Scale Solar Farm</name>
+        <description>5</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.6152862,2.7885771,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kuala Langat Power Plant</name>
+        <description>5</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.648849,2.798169,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SYABAS Kuala Langat</name>
+        <description>2</description>
+        <styleUrl>#icon-1751-C2185B</styleUrl>
+        <Point>
+          <coordinates>
+            101.5219313,2.8196628,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>
