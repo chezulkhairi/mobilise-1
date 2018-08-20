@@ -641,5 +641,5 @@ function initMap() {
 	if (useGeolocation && typeof navigator.geolocation != "undefined") {
 		navigator.geolocation.getCurrentPosition(foundLocation);
 	}
-	initEvents();
+	//initEvents();
 }
