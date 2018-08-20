@@ -1,0 +1,587 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Geometry Demo with Google Maps</title>
+		<script type="text/javascript"
+			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCkWRILhdrZVUbtVSn_LgOeDna_bk1x2Rg&sensor=false">"></script>
+		<script src="Libraries/prototype.js" type="text/javascript"></script>
+		<script src="Libraries/scriptaculous.js" type="text/javascript"></script>
+		<link href="Libraries/colorPicker.css" rel="stylesheet" type="text/css"></link>
+		<script src="Libraries/yahoo.color.js" type="text/javascript"></script>
+		<script src="Libraries/colorPicker.js" type="text/javascript"></script>
+		<script src="DelaunayTriangles.js" type="text/javascript"></script>
+		<script type="text/javascript">
+
+		//<![CDATA[
+		
+		function GetIntValue(ident)
+		{
+			var val = document.getElementById(ident).value;
+			var num = parseInt(val);
+			if (isNaN(num)) alert("The text field \"" + ident + "\" contains a bad value: " + val)
+			return num;
+		}
+	 
+		function GetFloatValue(ident)
+		{
+			var val = document.getElementById(ident).value;
+			var num = parseFloat(val);
+			if (isNaN(num)) alert("The text field \"" + ident + "\" contains a bad value: " + val)
+			return num;
+		}
+
+		// The keys here are the values in the select-marker-color popup menu
+		// The values are the image-file URL's;
+		//   keep the size and intended center point
+		var MarkerColors = {
+			'Black': "Pix/Point_Black.png",
+			'White': "Pix/Point_White.png",
+			'Red': "Pix/Point_Red.png",
+			'Yellow': "Pix/Point_Yellow.png",
+			'Green': "Pix/Point_Green.png",
+			'Cyan': "Pix/Point_Cyan.png",
+			'Blue': "Pix/Point_Blue.png",
+			'Magenta': "Pix/Point_Magenta.png"
+		};
+		
+		var MarkerBackgrounds = {
+			'Black': "white",
+			'White': "black",
+			'Red': "white",
+			'Yellow': "black",
+			'Green': "black",
+			'Cyan': "black",
+			'Blue': "white",
+			'Magenta': "white"
+		};
+		
+		function GetMarkerURL()
+		{
+			var MarkerSelector = document.getElementById("MarkerSelector");
+			return MarkerColors[MarkerSelector.value];
+		}
+		
+		function GetMarkerBackground()
+		{
+			var MarkerSelector = document.getElementById("MarkerSelector");
+			return MarkerBackgrounds[MarkerSelector.value];
+		}
+		
+		function SetSampleMarkerColor()
+		{
+			var SampleMarker = document.getElementById("SampleMarker");
+			SampleMarker.src = GetMarkerURL();
+			SampleMarker.style.backgroundColor = GetMarkerBackground();
+		}
+		
+		function SetMapMarkerColors()
+		{
+			var MarkerURL = GetMarkerURL();
+			var Len = MapMarkers.length;
+			for (var i=0; i<Len; i++)
+			{
+				var Marker = MapMarkers[i];
+				var Icon = Marker.getIcon();
+				Icon.url = GetMarkerURL();
+				Marker.setIcon(Icon);
+			}
+		}
+		
+		function SetMarkerColors()
+		{
+			SetSampleMarkerColor();
+			SetMapMarkerColors();
+		}
+				
+		// Define them out here so that we can use them across functions
+		var map;
+		
+		var MapMarkers = [];
+		var MapTriLines = [];
+		var MapBdryLines = [];
+		var MapNgbrLines = [];
+		
+		// Line thicknesses and opacities
+		var LineThickness = 1;
+		var LineOpacity = 1;
+		
+		var deg2rad = Math.PI/180;
+		var rad2deg = 180/Math.PI;
+		
+		function SplitSegment(p0,p1)
+		{
+			var diff = 0.0;
+			for (var ic=0; ic<3; ic++)
+			{
+				var dfc = p1[ic] - p0[ic];
+				diff += dfc*dfc;
+			}
+			var empty = [];
+			if (diff < 0.01) return empty;
+			
+			var px = new Array(3);
+			for (var ic=0; ic<3; ic++)
+				px[ic] = p0[ic] + p1[ic];
+			var asqr = 0;
+			for (var ic=0; ic<3; ic++)
+			{
+				pc = px[ic];
+				asqr += pc*pc;
+			}
+			var normmult = 1/Math.sqrt(asqr);
+			for (var ic=0; ic<3; ic++)
+				px[ic] *= normmult;
+			
+			return empty.concat(SplitSegment(p0,px),[px],SplitSegment(px,p1));
+		}
+		
+		function MakeLoop(arr)
+		{
+			if (arr.length == 0) return [];
+			var empty = [];
+			var lparr = empty.concat(arr);
+			lparr.push(arr[0]);
+			return lparr;
+		}
+		
+		// GUI color values don't have an initial #.
+		// However the Google Maps API requires it.
+		// This function fixes that discrepancy
+		function AddHash(x) {return "#"+x;}
+		
+		function Add_GMapLine(StoreArr, Positions, Verts, Color, Thickness, Opacity)
+		{
+			if (Verts.length < 2) return;
+			
+			var p0 = Positions[Verts[0]];
+			var poss = [p0];
+			
+			for (var i=1; i<Verts.length; i++)
+			{
+				var p = Positions[Verts[i]];
+				poss = poss.concat(SplitSegment(p0,p),[p]);
+				p0 = p;
+			}
+			
+			var GLLs = [];
+			for (var j=0; j<poss.length; j++)
+			{
+				var p = poss[j];
+				var lat = rad2deg*Math.atan2(p[2],Math.sqrt(p[0]*p[0]+p[1]*p[1]));
+				var lng = rad2deg*Math.atan2(p[1],p[0]);
+				GLLs.push(new google.maps.LatLng(lat,lng));
+			}
+			var GPln = new google.maps.Polyline(
+			{
+				path: GLLs,
+				strokeColor: Color,
+				strokeWeight: Thickness,
+				strokeOpacity: Opacity,
+				clickable: false
+			});
+			StoreArr.push(GPln);
+		}
+		function ClearOvlyArray(OvlyArray)
+		{
+			while (OvlyArray.length > 0)
+			{
+				var ovly = OvlyArray.pop();
+				ovly.setMap(null);
+			}
+		}
+				
+		// For making the graphs
+		function PointsChanged()
+		{
+			ClearOvlyArray(MapTriLines);
+			ClearOvlyArray(MapBdryLines);
+			ClearOvlyArray(MapNgbrLines);
+			
+			var MapPositions = [];
+			for (var i=0; i<MapMarkers.length; i++)
+			{
+				var LatLng = MapMarkers[i].getPosition();
+				var lat = deg2rad*LatLng.lat();
+				var lng = deg2rad*LatLng.lng();
+				var lc = Math.cos(lat);
+				var pt = [lc*Math.cos(lng), lc*Math.sin(lng), Math.sin(lat)];
+				// Add random offset to avoid collinearity
+				for (var ic=0; ic<3; ic++)
+					pt[ic] += 1e-10 * (2*Math.random() - 1);
+				var sumsq = 0;
+				for (var ic=0; ic<3; ic++)
+					sumsq += pt[ic]*pt[ic];
+				var norm = 1/Math.sqrt(sumsq);
+				for (var ic=0; ic<3; ic++)
+					pt[ic] *= norm;
+				// Accept it
+				MapPositions.push(pt);
+			}
+			var DT = FindDelaunayTriangulation(MapPositions);
+			
+			// Get colors and other line features off of the GUI
+			var TriColor = AddHash(document.getElementById("TriangleColor").getValue());
+			var BdryColor = AddHash(document.getElementById("BoundaryColor").getValue());
+			var NgbrColor = AddHash(document.getElementById("NeighborhoodColor").getValue());
+			GetLineFeatures();
+			
+			for (var i=0; i<DT.edges.length; i++)
+			{
+				var edge = DT.edges[i];
+				Add_GMapLine(MapTriLines, DT.positions, edge.verts,
+					TriColor, LineThickness, LineOpacity);
+			}
+			
+			/*
+			// For reference, in case I want to make filled Delaunay triangles
+			for (var i=0; i<DT.triangles.length; i++)
+			{
+				var tri = DT.triangles[i];
+				Add_GMapLine(MapTriLines, DT.positions, MakeLoop(tri.verts),
+					TriColor, LineThickness, LineOpacity);
+			}
+			*/
+			
+			for (var i=0; i<DT.vor_edges.length; i++)
+			{
+				var edge = DT.vor_edges[i];
+				if (edge[0] < 0) continue;
+				if (edge[1] < 0) continue;
+				Add_GMapLine(MapNgbrLines, DT.vor_positions, edge,
+					NgbrColor, LineThickness, LineOpacity);
+			}
+			
+			/*
+			// For reference, in case I want to make filled Voronoi regions
+			for (var i=0; i<DT.indices.length; i++)
+			{
+				var vor_poly = DT.vor_polygons[DT.indices[i]];
+				if (vor_poly == undefined) continue;
+				var poly = vor_poly.boundary;
+				// alert("VP: " + poly);
+				if (poly[0] < 0)
+					var pts = poly.slice(1,poly.length-1);
+				else
+					var pts = MakeLoop(poly);
+				// alert(pts);
+				Add_GMapLine(MapNgbrLines, DT.vor_positions, pts,
+					NgbrColor, LineThickness, LineOpacity);
+			}
+			*/
+			
+			// Try to make the convex-hull lines on top
+			Add_GMapLine(MapBdryLines, DT.positions, MakeLoop(DT.hull), 
+				BdryColor, LineThickness, LineOpacity);
+			
+			// Adjust their visibility
+			ShowMapObjects('Positions', MapMarkers);
+			ShowMapObjects('Triangles', MapTriLines);
+			ShowMapObjects('Boundaries', MapBdryLines);
+			ShowMapObjects('Neighborhoods', MapNgbrLines);
+			
+			document.getElementById("NumPoints").innerHTML = MapMarkers.length;
+		}
+		
+		// Needs a GLatLng object containing the position
+		function AddPoint(loc)
+		{
+			// Set up my icon
+			var IconSize = new google.maps.Size(15,15);
+			var IconAnchor = new google.maps.Point(7,7);
+			var Icon = new google.maps.MarkerImage(GetMarkerURL(),
+				IconSize, null, IconAnchor, null);
+			
+			// Go!
+			var marker = new google.maps.Marker(
+			{
+				position: loc,
+				icon: Icon, 
+				draggable: true
+			});
+			
+			google.maps.event.addListener(marker, 'dragend', function(e)
+			{
+				PointsChanged();
+			});
+			
+			MapMarkers.push(marker);
+			PointsChanged();
+		}
+		
+		// Needs whether to update the graph (useful in DeleteAllPoints)
+		// Returns whether a point was removed
+		function DeleteLastPoint(DoPointsChanged)
+		{
+			if (MapMarkers.length == 0) return false;
+			var marker = MapMarkers.pop();
+			marker.setMap(null);
+			if (DoPointsChanged) PointsChanged();
+			return true;
+		}
+		
+		function DeleteAllPoints()
+		{
+			while(DeleteLastPoint(false)) {}
+			PointsChanged();
+		}
+		
+		function ShowMapObjects(CheckboxID, MapObjectList)
+		{
+			var CB = document.getElementById(CheckboxID);
+			var Show = CB.checked;
+			var Len = MapObjectList.length;
+			for (var i=0; i<Len; i++)
+			{
+				var MapObject = MapObjectList[i];
+				MapObject.setMap(Show ? map : null);
+			}
+		}
+		
+		function UpdateLineColor(TxtFldID, Lines)
+		{
+			var Color = document.getElementById(TxtFldID).getValue();
+			var Style = {strokeColor: AddHash(Color)};
+			for (var i=0; i<Lines.length; i++)
+				Lines[i].setOptions(Style);
+		}
+		
+		function GetLineFeatures()
+		{
+			var NewVal;
+			
+			NewVal = GetFloatValue("LineThickness");
+			if (isNaN(NewVal))
+				document.getElementById("LineThickness").setValue(LineThickness);
+			else
+				LineThickness = NewVal;
+			
+			NewVal = GetFloatValue("LineOpacity");
+			if (isNaN(NewVal))
+				document.getElementById("LineOpacity").setValue(LineOpacity);
+			else
+				LineOpacity = NewVal;	
+		}
+		
+		function ChangeLineFeaturesForList(Lines,Style)
+		{
+			for (var i=0; i<Lines.length; i++)
+				Lines[i].setOptions(Style);
+		}
+		
+		function ChangeLineFeatures()
+		{
+			GetLineFeatures();
+			var Style = {strokeWeight: LineThickness, strokeOpacity: LineOpacity};
+			
+			ChangeLineFeaturesForList(MapTriLines, Style);
+			ChangeLineFeaturesForList(MapNgbrLines, Style);
+			ChangeLineFeaturesForList(MapBdryLines, Style);
+		}
+		
+		function ChangeMapSize()
+		{
+			MapArea = document.getElementById("map");
+			var wid = GetIntValue("WidthEdit");
+			if (!isNaN(wid))
+			{
+				// wid = max(wid, 400);
+				MapArea.style.width=("" + wid + "px");
+			}
+			var ht = GetIntValue("HeightEdit");
+			if (!isNaN(ht))
+			{
+				// ht = max(ht, 300);
+				MapArea.style.height=("" + ht + "px");
+			}
+		}
+		
+		// Show the latitude and longitude for the LatLng object loc
+		function ShowLatLng(loc)
+		{
+			var latdisp = document.getElementById("Latitude");
+			latdisp.innerHTML = loc.lat();
+			var lngdisp = document.getElementById("Longitude");
+			lngdisp.innerHTML = loc.lng();
+		}
+		
+		function load()
+		{
+			// Keep the sample marker consistent with the popup menu
+			SetSampleMarkerColor();
+			
+			// Add color pickers
+			var CP_ImgLoc = "Libraries/colorPickerImages/"
+			new Control.ColorPicker("TriangleColor",
+					{
+						IMAGE_BASE: CP_ImgLoc,
+						onUpdate: function()
+						{
+							UpdateLineColor("TriangleColor", MapTriLines);
+						}
+					}
+				);
+			new Control.ColorPicker("BoundaryColor",
+					{
+						IMAGE_BASE: CP_ImgLoc,
+						onUpdate: function()
+						{
+							UpdateLineColor("BoundaryColor", MapBdryLines);
+						}
+					}
+				);
+			new Control.ColorPicker("NeighborhoodColor",
+					{
+						IMAGE_BASE: CP_ImgLoc,
+						onUpdate: function()
+						{
+							UpdateLineColor("NeighborhoodColor", MapNgbrLines);
+						}
+					}
+				);
+		}
+		
+		// Get the map
+		var map;
+		function MapInit()
+		{
+			var options = {
+				zoom: 1,
+				center: new google.maps.LatLng(0,0),
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				streetViewControl: false
+			};
+			map = new google.maps.Map(document.getElementById('map'), options);
+			
+			google.maps.event.addListener(map, 'mousemove', function(e)
+			{
+				ShowLatLng(e.latLng);
+			});
+			
+			google.maps.event.addListener(map, 'click', function(e)
+			{
+				var MakeMarker = document.getElementById("MakeMarker");
+				if (MakeMarker.checked) AddPoint(e.latLng);
+			});
+		}
+		google.maps.event.addDomListener(window, 'load', MapInit);
+		
+		//]]>
+		</script>
+		<style type="text/css">
+		/*<![CDATA[*/
+		/* Floating box for a set of related controls */
+		.floatbox
+		{
+			float: left;
+			margin: 1em;
+			border: double gray;
+			padding: 1em;
+		}
+		/*]]>*/
+		</style>
+	</head>
+	
+	<body onload="load()">
+		
+		<h2>Geometry Demo</h2>
+		<h3>Spherical Delaunay triangulation, convex hull, Voronoi diagram</h3>
+		
+		<noscript>
+			Either your browser does not support JavaScript
+			or it is not switched on.
+			You'll need JavaScript to be active in order to use this page,
+			which uses Google Maps.
+		</noscript>
+	
+		<div id="map" style="float: left; width: 800px; height: 600px"></div>
+
+		<div class="floatbox">
+			<input type="checkbox" id="MakeMarker" checked="checked" />Click makes point <br />
+			You can drag the points <br />
+			<br />
+			Latitude: <br />
+			<span id="Latitude">--</span> <br />
+			Longitude: <br />
+			<span id="Longitude">--</span> <br />
+			<br />
+			<table>
+			<tr><td>Points: <span id="NumPoints">0</span></td></tr>
+			<tr><td><input type="button" value="Delete last point" onclick="DeleteLastPoint(true)" /></td></tr>
+			<tr><td><input type="button" value="Delete all points" onclick="DeleteAllPoints()" /></td></tr>
+			</table>
+		</div>
+
+		<div class="floatbox">      
+			<input id="Positions" type="checkbox" checked="checked" onclick="ShowMapObjects('Positions', MapMarkers)" />Show locations:
+			<br />
+			<img id="SampleMarker" alt="*" title="Marker" />
+			Each point<br />
+			Color:
+			<select id="MarkerSelector" onchange="SetMarkerColors()">
+				<option value="Black">Black</option>
+				<option value="White">White</option>
+				<option value="Red">Red</option>
+				<option value="Yellow">Yellow</option>
+				<option value="Green">Green</option>
+				<option value="Cyan">Cyan</option>
+				<option value="Blue">Blue</option>
+				<option value="Magenta">Magenta</option>
+			</select>
+			<br /><br />
+			<input id="Triangles" type="checkbox" checked="checked"
+				onclick="ShowMapObjects('Triangles', MapTriLines)" />Show triangle grid
+			<br />
+			(Delaunay triangulation)<br />
+			Color: #<input id="TriangleColor" type="text" size="8" value="0000ff" />
+			<br />
+			<input id="Boundaries" type="checkbox" checked="checked"
+				onclick="ShowMapObjects('Boundaries', MapBdryLines)" />Show boundaries
+			<br />
+			(Convex hull)<br />
+			Color: #<input id="BoundaryColor" type="text" size="8" value="ff0000" />
+			<br />
+			<input id="Neighborhoods" type="checkbox" checked="checked"
+				onclick="ShowMapObjects('Neighborhoods', MapNgbrLines)" />Show neighborhoods
+			<br />
+			(Voronoi diagram)<br />
+			Color: #<input id="NeighborhoodColor" type="text" size="8" value="003f00" />
+			<br /><br />
+			<table>
+				<tr>
+					<td>Thickness:</td>
+					<td><input id="LineThickness" type="text" size="6" value="1" /></td>
+				</tr>
+				<tr>
+					<td>Opacity:</td>
+					<td><input id="LineOpacity" type="text" size="6" value="1" /></td>
+				</tr>
+			</table>
+			<input type="button" value="Set lines" onclick="ChangeLineFeatures()" />
+		</div>
+		
+		<div class="floatbox">  
+			Map Size:<br />
+			<table>
+				<tr>
+					<td>Width:</td>
+					<td><input id="WidthEdit" type="text" size="10" value="800" /></td>
+				</tr>
+				<tr>
+					<td>Height:</td>
+					<td><input id="HeightEdit" type="text" size="10" value="600" /></td>
+				 </tr>
+			</table>
+			<input type="button" value="Change its size!" onclick="ChangeMapSize()" />
+		</div>
+
+		<div class="floatbox">
+			Written by Loren Petrich<br /><br />
+			Google Map by Google, Inc.<br />
+			Color picker by Matthias Platzer<br />
+			Uses script.aculo.us and prototype.js<br />
+		</div>
+		
+	</body>
+</html>

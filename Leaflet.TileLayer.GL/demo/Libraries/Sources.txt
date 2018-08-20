@@ -1,0 +1,13 @@
+This directory is for outside JavaScript libraries that have been downloaded into here.
+
+Prototype: does AJAX, JSON, etc.
+prototype.js
+http://www.prototypejs.org/
+
+script.aculo.us: does various visual effects
+scriptaculous.js, etc.
+http://script.aculo.us/
+
+Color Picker
+http://www.knallgrau.at/code/colorpicker
+http://code.google.com/p/colorpickerjs
