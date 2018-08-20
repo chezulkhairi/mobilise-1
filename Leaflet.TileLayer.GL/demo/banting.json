@@ -1,0 +1,626 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Kuala Langat Power Plant",
+        "geometry": "<Point><coordinates>101.648849,2.798169,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.798169,
+          101.648849
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Klinik Kesihatan Jenjarom",
+        "geometry": "<Point><coordinates>101.500457,2.878434,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 3,
+        "Reccurences": 5,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.878434,
+          101.500457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Jabatan Pertahanan Awam Malaysia",
+        "geometry": "<Point><coordinates>101.444691,2.753965,0.0</coordinates></Point>",
+        "YearBuilt": 2000,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 7,
+        "Impact": 7,
+        "Reccurences": 7,
+        "RecoveryTime": 3,
+        "RecoveryCost": 2,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.753965,
+          101.444691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "PPU MORIB",
+        "geometry": "<Point><coordinates>101.445616,2.749596,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 3,
+        "Impact": 10,
+        "Reccurences": 1,
+        "RecoveryTime": 3,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.749596,
+          101.445616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Genting Sanyen Power Sdn Bhd",
+        "geometry": "<Point><coordinates>101.495796,2.803589,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Mixed",
+        "AnticipatedProblem": 5,
+        "Impact": 7,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.803589,
+          101.495796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "PMU BANTING",
+        "geometry": "<Point><coordinates>101.535794,2.834601,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 10,
+        "Reccurences": 1,
+        "RecoveryTime": 3,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.834601,
+          101.535794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Pmu Olak Lempit",
+        "geometry": "<Point><coordinates>101.57902,2.846059,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 10,
+        "Reccurences": 1,
+        "RecoveryTime": 3,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.846059,
+          101.57902
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Titron Rubber Industries (M) Sdn Bhd",
+        "geometry": "<Point><coordinates>101.470576,2.84991,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 5,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.84991,
+          101.470576
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "NY CONTAINER SPECIALIST SDN. BHD.",
+        "geometry": "<Point><coordinates>101.50903,2.863436,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Steel",
+        "AnticipatedProblem": 3,
+        "Impact": 5,
+        "Reccurences": 1,
+        "RecoveryTime": 2,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.863436,
+          101.50903
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Express Mix Concrete (M) S/B",
+        "geometry": "<Point><coordinates>101.516358,2.855004,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 3,
+        "Impact": 7,
+        "Reccurences": 3,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.855004,
+          101.516358
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Boh Plantation Sdn Bhd",
+        "geometry": "<Point><coordinates>101.57661,2.915919,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 5,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.915919,
+          101.57661
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Police headquarters in Kuala Langat",
+        "geometry": "<Point><coordinates>101.494486,2.80495,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Mixed",
+        "AnticipatedProblem": 10,
+        "Impact": 5,
+        "Reccurences": 5,
+        "RecoveryTime": 3,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.80495,
+          101.494486
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Banting Fire and Rescue Station",
+        "geometry": "<Point><coordinates>101.505857,2.81455,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Mixed",
+        "AnticipatedProblem": 10,
+        "Impact": 7,
+        "Reccurences": 7,
+        "RecoveryTime": 2,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.81455,
+          101.505857
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Klinik Desa Morib",
+        "geometry": "<Point><coordinates>101.447245,2.746505,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 7,
+        "Impact": 7,
+        "Reccurences": 7,
+        "RecoveryTime": 2,
+        "RecoveryCost": 2,
+        "RecoveryCapacity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.746505,
+          101.447245
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Klinik Kesihatan Kanchong Darat",
+        "geometry": "<Point><coordinates>101.488591,2.788813,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 7,
+        "Impact": 7,
+        "Reccurences": 7,
+        "RecoveryTime": 2,
+        "RecoveryCost": 2,
+        "RecoveryCapacity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.788813,
+          101.488591
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Banting Health Office",
+        "geometry": "<Point><coordinates>101.493342,2.80222,0.0</coordinates></Point>",
+        "YearBuilt": 2000,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 5,
+        "Impact": 3,
+        "Reccurences": 3,
+        "RecoveryTime": 3,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.80222,
+          101.493342
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Klinik Kesihatan Kampung Bandar",
+        "geometry": "<Point><coordinates>101.444497,2.851134,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.851134,
+          101.444497
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "SHOWA DENKO CARBON Malaysia Sdn. Bhd.",
+        "geometry": "<Point><coordinates>101.553365,2.833947,0.0</coordinates></Point>",
+        "YearBuilt": 1980,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 5,
+        "Impact": 5,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 2,
+        "RecoveryCapacity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.833947,
+          101.553365
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Pusat Promosi Kesihatan Komuniti",
+        "geometry": "<Point><coordinates>101.517234,2.818928,0.0</coordinates></Point>",
+        "YearBuilt": 2000,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.818928,
+          101.517234
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Klinik Kesihatan Telok Datok",
+        "geometry": "<Point><coordinates>101.517528,2.819548,0.0</coordinates></Point>",
+        "YearBuilt": 1970,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 3,
+        "Reccurences": 3,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.819548,
+          101.517528
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "TNB Large Scale Solar Farm",
+        "geometry": "<Point><coordinates>101.615286,2.788577,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.788577,
+          101.615286
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Kilang Kopi Fama",
+        "geometry": "<Point><coordinates>101.478113,2.780673,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 3,
+        "Impact": 3,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.780673,
+          101.478113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Bridgex Sdn. Bhd (Precast Factory)",
+        "geometry": "<Point><coordinates>101.599467,2.825168,0.0</coordinates></Point>",
+        "YearBuilt": 1980,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 3,
+        "Impact": 3,
+        "Reccurences": 3,
+        "RecoveryTime": 3,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.825168,
+          101.599467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Ice Factory",
+        "geometry": "<Point><coordinates>101.631821,2.826526,0.0</coordinates></Point>",
+        "YearBuilt": 2000,
+        "BuildingMaterial": "Steel",
+        "AnticipatedProblem": 3,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.826526,
+          101.631821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "Genting Sanyen Power Sdn Bhd",
+        "geometry": "<Point><coordinates>101.649799,2.79789,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 5,
+        "Impact": 10,
+        "Reccurences": 1,
+        "RecoveryTime": 2,
+        "RecoveryCost": 3,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.79789,
+          101.649799
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "GS Paperboard & Packaging Sdn Bhd",
+        "geometry": "<Point><coordinates>101.651312,2.802718,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Wood",
+        "AnticipatedProblem": 5,
+        "Impact": 7,
+        "Reccurences": 3,
+        "RecoveryTime": 1,
+        "RecoveryCost": 2,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.802718,
+          101.651312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "",
+        "name": "SYABAS Kuala Langat",
+        "geometry": "<Point><coordinates>101.521931,2.819663,0.0</coordinates></Point>",
+        "YearBuilt": 1950,
+        "BuildingMaterial": "Concrete/Prefab",
+        "AnticipatedProblem": 1,
+        "Impact": 1,
+        "Reccurences": 1,
+        "RecoveryTime": 1,
+        "RecoveryCost": 1,
+        "RecoveryCapacity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.819663,
+          101.521931
+        ]
+      }
+    }
+  ]
+}
