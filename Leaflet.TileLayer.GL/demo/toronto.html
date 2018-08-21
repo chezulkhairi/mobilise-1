@@ -4,9 +4,12 @@
 <head>
   <meta charset=utf-8 />
   <title>Toronto Skyline</title>
+  <meta http-equiv="cache-control" content="Public">
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
+  <link href='progress.css' rel='stylesheet' />
+    <link href='app.css' rel='stylesheet' />
   <style>
   body { margin:0; padding:0; }
   #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -50,6 +53,8 @@
     <!-- All the other legend stuff will be added here as we programatically insert divs/spans-->
   </div>
 </div>
+  <script src='helpers.js'></script>
+    <script src='app.js'></script>
 <script src='./toronto.js'></script>
 </body>
 </html>
