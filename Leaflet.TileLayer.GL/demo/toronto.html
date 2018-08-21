@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8 />
+  <title>Toronto Skyline</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+  <style>
+    .legend-container {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      padding: 0px 10px;
+      margin-bottom: 30px;
+      z-index: 1;
+    }
+
+    .legend {
+      font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      background-color: white;
+      /*background color of legend*/
+      padding: 10px;
+      /*around stuff inside of legend*/
+      border-radius: 10px;
+      /*round the edges of the legend div*/
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.60);
+      /*horizontal shadow, vertical shadow, size of shadow, color*/
+    }
+
+    .legend h2 {
+      margin: 0px 0px 5px;
+      /*top margin, left/right margin, bottom margin*/
+    }
+
+    .legend-key {
+      display: inline-block;
+      border-radius: 50%;
+      /*curve border ... make a circle*/
+      width: 20px;
+      /*size of circle*/
+      height: 20px;
+      margin-right: 10px;
+      /*position of circle*/
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id='map' class='map'> </div>
+  <div class='legend-container'>
+    <div id='legend' class='legend'>
+      <h2>Height</h2>
+      <i>Use right mouse button to navigate 3d space.
+ <br>Click on a building to see its height.</i>
+      <!-- All the other legend stuff will be added here as we programatically insert divs/spans-->
+    </div>
+  </div>
+  //<script src='toronto.js'></script>
+</body>
+
+</html>
