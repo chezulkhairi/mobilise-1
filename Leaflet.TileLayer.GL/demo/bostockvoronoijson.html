@@ -14,8 +14,8 @@
 </style>
 
 <body>
-  <script src="https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/d3.v3.min.js"></script>
-  <script src="https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/topojson.v1.min.js"></script>
+  <script src="d3.v3.min.js"></script>
+  <script src="topojson.v1.min.js"></script>
   <script>
     var width = 960,
       height = 500;
@@ -24,7 +24,7 @@
     var svg = d3.select("body").append("svg")
       .attr("width", width)
       .attr("height", height);
-    d3.json("https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/airports.json", function(error, us) {
+    d3.json("airports.json", function(error, us) {
       if (error) throw error;
       var states = topojson.feature(us, us.objects.states),
         nodes = [],
