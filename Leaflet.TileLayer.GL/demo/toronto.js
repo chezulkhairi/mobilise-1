@@ -23,11 +23,6 @@ void main(void) {
 }
 `
 
-
-
-
-
-
 mapboxgl.accessToken = 'pk.eyJ1IjoibXdpZGVuZXIiLCJhIjoibXBKQU85dyJ9.Q6yf1zk7wpnYqpsQfRwVmw';
 
 var map = new mapboxgl.Map({
@@ -40,6 +35,11 @@ var map = new mapboxgl.Map({
   pitch: 60,      //tilt camera
   bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
 });
+
+var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+		}).addTo(map);	
 
 var features=[];
 
@@ -65,10 +65,7 @@ map.on('style.load', function(){
     'url': 'mapbox://mwidener.1ayxbus1'
   });
 	
-var antitoner = L.tileLayer.gl({
-			fragmentShader: fragmentShader,
-			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
-		}).addTo(map);	
+
 
   layers.forEach(function(layer, i){
     map.addLayer({
