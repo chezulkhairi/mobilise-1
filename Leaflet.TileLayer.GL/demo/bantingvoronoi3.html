@@ -56,6 +56,16 @@ $.getJSON('banting102.geojson', function (results) {
 });
 heatmap.setMap(map);
     
+    var heat = L.heatLayer([], { maxZoom: 12 }).addTo(map);
+$.getJSON('banting102.geojson', function(data) {
+    var geojson = L.geoJson(data, {
+        onEachFeature: function(feature, layer) {
+            feature.geometry.coordinates.forEach(function(p) {
+                heat.addLatLng(L.latLng(p[0], p[1]));
+            });
+        }
+    });
+});
     
   </script>
 </body>
