@@ -22,7 +22,6 @@ void main(void) {
 	}
 }
 `
-		var tileSize = 256;
 
 
 
