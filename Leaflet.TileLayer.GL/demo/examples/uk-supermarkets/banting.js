@@ -10,7 +10,7 @@ map = new mapboxgl.Map({
   pitch: 60,      //tilt camera
   bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
 });
-
+initEvents();
 var features=[];
 
 var layers = [
