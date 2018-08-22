@@ -26,6 +26,7 @@ void main(void) {
 mapboxgl.accessToken = 'pk.eyJ1IjoibXdpZGVuZXIiLCJhIjoibXBKQU85dyJ9.Q6yf1zk7wpnYqpsQfRwVmw';
 
 var map = new mapboxgl.Map({
+	fragmentShader: fragmentShader,
   container: 'map',
   style: 'mapbox://styles/mwidener/ciuvowcno00ee2js5wibckxv3',
   center: [2.7807,101.4781],
@@ -35,8 +36,6 @@ var map = new mapboxgl.Map({
   pitch: 60,      //tilt camera
   bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
 });
-
-
 
 var features=[];
 
