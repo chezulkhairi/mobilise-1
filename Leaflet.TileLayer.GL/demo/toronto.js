@@ -65,6 +65,11 @@ map.on('style.load', function(){
     'type': 'vector',
     'url': 'mapbox://mwidener.1ayxbus1'
   });
+	
+var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+		}).addTo(map);	
 
   layers.forEach(function(layer, i){
     map.addLayer({
@@ -115,18 +120,8 @@ layers.forEach(function(layer,i){
   all_added_layers.push('building_layer-'+i);
 })
 
-		var antitoner = L.tileLayer.gl({
-			fragmentShader: fragmentShader,
-			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
-		}).addTo(map);
-		function logEvent(e) { console.log(e.type); }
-		map.on('mousemove', function(ev){
-			document.getElementById('x').innerHTML = ev.latlng.lng;
-			document.getElementById('y').innerHTML = ev.latlng.lat;
-		});
-		map.on('zoomend', function(ev){
-			document.getElementById('zoom').innerHTML = map.getZoom();
-		});
+		
+
 
 map.on('mousemove', function(e){
    features = map.queryRenderedFeatures(e.point, {all_added_layers}); //get features that are in building layers
