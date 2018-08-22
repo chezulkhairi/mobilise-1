@@ -3,7 +3,7 @@ var map;
 map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mwidener/ciuvowcno00ee2js5wibckxv3',
-  center: [-79.388924,43.645],
+  center: [2.798169,101.648849],
   zoom: 14,
   minZoom: 13,     //restrict map zoom - buildings not visible beyond 13
   maxZoom: 20,
@@ -15,14 +15,14 @@ var features=[];
 
 var layers = [
     //Color     Height threshold   Label
-    ['#ffffcc',       15,          '0-15 Meters'],
-    ['#ffeda0',       30,          '15-30 Meters'],
-    ['#fed976',       50,          '30-50 Meters'],
-    ['#feb24c',       100,         '50-100 Meters'],
-    ['#fd8d3c',       200,         '100-200 Meters'],
-    ['#fc4e2a',       300,         '200-300 Meters'],
-    ['#e31a1c',       400,         '300-400 Meters'],
-    ['#bd0026',       500,         '400-500 Meters']
+    ['#ffffcc',       15,          '0-15m'],
+    ['#ffeda0',       30,          '15-30m'],
+    ['#fed976',       50,          '30-50m'],
+    ['#feb24c',       100,         '50-100m'],
+    ['#fd8d3c',       200,         '100-200m'],
+    ['#fc4e2a',       300,         '200-300m'],
+    ['#e31a1c',       400,         '300-400m'],
+    ['#bd0026',       500,         '400-500m']
 ];
 
 //create a popup object and give it some properties. we'll generate/overwrite a new popup each time we click.
