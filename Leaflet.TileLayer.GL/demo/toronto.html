@@ -10,6 +10,11 @@
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
   <link href='progress.css' rel='stylesheet' />
     <link href='app.css' rel='stylesheet' />
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
+	<script src="../src/Leaflet.TileLayer.GL.js"></script>
+  
   <style>
   body { margin:0; padding:0; }
   #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -44,6 +49,16 @@
 
 </head>
 <body>
+  <h1>Leaflet.TileLayer.GL Flood demo</h1>
+
+	<div id="map" style='width:100%; max-height:100%; height:600px;'></div>
+
+	<div>X:<span id="x"></div>
+	<div>Y:<span id="y"></div>
+	<div>Zoom: <span id="zoom"></div>
+
+	<p>In this demo, a WebGL shader uses the elevation provided in <a href='https://www.mapbox.com/blog/terrain-rgb/'>Mapbox's "Terrain-RGB" map tiles</a>  to colour areas depending on their elevation (below 0 meters, between 0 and 5 meters, between 5 and 10 meters, above 10 meters).</p>
+
 <div id='map' class='map'> </div>
 <div class='legend-container'>
   <div id='legend' class='legend'>
@@ -54,6 +69,6 @@
   <script src='helpers.js'></script>
     <script src='app.js'></script>
 <script src='./toronto.js'></script>
-  <script src='./flood.js'></script>
+    <script src='./flood.js'></script>
 </body>
 </html>
