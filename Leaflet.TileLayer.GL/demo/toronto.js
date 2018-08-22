@@ -3,7 +3,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibXdpZGVuZXIiLCJhIjoibXBKQU85dyJ9.Q6yf1zk7wpnY
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mwidener/ciuvowcno00ee2js5wibckxv3',
-  center: [-79.388924,43.645],
+  center: [2.7807,101.4781],
   zoom: 16,
   minZoom: 13,     //restrict map zoom - buildings not visible beyond 13
   maxZoom: 20,
