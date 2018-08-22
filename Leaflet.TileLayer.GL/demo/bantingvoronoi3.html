@@ -40,6 +40,23 @@
     url = 'banting102.csv';
     initialSelection = d3.set(['FirstResponder', 'RiskArea']);
     voronoiMap(map, url, initialSelection);
+    
+    // Variable for your data
+var geojsonData;
+
+// Fetch the file
+$.getJSON('banting102.geojson', function (results) {
+    // Assign the results to the geojsonData variable
+    geojsonData = results;
+    // Assign the data to the layer
+    featureLayer.setGeoJSON(geojsonData);
+});
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+  data: geojsonData
+});
+heatmap.setMap(map);
+    
+    
   </script>
 </body>
 </html>
