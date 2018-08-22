@@ -96,9 +96,15 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
                         "data": gJson
                     });
                     // add layer
-                    map.addLayer(m.layer,"place-village");
+                    //map.addLayer(m.layer,"place-village");
                     // set progress to max
-                    data[m.id] = gJson;
+                    //data[m.id] = gJson;
+                      
+                      map.addLayer({
+                    id: "place-village",
+                    source: m.layer,
+                    type: 'heatmap'
+                    });
                   }
                   catch(err){
                     alert(err);
