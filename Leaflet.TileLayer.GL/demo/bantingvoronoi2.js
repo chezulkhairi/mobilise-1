@@ -21,6 +21,71 @@ voronoiMap = function(map, url, initialSelections) {
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
+  // voronoi.find is included in [d3 v4.3.0](https://github.com/d3/d3/releases/v4.3.0)
+// the following lines just add coloring
+voronoi.find = function(x, y, radius) {
+  var i, next = voronoi.find.found || Math.floor(Math.random() * diagram.cells.length);
+  var cell = voronoi.cells[next] || voronoi.cells[next=0];
+  var dx = x - cell.site[0], 
+      dy = y - cell.site[1],
+      dist = dx*dx + dy*dy;
+  
+
+  do {
+    cell = voronoi.cells[i=next];
+    next = null;
+    polygon._groups[0][i].setAttribute('fill', '#f5a61d');
+    cell.halfedges.forEach(function(e) {
+      var edge = voronoi.edges[e];
+      var ea = edge.left;
+      if (ea === cell.site || !ea) {
+        ea = edge.right;
+      }
+      if (ea){
+        if (polygon._groups[0][ea.index].getAttribute('fill') != '#f5a61d')
+        polygon._groups[0][ea.index].setAttribute('fill', '#fbe8ab');
+				var dx = x - ea[0],
+            dy = y - ea[1],
+            ndist = dx*dx + dy*dy;
+        if (ndist < dist){
+          dist = ndist;
+          next = ea.index;
+          return;
+        }
+      }
+    });
+
+  } while (next !== null);
+
+  voronoi.find.found = i;
+  if (!radius || dist < radius * radius) return cell.site;
+} 
+
+
+findcell([width/2, height/2]);
+
+function moved() {
+  findcell(d3.mouse(this));
+}
+
+function findcell(m) {
+  polygon.attr('fill', '');
+	var found = voronoi.find(m[0],m[1], 50);
+  if (found)
+    polygon._groups[0][found.index].setAttribute('fill', 'red');
+}
+
+function redraw() {
+  polygon = polygon.data(voronoi.polygons()).call(redrawPolygon);
+}
+
+function redrawPolygon(polygon) {
+  polygon
+      .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; });
+}
+
+  
+  
   var selectPoint = function() {
     d3.selectAll('.selected').classed('selected', false);
 
