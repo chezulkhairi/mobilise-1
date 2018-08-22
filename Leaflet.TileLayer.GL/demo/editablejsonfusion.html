@@ -28,12 +28,12 @@
         src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script type="text/javascript">
-      function initialize() {
-        var tableId = '1lBRXKFRisZ9smBSYoFLgxiRdKtK3AATT_7qoSQmr';
+function initialize() {
+        var tableId = '1bxSIjstezkum61G8IX_8hhvDfb_0Q4bYH9W0-SD2';
         var locationColumn = 'Location';
 
         var map = new google.maps.Map(document.getElementById('map-canvas'), {
-          center: new google.maps.LatLng(37.4, -122.1),
+          center: new google.maps.LatLng(2.80495, 101.4944861),
           zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -46,7 +46,7 @@
           map: map
         });
 
-        google.maps.event.addDomListener(document.getElementById('delivery'),
+        google.maps.event.addDomListener(document.getElementById('data'),
             'change', function() {
               updateMap(layer, tableId, locationColumn);
         });
@@ -55,13 +55,13 @@
       // Update the query sent to the Fusion Table Layer based on
       // the user selection in the select menu
       function updateMap(layer, tableId, locationColumn) {
-        var RecoveryCapacity = document.getElementById('RecoveryCapacity').value;
-        if (RecoveryCapacity) {
+        var Radius = document.getElementById('data').value;
+        if (data) {
           layer.setOptions({
             query: {
               select: locationColumn,
               from: tableId,
-              where: "RecoveryCapacity = '" + RecoveryCapacity + "'"
+              where: "Radius = '" + data + "'"
             }
           });
         } else {
@@ -80,11 +80,10 @@
   <body>
     <div id="map-canvas"></div>
     <label>Delivers?</label>
-    <select id="RecoveryCapacity (1Lo 3Hi">
+    <select id="delivery">
       <option value="">--Select--</option>
-      <option value="yes">1</option>
-      <option value="no">2</option>
-      <option value="no">3</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
     </select>
   </body>
 </html>
