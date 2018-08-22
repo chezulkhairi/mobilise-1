@@ -37,6 +37,15 @@ var map = new mapboxgl.Map({
   bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
 });
 
+var mapboxAccessToken = 'pk.eyJ1IjoienN0YWRsZXIiLCJhIjoiY2lvbDc5Zzl6MDAwc3Z2bTZ6NDNybDM3dSJ9.vxR1WVn26mEtpEk9MzdiUA';
+var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+	attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+	}).addTo(map);
+var antitoner = L.tileLayer.gl({
+	fragmentShader: fragmentShader,
+	tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+	}).addTo(map);
+
 var features=[];
 
 var layers = [
