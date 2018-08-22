@@ -4,7 +4,7 @@ var map = new mapboxgl.Map({
  container: 'map',
  style: 'mapbox://styles/mwidener/ciuvowcno00ee2js5wibckxv3',
  center: [-79.388924,43.645],
- zoom: 14,
+ zoom: 12,
  minZoom: 13, //restrict map zoom - buildings not visible beyond 13
  maxZoom: 20,
  pitch: 60, //tilt camera
