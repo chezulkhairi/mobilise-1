@@ -42,7 +42,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYq
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.798169,101.648849], 5);
   
-L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
+var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
 var range = document.getElementById('range');
 
 function clip() {
@@ -50,7 +50,7 @@ function clip() {
       se = map.containerPointToLayerPoint(map.getSize()),
       clipX = nw.x + (se.x - nw.x) * range.value;
 
-  map.getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+  overlay.getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
 }
 
 range['oninput' in range ? 'oninput' : 'onchange'] = clip;
