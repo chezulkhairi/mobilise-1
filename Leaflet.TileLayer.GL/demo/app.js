@@ -1,11 +1,11 @@
 // mapbox gl init
-mapboxgl.accessToken = 'pk.eyJ1IjoidW5lcGdyaWQiLCJhIjoiY2lzZnowenUwMDAzdjJubzZyZ3R1bjIzZyJ9.uyP-RWjY-94qCVajU0u8KA';
-var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
-    center: [-14.66,-23.64],
-    zoom: 3
-});
+//mapboxgl.accessToken = 'pk.eyJ1IjoidW5lcGdyaWQiLCJhIjoiY2lzZnowenUwMDAzdjJubzZyZ3R1bjIzZyJ9.uyP-RWjY-94qCVajU0u8KA';
+//var map = new mapboxgl.Map({
+//    container: 'map',
+//    style: 'mapbox://styles/mapbox/dark-v9',
+//    center: [-14.66,-23.64],
+//    zoom: 3
+//});
 
 // object to hold geojson
 var data = {};
