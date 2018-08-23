@@ -46,7 +46,7 @@ var data = [{
     name: 'Kuala Langat Power Plant',
     type:'Risk',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#c091e6'
 }, {
     lon: 101.500457,
@@ -54,7 +54,7 @@ var data = [{
     name: 'Klinik Kesihatan Jenjarom',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
    {
@@ -63,7 +63,7 @@ var data = [{
     name: 'Jabatan Pertahanan Awam Malaysia',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
    {
@@ -72,7 +72,7 @@ var data = [{
     name: 'PPU MORIB',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
    {
@@ -81,7 +81,7 @@ var data = [{
     name: 'Genting Sanyen Power Sdn Bhd',
     type:'Risk',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
    {
@@ -90,7 +90,7 @@ var data = [{
     name: 'PMU BANTING',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
   {
@@ -99,7 +99,7 @@ var data = [{
     name: 'Titron Rubber Industries (M) Sdn Bhd',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -108,7 +108,7 @@ var data = [{
     name: 'Police headquarters in Kuala Langat',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -117,7 +117,7 @@ var data = [{
     name: 'Banting Fire and Rescue Station',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -126,7 +126,7 @@ var data = [{
     name: 'Klinik Desa Morib',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -135,7 +135,7 @@ var data = [{
     name: 'Klinik Kesihatan Kanchong Darat',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -144,7 +144,7 @@ var data = [{
     name: 'Klinik Kesihatan Kampung Bandar',
     type:'Responder',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -153,7 +153,7 @@ var data = [{
     name: 'Pusat Komuniti Taman Seri Bayu Morib',
     type:'Assembly',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
             {
@@ -162,7 +162,7 @@ var data = [{
     name: 'Sk Morib',
     type:'Assembly',
     priority:1,
-    radius:1,
+    radius: 'small',
     color: '#fa946e'
 },
            ];
@@ -202,7 +202,8 @@ $("#table").handsontable({
     },
      {
       data: 'radius',
-      type: 'numeric'
+      editor: 'select',
+      selectOptions: ['small', 'medium', 'large']
     },
     {
       data: 'color'
