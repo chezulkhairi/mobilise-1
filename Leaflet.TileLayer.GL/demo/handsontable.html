@@ -62,9 +62,9 @@ var dataLayer = L.mapbox.featureLayer().addTo(map);
 // http://handsontable.com/index.html
 $("#table").handsontable({
   data: data,
-  startRows: 7,
-  startCols: 4,
-  colHeaders: ['Lon', 'Lat', 'Name', 'Size', 'Color'],
+  startRows: 10,
+  startCols: 7,
+  colHeaders: ['Lon', 'Lat', 'Name', 'type', 'Priority', 'Radius', 'color'],
   columnSorting: true,
   columns: [
     {
@@ -116,7 +116,7 @@ function dataToMarkers() {
         coordinates: [ data[i].lon, data[i].lat]
       },
       properties: {
-        'marker-size': data[i].size,
+        'marker-size': data[i].Radius,
         'marker-color': data[i].color,
         'title': data[i].name
       }
