@@ -48,10 +48,10 @@ var map = L.mapbox.map('map', 'mapbox.streets')
       Satellite: L.mapbox.tileLayer('mapbox.satellite')
   };
 
-  layers.Streets.addTo(map);
-  L.control.layers(layers).addTo(map);
+  var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
+  layers.Streets.addTo(overlay);
+  L.control.layers(layers).addTo(overlay);
   
-var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
 var range = document.getElementById('range');
 
 function clip() {
