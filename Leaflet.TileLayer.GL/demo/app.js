@@ -175,7 +175,11 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
     };
                     });
                    
-  
+  // add layer
+                    map.addLayer(m.layer,"place-village");
+                    // set progress to max
+                    data[m.id] = gJson;
+                  }
 
     var updateLayerList = function(theFile) {
         return function(e) {};
