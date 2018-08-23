@@ -103,17 +103,7 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
                     map.addSource(m.id, {
                         "type": "geojson",
                         "data": gJson
-                    });
-                    // add layer
-                    map.addLayer(m.layer,"place-village");
-                    // set progress to max
-                    data[m.id] = gJson;
-                      //
-                      map.addLayer({
-  id: 'heat',
-  type: 'heatmap',
-  source: 'gJson',
-  maxzoom: 15,
+                        type: 'heatmap',
   paint: {
     // increase weight as diameter breast height increases
     'heatmap-weight': {
@@ -183,6 +173,9 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
             }
         };
     };
+                    });
+                   
+  
 
     var updateLayerList = function(theFile) {
         return function(e) {};
