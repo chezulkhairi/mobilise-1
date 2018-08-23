@@ -76,12 +76,22 @@ $("#table").handsontable({
       type: 'numeric'
     },
     {
-      data: 'name'
+      data: 'Name',
     },
     {
-      data: 'size',
+      data: 'type',
       editor: 'select',
-      selectOptions: ['small', 'medium', 'large']
+      selectOptions: ['Responder', 'Risk', 'Assembly']
+    },
+    {
+      data: 'Priority'
+      editor: 'select',
+      selectOptions: ['1', '2', '3','4', '5', '6', '7','8', '9', '10']
+    },
+     {
+      data: 'Radius',
+      editor: 'select',
+      selectOptions: ['1', '2', '3']
     },
     {
       data: 'color'
