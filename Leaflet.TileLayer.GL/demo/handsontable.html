@@ -44,126 +44,154 @@ var map = L.mapbox.map('map', 'mapbox.streets')
 var data = [{
     lon: 101.648849,
     lat: 2.798169,
-    name: 'Kuala Langat Plant',
+    //name: 'Kuala Langat Plant',
     type:'Risk',
     priority:1,
     radius: 'medium',
+    R_Cost:5,
+    R_Time:5,
     color: '#c091e6'
 }, {
     lon: 101.500457,
     lat: 2.878434,
-    name: 'Klinik Jenjarom',
+    //name: 'Klinik Jenjarom',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:3,
     color: '#fa946e'
 },
    {
     lon: 101.444691,
     lat: 2.753965,
-    name: 'Jabatan Pertahanan Awam',
+    //name: 'Jabatan Pertahanan Awam',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:1,
     color: '#fa946e'
 },
    {
     lon: 101.445616,
     lat: 2.749596,
-    name: 'PPU MORIB',
+    //name: 'PPU MORIB',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:1,
     color: '#fa946e'
 },
    {
     lon: 101.495796,
     lat: 2.803589,
-    name: 'Genting Sanyen Power',
+    //name: 'Genting Sanyen Power',
     type:'Risk',
     priority:1,
     radius: 'large',
+    R_Cost:4,
+    R_Time:4,
     color: '#c091e6'
 },
    {
     lon: 101.535794,
     lat: 2.834601,
-    name: 'PMU BANTING',
+    //name: 'PMU BANTING',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:3,
     color: '#fa946e'
 },
   {
     lon: 101.470576,
     lat: 2.84991,
-    name: 'Titron Rubber Industries',
+    //name: 'Titron Rubber Industries',
     type:'Responder',
     priority:1,
     radius: 'medium',
+    R_Cost:5,
+    R_Time:3,
     color: '#c091e6'
 },
             {
     lon: 101.494486,
     lat: 2.80495,
-    name: 'Police headquarters',
+    //name: 'Police headquarters',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:3,
     color: '#fa946e'
 },
             {
     lon: 101.505857,
     lat: 2.81455,
-    name: 'Banting Fire Rescue',
+    //name: 'Banting Fire Rescue',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:1,
     color: '#fa946e'
 },
             {
     lon: 101.447245,
     lat: 2.746505,
-    name: 'Klinik Desa Morib',
+    //name: 'Klinik Desa Morib',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:3,
     color: '#fa946e'
 },
             {
     lon: 101.488591,
     lat: 2.788813,
-    name: 'Klinik Kanchong Darat',
+    //name: 'Klinik Kanchong Darat',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:3,
     color: '#fa946e'
 },
             {
     lon: 101.444497,
     lat: 2.851134,
-    name: 'Klinik Kampung Bandar',
+    //name: 'Klinik Kampung Bandar',
     type:'Responder',
     priority:1,
     radius: 'small',
+    R_Cost:1,
+    R_Time:4,
     color: '#fa946e'
 },
             {
     lon: 103.438050,
     lat: 4.225230,
-    name: 'Pusat Komuniti Morib',
+    //name: 'Pusat Komuniti Morib',
     type:'Assembly',
     priority:1,
     radius: 'small',
+    R_Cost:3,
+    R_Time:3,
     color: '#D9E650'
 },
             {
     lon: 101.446250,
     lat: 2.757290,
-    name: 'Sk Morib',
+    //name: 'Sk Morib',
     type:'Assembly',
     priority:1,
     radius: 'small',
+    R_Cost:3,
+    R_Time:3,
     color: '#D9E650'
 },
            ];
@@ -178,7 +206,7 @@ $("#table").handsontable({
   data: data,
   startRows: 15,
   startCols: 7,
-  colHeaders: ['Lon', 'Lat', 'Name', 'Type', 'Priority', 'Radius', 'Color'],
+  colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
   columnSorting: true,
   columns: [
     {
@@ -189,9 +217,9 @@ $("#table").handsontable({
       data: 'lat',
       type: 'numeric'
     },
-    {
-      data: 'name',
-    },
+    //{
+    //  data: 'name',
+    //},
     {
       data: 'type',
       editor: 'select',
@@ -205,6 +233,14 @@ $("#table").handsontable({
       data: 'radius',
       editor: 'select',
       selectOptions: ['small', 'medium', 'large']
+    },
+    {
+      data: 'R_Cost',
+      type: 'numeric'
+    },
+    {
+      data: 'R_Time',
+      type: 'numeric'
     },
     {
       data: 'color'
@@ -231,7 +267,7 @@ function dataToMarkers() {
       properties: {
         'marker-size': data[i].radius,
         'marker-color': data[i].color,
-        'title': data[i].name
+        'title': data[i].type
       }
     });
   }
