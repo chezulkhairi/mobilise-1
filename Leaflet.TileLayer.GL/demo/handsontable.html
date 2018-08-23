@@ -37,6 +37,21 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.798169,101.648849], 5);
+  
+L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
+var range = document.getElementById('range');
+
+function clip() {
+  var nw = map.containerPointToLayerPoint([0, 0]),
+      se = map.containerPointToLayerPoint(map.getSize()),
+      clipX = nw.x + (se.x - nw.x) * range.value;
+
+  map.getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+}
+
+range['oninput' in range ? 'oninput' : 'onchange'] = clip;
+map.on('move', clip);
+clip();
 
 // Handsontable changes this data by reference, so when it is edited,
 // this copy will be modified in-place.
