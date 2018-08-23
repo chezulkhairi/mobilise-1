@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>Toronto Skyline</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.css' rel='stylesheet' />
+  
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='progress.css' rel='stylesheet' />
+    <link href='app.css' rel='stylesheet' />
+  
+  <style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+  <style>
+  .legend-container {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      padding: 0px 10px;
+      margin-bottom: 30px;
+      z-index: 1;
+  }
+  .legend {
+      font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      background-color: white; /*background color of legend*/
+      padding: 10px; /*around stuff inside of legend*/
+      border-radius: 10px; /*round the edges of the legend div*/
+      box-shadow: 10px 10px 20px rgba(0,0,0,0.60); /*horizontal shadow, vertical shadow, size of shadow, color*/
+  }
+  .legend h2 {
+      margin: 0px 0px 5px; /*top margin, left/right margin, bottom margin*/
+  }
+  .legend-key {
+      display: inline-block;
+      border-radius: 50%; /*curve border ... make a circle*/
+      width: 20px; /*size of circle*/
+      height: 20px;
+      margin-right: 10px; /*position of circle*/
+  }
+  </style>
+
+</head>
+<body>
+<div id='map' class='map'> </div>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
+    <script src='helpers.js'></script>
+    <script src='app.js'></script>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibXdpZGVuZXIiLCJhIjoibXBKQU85dyJ9.Q6yf1zk7wpnYqpsQfRwVmw';
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mwidener/ciuvowcno00ee2js5wibckxv3',
+  center: [-79.388924,43.645],
+  zoom: 16,
+  minZoom: 2,     //restrict map zoom - buildings not visible beyond 13
+  maxZoom: 20,
+  pitch: 60,      //tilt camera
+  bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
+});
+
+
+
+var features=[];
+
+var layers = [
+    //Color     Height threshold   Label
+    ['#ffffcc',       15,          '0-15 Meters'],
+    ['#ffeda0',       30,          '15-30 Meters'],
+    ['#fed976',       50,          '30-50 Meters'],
+    ['#feb24c',       100,         '50-100 Meters'],
+    ['#fd8d3c',       200,         '100-200 Meters'],
+    ['#fc4e2a',       300,         '200-300 Meters'],
+    ['#e31a1c',       400,         '300-400 Meters'],
+    ['#bd0026',       500,         '400-500 Meters']
+];
+
+//create a popup object and give it some properties. we'll generate/overwrite a new popup each time we click.
+var popup = null;
+
+map.on('style.load', function(){
+  var legend = document.getElementById('legend'); //get the legend from the HTML document
+  map.addSource('building_source', {
+    'type': 'vector',
+    'url': 'mapbox://mwidener.1ayxbus1'
+  });
+
+  layers.forEach(function(layer, i){
+    map.addLayer({
+        'id': 'building_layer-' + i,
+        'type': 'fill',
+        'source': 'building_source',
+        'paint': {
+            'fill-color': layer[0],
+            'fill-opacity': 0.6,
+            'fill-extrude-height': { //grab the height from the 'EleZ' attribute from building data
+              'type': 'identity',
+              'property': 'EleZ'
+            },
+            'fill-extrude-base': 0
+        },
+        'source-layer': 'Archive-bcz1gm' //name of the source layer of buildings found on mapbox studio
+      });
+      // Build out legends
+      //***********//
+       var item = document.createElement('div');//each layer gets a 'row' - this isn't in the legend yet, we do this later
+       var key = document.createElement('span');//add a 'key' to the row. A key will be the color circle
+       var value = document.createElement('span');//add a value variable to the 'row' in the legend
+
+       key.className = 'legend-key'; //the key will take on the shape and style properties defined here, in the HTML
+       key.style.backgroundColor = layer[0]; // the background color is retreived from teh layers array
+
+       value.id = 'legend-value-' + i; //give the value variable an id that we can access and change
+
+       item.appendChild(key); //add the key (color cirlce) to the legend row
+       item.appendChild(value);//add the value to the legend row
+
+       legend.appendChild(item); // Add row to the legend
+
+    });
+
+  layers.forEach(function(layer, i) {
+    var filters = ['all',['<=', 'EleZ', layer[1]]];
+    if (i !== 0) filters.push(['>', 'EleZ', layers[i - 1][1]]);
+    map.setFilter('building_layer-' + i, filters);
+    document.getElementById('legend-value-' + i).textContent = layer[2];//.toLocaleString(); //as we iterate through the layers
+                                                                                          //get the correct row, and add the appropriate text                                                                     //get the correct row, and add the appropriate text
+  });
+});
+
+//create an array that has the name of all layers created above
+var all_added_layers = []
+layers.forEach(function(layer,i){
+  all_added_layers.push('building_layer-'+i);
+})
+
+map.on('mousemove', function(e){
+   features = map.queryRenderedFeatures(e.point, {all_added_layers}); //get features that are in building layers
+  if (features.length > 0){
+    console.log(features[0].id);
+    //use the following code to change the cursor to a pointer ('pointer') instead of the default ('')
+    map.getCanvas().style.cursor = (features[0].properties.EleZ != null) ? 'pointer' : '';
+  }
+  //if there are no provinces under our mouse, then change the cursor back to the default
+  else {
+    map.getCanvas().style.cursor = '';
+  }
+});
+
+
+
+map.on('load', function() {
+    // Add a geojson point source.
+    // Heatmap layers also work with a vector tile source.
+    map.addSource('earthquakes', {
+        "type": "geojson",
+        "data": "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"
+    });
+
+    map.addLayer({
+        "id": "earthquakes-heat",
+        "type": "heatmap",
+        "source": "earthquakes",
+        "maxzoom": 9,
+        "paint": {
+            // Increase the heatmap weight based on frequency and property magnitude
+            "heatmap-weight": [
+                "interpolate",
+                ["linear"],
+                ["get", "mag"],
+                0, 0,
+                6, 1
+            ],
+            // Increase the heatmap color weight weight by zoom level
+            // heatmap-intensity is a multiplier on top of heatmap-weight
+            "heatmap-intensity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                0, 1,
+                9, 3
+            ],
+            // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+            // Begin color ramp at 0-stop with a 0-transparancy color
+            // to create a blur-like effect.
+            "heatmap-color": [
+                "interpolate",
+                ["linear"],
+                ["heatmap-density"],
+                0, "rgba(33,102,172,0)",
+                0.2, "rgb(103,169,207)",
+                0.4, "rgb(209,229,240)",
+                0.6, "rgb(253,219,199)",
+                0.8, "rgb(239,138,98)",
+                1, "rgb(178,24,43)"
+            ],
+            // Adjust the heatmap radius by zoom level
+            "heatmap-radius": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                0, 2,
+                9, 20
+            ],
+            // Transition from heatmap to circle layer by zoom level
+            "heatmap-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                7, 1,
+                9, 0
+            ],
+        }
+    }, 'waterway-label');
+
+    map.addLayer({
+        "id": "earthquakes-point",
+        "type": "circle",
+        "source": "earthquakes",
+        "minzoom": 7,
+        "paint": {
+            // Size circle radius by earthquake magnitude and zoom level
+            "circle-radius": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                7, [
+                    "interpolate",
+                    ["linear"],
+                    ["get", "mag"],
+                    1, 1,
+                    6, 4
+                ],
+                16, [
+                    "interpolate",
+                    ["linear"],
+                    ["get", "mag"],
+                    1, 5,
+                    6, 50
+                ]
+            ],
+            // Color circle by earthquake magnitude
+            "circle-color": [
+                "interpolate",
+                ["linear"],
+                ["get", "mag"],
+                1, "rgba(33,102,172,0)",
+                2, "rgb(103,169,207)",
+                3, "rgb(209,229,240)",
+                4, "rgb(253,219,199)",
+                5, "rgb(239,138,98)",
+                6, "rgb(178,24,43)"
+            ],
+            "circle-stroke-color": "white",
+            "circle-stroke-width": 1,
+            // Transition from heatmap to circle layer by zoom level
+            "circle-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                7, 0,
+                8, 1
+            ]
+        }
+    }, 'waterway-label');
+});
+
+//an event where when there is a mouse click, send the event data (represented by e) to a function that does something
+map.on('click', function(e) {
+  popup = new mapboxgl.Popup({
+    closeButton: true,
+    closeOnClick: true
+  });
+
+  //get the spatial features where your mouse is currently located. note we use the pixel location (e.point) and not lat/lon here.
+  //also specify the feature we want to pay attention to - 'provinces_base'
+  var features = map.queryRenderedFeatures(e.point, {layers: all_added_layers});
+  if (features.length > 0 && features[0].properties.EleZ != null){ //if there is a feature in our features array then proceed. otherwise, we don't have anything to work with
+    //center at click locations
+    map.panTo(e.lngLat, {'duration': 1000});
+    //set the location of our popup to the lnglat of our click (note we use e.lnglat here and NOT e.point)
+    popup.setLngLat(e.lngLat);
+    //give the popup content
+    popup.setHTML(
+      '<center>The height of this building is approximately: <b>' + Math.round(features[0].properties.EleZ) + '</b> meters.'
+    );
+    //finally add the popup to the map
+    popup.addTo(map);
+  }
+
+  //if there are no features that we're interested in, reset the filter for provinces_hover and remove any popup.
+  else{
+    //map.setFilter('provinces_hover',['==','PRVNAME','']);
+    popup.remove();
+  }
+
+});
+
+</script>
+</body>
+</html>
