@@ -41,22 +41,131 @@ var map = L.mapbox.map('map', 'mapbox.streets')
 // this copy will be modified in-place.
 // http://handsontable.com/demo/understanding_reference.html
 var data = [{
-    lon: 12.493515014648438,
-    lat: 41.89409955811395,
-    name: 'Rome',
-    type:'Responder',
+    lon: 101.648849,
+    lat: 2.798169,
+    name: 'Kuala Langat Power Plant',
+    type:'Risk',
     priority:1,
     radius:1,
     color: '#c091e6'
 }, {
-    lon: 28.939361572265625,
-    lat: 41.01099329360268,
-    name: 'Istanbul',
+    lon: 101.500457,
+    lat: 2.878434,
+    name: 'Klinik Kesihatan Jenjarom',
     type:'Responder',
     priority:1,
     radius:1,
     color: '#fa946e'
-}];
+},
+   {
+    lon: 101.444691,
+    lat: 2.753965,
+    name: 'Jabatan Pertahanan Awam Malaysia',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+   {
+    lon: 101.445616,
+    lat: 2.749596,
+    name: 'PPU MORIB',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+   {
+    lon: 101.495796,
+    lat: 2.803589,
+    name: 'Genting Sanyen Power Sdn Bhd',
+    type:'Risk',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+   {
+    lon: 101.535794,
+    lat: 2.834601,
+    name: 'PMU BANTING',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+  {
+    lon: 101.470576,
+    lat: 2.84991,
+    name: 'Titron Rubber Industries (M) Sdn Bhd',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.494486,
+    lat: 2.80495,
+    name: 'Police headquarters in Kuala Langat',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.505857,
+    lat: 2.81455,
+    name: 'Banting Fire and Rescue Station',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.447245,
+    lat: 2.746505,
+    name: 'Klinik Desa Morib',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.488591,
+    lat: 2.788813,
+    name: 'Klinik Kesihatan Kanchong Darat',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.444497,
+    lat: 2.851134,
+    name: 'Klinik Kesihatan Kampung Bandar',
+    type:'Responder',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 103.438050,
+    lat: 4.225230,
+    name: 'Pusat Komuniti Taman Seri Bayu Morib',
+    type:'Assembly',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.446250,
+    lat: 2.757290,
+    name: 'Sk Morib',
+    type:'Assembly',
+    priority:1,
+    radius:1,
+    color: '#fa946e'
+},
+           ];
 
 // Create the layer that will contain these markers: this is used in the
 // dataToMarkers function below with .setGeoJSON to update marker data.
@@ -66,7 +175,7 @@ var dataLayer = L.mapbox.featureLayer().addTo(map);
 // http://handsontable.com/index.html
 $("#table").handsontable({
   data: data,
-  startRows: 10,
+  startRows: 15,
   startCols: 7,
   colHeaders: ['Lon', 'Lat', 'Name', 'Type', 'Priority', 'Radius', 'Color'],
   columnSorting: true,
