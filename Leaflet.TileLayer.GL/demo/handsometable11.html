@@ -6,6 +6,11 @@
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+  
+  <script type="text/javascript" src="leaflet.js"></script>
+	<link rel="stylesheet" type="text/css" href="leaflet-openweathermap.css" />
+	<script type="text/javascript" src="leaflet-openweathermap.js"></script>
+  
 <style>
   body { margin:0; padding:0; }
   #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -42,13 +47,31 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYq
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.798169,101.648849], 5);
     
+  // Get your own free OWM API key at https://www.openweathermap.org/appid - please do not re-use mine!
+	// You don't need an API key for this to work at the moment, but this will change eventually.
+	var OWM_API_KEY = '06aac0fd4ba239a20d824ef89602f311';
+  
     var layers = {
       Streets: L.mapbox.tileLayer('mapbox.streets'),
       Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
       Satellite: L.mapbox.tileLayer('mapbox.satellite'),
       stamen : L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-})
+}),
+	clouds : L.OWM.clouds({opacity: 0.8, legendImagePath: 'files/NT2.png', appId: OWM_API_KEY}),
+	cloudscls : L.OWM.cloudsClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	precipitation : L.OWM.precipitation( {opacity: 0.5, appId: OWM_API_KEY} ),
+	precipitationcls : L.OWM.precipitationClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	rain : L.OWM.rain({opacity: 0.5, appId: OWM_API_KEY}),
+	raincls : L.OWM.rainClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	snow : L.OWM.snow({opacity: 0.5, appId: OWM_API_KEY}),
+	pressure : L.OWM.pressure({opacity: 0.4, appId: OWM_API_KEY}),
+	pressurecntr : L.OWM.pressureContour({opacity: 0.5, appId: OWM_API_KEY}),
+	temp : L.OWM.temperature({opacity: 0.5, appId: OWM_API_KEY}),
+	wind : L.OWM.wind({opacity: 0.5, appId: OWM_API_KEY}),
+	localLang : getLocalLanguage(),
+  city : L.OWM.current({intervall: 15, imageLoadingUrl: 'leaflet/owmloading.gif', lang: localLang, minZoom: 5,
+			appId: OWM_API_KEY})
   };
 
   
