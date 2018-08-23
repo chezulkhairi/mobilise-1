@@ -14,21 +14,9 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.css' rel='stylesheet' />
     <link href='progress.css' rel='stylesheet' />
     <link href='app.css' rel='stylesheet' />
-  <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-    <!-- Mapbox GL -->
-    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.css" rel='stylesheet' />
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.js"></script>
-
-    <!-- Leaflet.MarkerCluster -->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.4/leaflet.markercluster.js'></script>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.4/MarkerCluster.css' rel='stylesheet' />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.4/MarkerCluster.Default.css' rel='stylesheet' />
-
-    <!-- test data -->
-    <script src="https://www.mapbox.com/mapbox.js/assets/data/realworld.388.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
   
   <style>
   body { margin:0; padding:0; }
@@ -68,7 +56,10 @@
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
     <script src='helpers.js'></script>
     <script src='app.js'></script>
-  <script src="./leaflet-mapbox-gl.js"></script>
+  
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-heat/v0.1.3/leaflet-heat.js'></script>
+   <script src="https://www.mapbox.com/mapbox.js/assets/data/realworld.388.js"></script>
+  
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoibXdpZGVuZXIiLCJhIjoibXBKQU85dyJ9.Q6yf1zk7wpnYqpsQfRwVmw';
 
@@ -83,15 +74,6 @@ var map = new mapboxgl.Map({
   bearing: 17.5   //adjust angle we're looking (17.5 degrees from north)
 });
 
-  var markers = L.markerClusterGroup();
-for (var i = 0; i < addressPoints.length; i++) {
-    var a = addressPoints[i];
-    var title = a[2];
-    var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
-    marker.bindPopup(title);
-    markers.addLayer(marker);
-}
-map.addLayer(markers);
   
   var heat = L.heatLayer(addressPoints, {maxZoom: 18}).addTo(map);
     var draw = true;
