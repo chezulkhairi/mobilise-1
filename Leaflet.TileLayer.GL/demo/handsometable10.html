@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Editable table controlling marker data</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+  <style>
+.ui-table.handsontable {
+  background:#fff;
+  position:absolute;
+  top:10px;
+  left:10px;
+  z-index:100;
+  font-size: 7px;
+  }
+    .range {
+  position:absolute;
+  width:100%;
+  }
+</style>
+</head>
+<body>
+
+
+<div id='table' class='ui-table'></div>
+<div id='map'></div>
+<input id='range' class='range' type='range' min='0' max='1.0' step='any' />
+<!-- jQuery is required for this example. -->
+<script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
+<script src='https://code.jquery.com/jquery-migrate-1.2.1.min.js'></script>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/jquery-handsontable/0.10.2/jquery.handsontable.full.min.css' rel='stylesheet' />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-handsontable/0.10.2/jquery.handsontable.full.min.js'></script>
+
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
+var map = L.mapbox.map('map', 'mapbox.streets')
+    .setView([2.798169,101.648849], 5);
+    
+    var layers = {
+      Streets: L.mapbox.tileLayer('mapbox.streets'),
+      Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
+      Satellite: L.mapbox.tileLayer('mapbox.satellite')
+  };
+
+  layers.Streets.addTo(map);
+  L.control.layers(layers).addTo(map);
+  
+var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
+var range = document.getElementById('range');
+
+function clip() {
+  var nw = map.containerPointToLayerPoint([0, 0]),
+      se = map.containerPointToLayerPoint(map.getSize()),
+      clipX = nw.x + (se.x - nw.x) * range.value;
+
+  overlay.getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+}
+
+range['oninput' in range ? 'oninput' : 'onchange'] = clip;
+map.on('move', clip);
+clip();
+
+// Handsontable changes this data by reference, so when it is edited,
+// this copy will be modified in-place.
+// http://handsontable.com/demo/understanding_reference.html
+var data = [{
+    lon: 101.648849,
+    lat: 2.798169,
+    //name: 'Kuala Langat Plant',
+    type:'Risk',
+    priority:1,
+    radius: 'medium',
+    R_Cost:5,
+    R_Time:5,
+    color: '#c091e6'
+}, {
+    lon: 101.500457,
+    lat: 2.878434,
+    //name: 'Klinik Jenjarom',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:3,
+    color: '#fa946e'
+},
+   {
+    lon: 101.444691,
+    lat: 2.753965,
+    //name: 'Jabatan Pertahanan Awam',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:1,
+    color: '#fa946e'
+},
+   {
+    lon: 101.445616,
+    lat: 2.749596,
+    //name: 'PPU MORIB',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:1,
+    color: '#fa946e'
+},
+   {
+    lon: 101.495796,
+    lat: 2.803589,
+    //name: 'Genting Sanyen Power',
+    type:'Risk',
+    priority:1,
+    radius: 'large',
+    R_Cost:4,
+    R_Time:4,
+    color: '#c091e6'
+},
+   {
+    lon: 101.535794,
+    lat: 2.834601,
+    //name: 'PMU BANTING',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:3,
+    color: '#fa946e'
+},
+  {
+    lon: 101.470576,
+    lat: 2.84991,
+    //name: 'Titron Rubber Industries',
+    type:'Responder',
+    priority:1,
+    radius: 'medium',
+    R_Cost:5,
+    R_Time:3,
+    color: '#c091e6'
+},
+            {
+    lon: 101.494486,
+    lat: 2.80495,
+    //name: 'Police headquarters',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:3,
+    color: '#fa946e'
+},
+            {
+    lon: 101.505857,
+    lat: 2.81455,
+    //name: 'Banting Fire Rescue',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:1,
+    color: '#fa946e'
+},
+            {
+    lon: 101.447245,
+    lat: 2.746505,
+    //name: 'Klinik Desa Morib',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:3,
+    color: '#fa946e'
+},
+            {
+    lon: 101.488591,
+    lat: 2.788813,
+    //name: 'Klinik Kanchong Darat',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:3,
+    color: '#fa946e'
+},
+            {
+    lon: 101.444497,
+    lat: 2.851134,
+    //name: 'Klinik Kampung Bandar',
+    type:'Responder',
+    priority:1,
+    radius: 'small',
+    R_Cost:1,
+    R_Time:4,
+    color: '#fa946e'
+},
+            {
+    lon: 103.438050,
+    lat: 4.225230,
+    //name: 'Pusat Komuniti Morib',
+    type:'Assembly',
+    priority:1,
+    radius: 'small',
+    R_Cost:3,
+    R_Time:3,
+    color: '#D9E650'
+},
+            {
+    lon: 101.446250,
+    lat: 2.757290,
+    //name: 'Sk Morib',
+    type:'Assembly',
+    priority:1,
+    radius: 'small',
+    R_Cost:3,
+    R_Time:3,
+    color: '#D9E650'
+},
+           ];
+
+// Create the layer that will contain these markers: this is used in the
+// dataToMarkers function below with .setGeoJSON to update marker data.
+var dataLayer = L.mapbox.featureLayer().addTo(map);
+
+// Create the table: see full documentation for this call at
+// http://handsontable.com/index.html
+$("#table").handsontable({
+  data: data,
+  startRows: 15,
+  startCols: 7,
+  colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
+  columnSorting: true,
+  columns: [
+    {
+      data: 'lon',
+      type: 'numeric'
+    },
+    {
+      data: 'lat',
+      type: 'numeric'
+    },
+    //{
+    //  data: 'name',
+    //},
+    {
+      data: 'type',
+      editor: 'select',
+      selectOptions: ['Responder', 'Risk', 'Assembly']
+    },
+    {
+      data: 'priority',
+      type: 'numeric'
+    },
+     {
+      data: 'radius',
+      editor: 'select',
+      selectOptions: ['small', 'medium', 'large']
+    },
+    {
+      data: 'R_Cost',
+      type: 'numeric'
+    },
+    {
+      data: 'R_Time',
+      type: 'numeric'
+    },
+    {
+      data: 'color'
+    }
+  ],
+  minSpareRows: 1,
+  // Everytime the table is changed, update the markers on the map.
+  afterChange: dataToMarkers
+});
+
+function dataToMarkers() {
+  // Create a new geojson object that'll represent the table values.
+  var geojson = { type: 'FeatureCollection', features: [] };
+  // For each table row, create a marker.
+  for (var i = 0; i < data.length; i++) {
+    // Blank rows shouldn't be included - they're easy to detect and skip.
+    if (data[i].lon === null || data[i].lat === null) continue;
+    geojson.features.push({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ data[i].lon, data[i].lat]
+      },
+      properties: {
+        'marker-size': data[i].radius,
+        'marker-color': data[i].color,
+        'title': data[i].type
+      }
+    });
+  }
+  dataLayer.setGeoJSON(geojson);
+}
+</script>
+</body>
+</html>
