@@ -44,17 +44,17 @@ var data = [{
     lon: 12.493515014648438,
     lat: 41.89409955811395,
     name: 'Rome',
-  type:'Responder',
-  Priority:1,
-    Radius:1,
+    type:'Responder',
+    priority:1,
+    radius:1,
     color: '#c091e6'
 }, {
     lon: 28.939361572265625,
     lat: 41.01099329360268,
     name: 'Istanbul',
-  type:'Responder',
-  Priority:1,
-  Radius:1,
+    type:'Responder',
+    priority:1,
+    radius:1,
     color: '#fa946e'
 }];
 
@@ -68,7 +68,7 @@ $("#table").handsontable({
   data: data,
   startRows: 10,
   startCols: 7,
-  colHeaders: ['Lon', 'Lat', 'Name', 'type', 'Priority', 'Radius', 'color'],
+  colHeaders: ['Lon', 'Lat', 'Name', 'Type', 'Priority', 'Radius', 'Color'],
   columnSorting: true,
   columns: [
     {
@@ -80,7 +80,7 @@ $("#table").handsontable({
       type: 'numeric'
     },
     {
-      data: 'Name',
+      data: 'name',
     },
     {
       data: 'type',
@@ -88,14 +88,12 @@ $("#table").handsontable({
       selectOptions: ['Responder', 'Risk', 'Assembly']
     },
     {
-      data: 'Priority'
-      editor: 'select',
-      selectOptions: ['1', '2', '3','4', '5', '6', '7','8', '9', '10']
+      data: 'priority',
+      type: 'numeric'
     },
      {
-      data: 'Radius',
-      editor: 'select',
-      selectOptions: ['1', '2', '3']
+      data: 'radius',
+      type: 'numeric'
     },
     {
       data: 'color'
@@ -120,7 +118,7 @@ function dataToMarkers() {
         coordinates: [ data[i].lon, data[i].lat]
       },
       properties: {
-        'marker-size': data[i].Radius,
+        'marker-size': data[i].radius,
         'marker-color': data[i].color,
         'title': data[i].name
       }
