@@ -84,6 +84,9 @@ tin.features.forEach(function(d){
     L.geoJson(d, {color:d.properties.fill}).addTo(map);
 });
 	
+	var austin = turf.point([2.798169,101.648849]); //GeoJSON point
+var buffered = turf.buffer(austin, 15, 'miles');
+result = turf.featurecollection([austin, buffered])
     
     var layers = {
       Streets: L.mapbox.tileLayer('mapbox.streets'),
