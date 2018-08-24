@@ -45,7 +45,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYq
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.798169,101.648849], 12);
 	
-	var points_layer = L.mapbox.featureLayer().loadURL('https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/trees.geojson');
+	var points_layer = L.mapbox.featureLayer().loadURL('https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/banting.geojson');
 points_layer.on('ready', function () {
     var resolution = 100;
     var breaks = [980, 985, 990, 995, 1000, 1005, 1010, 1015, 1020, 1025, 1030];
