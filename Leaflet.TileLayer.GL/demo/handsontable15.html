@@ -44,6 +44,19 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.798169,101.648849], 12);
+	
+	var points_layer = L.mapbox.featureLayer().loadURL('https://github.com/chezulkhairi/mobilise-1/blob/master/Leaflet.TileLayer.GL/demo/trees.geojson');
+points_layer.on('ready', function () {
+    var resolution = 100;
+    var breaks = [980, 985, 990, 995, 1000, 1005, 1010, 1015, 1020, 1025, 1030];
+    var isolines = turf.isolines(points_layer.toGeoJSON(), 'pressure', resolution, breaks);
+    isolines.features.forEach(function (feature) {
+        feature.properties["stroke"] = "#25561F";
+        feature.properties["stroke-width"] = 5;
+    });
+
+    L.mapbox.featureLayer().setGeoJSON(isolines).addTo(map);
+});
     
     var layers = {
       Streets: L.mapbox.tileLayer('mapbox.streets'),
