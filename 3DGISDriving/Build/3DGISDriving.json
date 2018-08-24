@@ -1,0 +1,11 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "3DGISDriving.data.unityweb",
+"asmCodeUrl": "3DGISDriving.asm.code.unityweb",
+"asmMemoryUrl": "3DGISDriving.asm.memory.unityweb",
+"asmFrameworkUrl": "3DGISDriving.asm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
