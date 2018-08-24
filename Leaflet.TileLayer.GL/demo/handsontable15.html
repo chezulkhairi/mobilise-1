@@ -328,13 +328,13 @@ function dataToMarkers() {
       geometry: {
         type: 'Point',
         coordinates: [ data[i].lon, data[i].lat],
-	      draggable: true
+	      draggable: true,
       },
       properties: {
         'marker-size': data[i].radius,
         'marker-color': data[i].color,
         'title': data[i].type,
-        
+        'draggable': true,
       }
     });
   }
