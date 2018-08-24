@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+</head>
+<body>
+<div id='map'></div>
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlenVsa2hhaXJpIiwiYSI6ImNqYXlob25nMjEzZHkyd3Noam1jc3EwMm4ifQ.RijbHD5-xQYubqDS9dOjyQ';
+var map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/mapbox/light-v9', // stylesheet location
+  center: [-84.5, 38.05], // starting position
+  zoom: 11 // starting zoom
+});
+
+//add marker that is draggable
+        var marker = L.marker(new L.LatLng(38.633, -90.319), {
+            icon: L.mapbox.marker.icon({
+                'marker-color': '1B05E3', 
+                "marker-symbol": "pitch"
+            }),
+            draggable: true
+        });
+
+        //add marker popup
+        marker.bindPopup('This marker is draggable! Move it around to see what locales are in your "area of walkability".');
+        marker.addTo(map);
+
+        //remove old buffers (used when marker is dragged)
+        function removeBuff(){
+            map.removeLayer(buff);
+            };
+
+        //create buffer (used when the marker is dragged)
+        function updateBuffer(){
+            //Make the marker a feature
+            var pointMarker = marker.toGeoJSON();
+            //buffer the marker geoJSON feature
+            var buffered = turf.buffer(pointMarker, 1, 'miles');
+            //add buffer to the map. Note: no "var" before "buff" makes it a global variable and usable within the removeBuff() function. 
+            buff = L.mapbox.featureLayer(buffered);
+            buff.addTo(map);
+        };
+
+        marker.on('drag', function(){removeBuff(), updateBuffer()});
+        updateBuffer();
+        
+        
+       </script>
+</body>
+</html>
