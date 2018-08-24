@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+ <Folder>
+ <GroundOverlay>
+ <description> 
+SOUTHEAST ASIA  TRMM  Based flood potential map using Meso-Scale Hydrological Model 
+  </description>
+ <name> 
+ realtime flood potential
+  </name>
+ <LookAt>
+ <longitude>  110.</longitude>
+ <latitude>  16.75</latitude>
+ <range>6035000.36838438907</range>
+ <tilt>0.0</tilt>
+ <heading>0.0</heading>
+ </LookAt>
+ <visibility>1</visibility>
+  <Icon>
+  <href>http://trmm.gsfc.nasa.gov/trmm_rain/Events/GOOGLE_SOUTHEAST_ASIA_FLOOD_POTENTIAL.png</href>
+ <refreshMode>onInterval</refreshMode>
+ <refreshInterval>300</refreshInterval>
+  </Icon>
+  <LatLonBox>
+ <north>23.50</north>
+ <south>-10.0</south>
+  <east>130.00</east> 
+  <west>90.00</west> 
+  </LatLonBox>
+ </GroundOverlay>
+ <ScreenOverlay>
+ <name>Color scale</name>
+ <description>
+ Overlay for 
+ realtime flood potential
+ </description>
+ <color>ffffffff</color>
+ <visibility>1</visibility>
+ <Icon>
+  <href>http://trmm.gsfc.nasa.gov/trmm_rain/Events/GOOGLE_SOUTHEAST_ASIA_FLOOD_POTENTIAL_wedge.png</href>
+ <refreshMode>onInterval</refreshMode>
+ <refreshInterval>300</refreshInterval>
+ </Icon>
+ <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+ <screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+ <size x="0.45" y="0.15" xunits="fraction" yunits="fraction"/>
+ </ScreenOverlay>
+ </Folder>
+ </kml>

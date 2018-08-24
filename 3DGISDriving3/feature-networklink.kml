@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+  <Folder>
+  <name>Geonames</name>
+  <visibility>1</visibility>
+  <open>1</open>
+  <Snippet maxLines="0"></Snippet>
+  <NetworkLink>
+     <name>Administrative Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Administrative Boundary Features (country, state, region,...)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;A=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Hydrographic Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Hydrographic Features (stream, lake, ...)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;H=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Area Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Area Features (parks,area, ...)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;L=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Populated Places</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Populated Place Features (city, village,...)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;P=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Road / Railroad Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Road / Railroad Features (road, railroad )</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;R=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Spot Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Spot Features (spot, building, farm)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;S=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Hypsographic Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Hypsographic Features (mountain,hill,rock,... )</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;T=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+  <NetworkLink>
+     <name>Undersea Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Undersea Features (undersea)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;U=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>  <NetworkLink>
+     <name>Vegetation Features</name>
+     <visibility>0</visibility>
+     <open>1</open>
+     <refreshVisibility>1</refreshVisibility>
+     <Snippet maxLines="0"></Snippet>
+     <description>Vegetation Features (forest,heath,...)</description>
+     <Url>
+         <href>http://www.geonames.org/servlet/geonames?srv=2&amp;type=kml&amp;numrows=40&amp;V=1</href>
+         <refreshInverval>3</refreshInverval>
+         <viewRefreshMode>onStop</viewRefreshMode>
+         <viewRefreshTime>1</viewRefreshTime>
+     </Url>
+  </NetworkLink>
+</Folder>
+</kml>
+
