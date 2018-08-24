@@ -57,6 +57,10 @@ points_layer.on('ready', function () {
 
     L.mapbox.featureLayer().setGeoJSON(isolines).addTo(map);
 });
+	
+	// add a marker to the map
+var point = turf.point([2.798169,101.648849]);
+L.geoJson(point).addTo(map);
     
     var layers = {
       Streets: L.mapbox.tileLayer('mapbox.streets'),
