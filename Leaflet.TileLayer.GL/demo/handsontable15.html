@@ -371,13 +371,13 @@ var pointStyle = {
 
 
 function getColor(d) {
-    return d > 50 ? '#800026' :
-           d > 30  ? '#BD0026' :
-           d > 25  ? '#E31A1C' :
-           d > 20  ? '#FC4E2A' :
-           d > 15   ? '#FD8D3C' :
-           d > 10   ? '#FEB24C' :
-           d > 5  ? '#FED976' :
+    return d > 7 ? '#800026' :
+           d > 6  ? '#BD0026' :
+           d > 5  ? '#E31A1C' :
+           d > 4  ? '#FC4E2A' :
+           d > 3   ? '#FD8D3C' :
+           d > 2   ? '#FEB24C' :
+           d > 1  ? '#FED976' :
                       '#FFEDA0';
 }
 
@@ -407,9 +407,9 @@ points.features.forEach(function(d){
     d.properties.z = ~~(Math.random() * 50);
 });
 
-	for (var i = 0; i < points.features.length; i++) {
-    points.features[i].properties.elevation = data[i].R_Cost;
-}
+//for (var i = 0; i < points.features.length; i++) {
+//points.features[i].properties.elevation = data[i].R_Cost;
+//}
 	
 // show the points on the map
 L.geoJson(points, pointStyle).addTo(map);
