@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | HexGrid</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/3DGIS2.json", { onProgress: UnityProgress });
+  </script>
+</head>
+
+<body>
+    <div>
+      <iframe src="https://cheabdullah.github.io/UnityMapBox/3drivingindex.html#15.19/53.3483/-6.2558/-10.6/45" width="300" height="300"
+        marginwidth="0" marginheight="0" frameborder="no" scrolling="yes" style="border-width:2px; border-color:#333; background:#FFF; border-style:solid;">
+      </iframe>
+
+    </div>
+    <div class="webgl-content" align="right">
+      <div id="gameContainer" style="border: 1px solid; height: 240px; width:400px;position:relative;" id="1"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+        <div class="title">HexGrid</div>
+      </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Swipe between maps</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+
+        .mapboxgl-popup {
+        max-width: 400px;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+    </style>
+</head>
+<body>
+        <style type='text/css'>
+            #info {
+                display: block;
+                position: relative;
+                margin-top: 100px;
+                margin-left: 350px;
+                width: 30%;
+                padding: 10px;
+                border: none;
+                border-radius: 3px;
+                font-size: 12px;
+                text-align: center;
+                color: #222;
+                background: #fff;
+            }
+            
+        </style>
+<style>
+
+
+body {
+    overflow: hidden;
+}
+
+body * {
+   -webkit-touch-callout: none;
+     -webkit-user-select: none;
+        -moz-user-select: none;
+         -ms-user-select: none;
+             user-select: none;
+}
+
+.map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/*
+ * The path-start class is added to each line
+ * to manage its animation - this interpolates
+ * between the starting and ending values for the
+ * stroke-dashoffset css property
+ */
+ .path-start {
+  -webkit-transition:stroke-dashoffset 5s ease-in;
+     -moz-transition:stroke-dashoffset 5s ease-in;
+       -o-transition:stroke-dashoffset 5s ease-in;
+          transition:stroke-dashoffset 5s ease-in;
+  }
+
+
+</style>
+<!-- compare -->
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
+
+<!-- //path planning -->
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.1.1/mapbox-gl-directions.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.1.1/mapbox-gl-directions.css' type='text/css' />
+
+<!-- //geocoder -->
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.css' type='text/css' />
+
+<!-- We use arc.js to make our paths curved.
+<script src='https://api.mapbox.com/mapbox.js/plugins/arc.js/v0.1.0/arc.js'></script>
+<!-- This is our data file - it's an array of [[lat,lng],[lat,lng]] pairs
+     that define starting and ending locations of flight paths -->
+<!-- <script src='/mapbox.js/assets/data/flights.js'></script> --> -->
+
+
+
+<pre id='info'></pre>
+<div id='before' class='map'></div>
+<div id='after' class='map'></div>
+
+<script>
+
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlenVsa2hhaXJpIiwiYSI6ImNqYXlob25nMjEzZHkyd3Noam1jc3EwMm4ifQ.RijbHD5-xQYubqDS9dOjyQ';
+// var beforeMap = new mapboxgl.Map({
+//     container: 'before',
+//     style: 'mapbox://styles/mapbox/light-v9',
+//     center: [0, 0],
+//     zoom: 0
+// });
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlenVsa2hhaXJpIiwiYSI6ImNqYXlob25nMjEzZHkyd3Noam1jc3EwMm4ifQ.RijbHD5-xQYubqDS9dOjyQ'; // [-74.0066, 40.7135],
+var beforeMap = new mapboxgl.Map({
+    container: 'before',
+    style: 'mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g', // the outdoors-v10 style but without Hillshade layers
+    center: [-6.259142,53.347268],
+    zoom: 16.96,
+    pitch: 53,
+    bearing: -143.2,
+    hash: true,
+});
+
+
+var afterMap = new mapboxgl.Map({
+    container: 'after',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-6.259142,53.347268],
+    zoom: 16.96,
+    pitch: 53,
+    bearing: -143.2,
+    hash: true,
+});
+
+var map = new mapboxgl.Compare(beforeMap, afterMap, {
+    // Set this to enable comparing two maps by mouse movement:
+    // mousemove: true
+});
+
+
+// var credits = L.control.attribution({
+//   prefix: '<a href="http://openflights.org/data.html">Flight data from Open Flights, under the ODbL license</a>'
+// }).addTo(beforeMap);
+
+// The 'building' layer in the mapbox-streets vector source contains building-height
+// data from OpenStreetMap.
+beforeMap.on('load', function() {
+    // Insert the layer beneath any symbol layer.
+    var layers = beforeMap.getStyle().layers;
+
+    var labelLayerId;
+    for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+            labelLayerId = layers[i].id;
+            break;
+        }
+    }
+
+    beforeMap.addSource('contours', {
+        type: 'vector',
+        url: 'mapbox://mapbox.mapbox-terrain-v2'
+    });
+    beforeMap.addLayer({
+        'id': 'contours',
+        'type': 'line',
+        'source': 'contours',
+        'source-layer': 'contour',
+        'layout': {
+            'visibility': 'visible',
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#877b59',
+            'line-width': 1
+        }
+    }); 
+
+    beforeMap.addSource('dem', {
+        "type": "raster-dem",
+        "url": "mapbox://mapbox.terrain-rgb"
+    });
+    beforeMap.addLayer({
+        "id": "hillshading",
+        "source": "dem",
+        "type": "hillshade"
+    // insert below waterway-river-canal-shadow;
+    // where hillshading sits in the Mapbox Outdoors style
+    }, 'waterway-river-canal-shadow');
+
+
+    beforeMap.addLayer({
+        "id": "places",
+        "type": "symbol",
+        "source": {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 1</strong><p>No Data Available 1</p>",
+                        "number":"00000000000001",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.259142,53.347268]
+                    }
+                }, {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 2</strong><p>No Data Available 2</p>",
+                        "number":"00000000000002",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.2591,53.3472]
+                    }}
+                    , {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 3</strong><p>No Data Available 3</p>",
+                        "number":"00000000000003",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.258,53.3471]
+                    }}
+                    , {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 4</strong><p>No Data Available 4</p>",
+                        "number":"00000000000004",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.257,53.3470]
+                    }}
+                    , {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 5</strong><p>No Data Available 5</p>",
+                        "number":"00000000000005",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.256,53.3469]
+                    }}
+                    , {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>Test Data 6</strong><p>No Data Available 6</p>",
+                        "number":"00000000000006",
+                        "icon": "star"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-6.255,53.3468]
+                    }
+                }
+                ]
+            }
+        },
+        "layout": {
+            "icon-image": "{icon}-15",
+            "icon-allow-overlap": true
+        }
+    });
+
+    
+
+    beforeMap.addLayer({
+        'id': '3d-buildings',
+        'source': 'composite',
+        'source-layer': 'building',
+        'filter': ['==', 'extrude', 'true'],
+        'type': 'fill-extrusion',
+        'minzoom': 15,
+        'paint': {
+            'fill-extrusion-color': '#aaa',
+
+            // use an 'interpolate' expression to add a smooth transition effect to the
+            // buildings as the user zooms in
+            'fill-extrusion-height': [
+                "interpolate", ["linear"], ["zoom"],
+                15, 0,
+                15.05, ["get", "height"]
+            ],
+            'fill-extrusion-base': [
+                "interpolate", ["linear"], ["zoom"],
+                15, 0,
+                15.05, ["get", "min_height"]
+            ],
+            'fill-extrusion-opacity': .6
+        }
+    }, labelLayerId);
+});
+
+
+
+beforeMap.on('mousemove', function (e) {
+    document.getElementById('info').innerHTML =
+        // e.point is the x, y coordinates of the mousemove event relative
+        // to the top-left corner of the map
+        JSON.stringify(e.point) + '<br />' +
+        // e.lngLat is the longitude, latitude geographical position of the event
+        JSON.stringify(e.lngLat);
+});
+
+beforeMap.addControl(new MapboxDirections({
+    accessToken: mapboxgl.accessToken
+}), 'top-left');
+beforeMap.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken
+}), 'top-right');
+// Add zoom and rotation controls to the map.
+beforeMap.addControl(new mapboxgl.NavigationControl());
+
+// When a click event occurs on a feature in the places layer, open a popup at the
+    // location of the feature, with description HTML from its properties.
+    beforeMap.on('click', 'places', function (e) {
+        new mapboxgl.Popup()
+            .setLngLat(e.features[0].geometry.coordinates)
+            .setHTML(e.features[0].properties.description)
+            .addTo(beforeMap);
+    });
+
+    // Change the cursor to a pointer when the mouse is over the places layer.
+    beforeMap.on('mouseenter', 'places', function () {
+        beforeMap.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    beforeMap.on('mouseleave', 'places', function () {
+        beforeMap.getCanvas().style.cursor = '';
+    });
+
+    
+      
+    
+
+// Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false
+});
+
+beforeMap.on('mouseenter', 'places', function(e) {
+    // Change the cursor style as a UI indicator.
+    beforeMap.getCanvas().style.cursor = 'pointer';
+
+    // Populate the popup and set its coordinates
+    // based on the feature found.
+    popup.setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(e.features[0].properties.description)
+        .addTo(beforeMap);
+});
+
+beforeMap.on('mouseleave', 'places', function() {
+    beforeMap.getCanvas().style.cursor = '';
+    popup.remove();
+});
+
+
+// // Transform the short [lat,lng] format in our
+// // data into the {x, y} expected by arc.js.
+// function obj(ll) { return { y: ll[0], x: ll[1] }; }
+
+// for (var i = 0; i < pairs.length; i++) {
+//     // Transform each pair of coordinates into a pretty
+//     // great circle using the Arc.js plugin, as included above.
+//     var generator = new arc.GreatCircle(
+//             obj(pairs[i][0]),
+//             obj(pairs[i][1]));
+//     var line = generator.Arc(100, { offset: 10 });
+//     // Leaflet expects [lat,lng] arrays, but a lot of
+//     // software does the opposite, including arc.js, so
+//     // we flip here.
+//     var newLine = L.polyline(line.geometries[0].coords.map(function(c) {
+//         return c.reverse();
+//     }), {
+//         color: '#fff',
+//         weight: 1,
+//         opacity: 0.5
+//     })
+//     .addTo(afterMap);
+//     var totalLength = newLine._path.getTotalLength();
+//     newLine._path.classList.add('path-start');
+//     // This pair of CSS properties hides the line initially
+//     // See http://css-tricks.com/svg-line-animation-works/
+//     // for details on this trick.
+//     newLine._path.style.strokeDashoffset = totalLength;
+//     newLine._path.style.strokeDasharray = totalLength;
+//     // Offset the timeout here: setTimeout makes a function
+//     // run after a certain number of milliseconds - in this
+//     // case we want each flight path to be staggered a bit.
+//     setTimeout((function(path) {
+//         return function() {
+//             // setting the strokeDashoffset to 0 triggers
+//             // the animation.
+//             path.style.strokeDashoffset = 0;
+//         };
+//     })(newLine._path), i * 100);
+//}
+
+</script>
+
+</body>
+</html>
