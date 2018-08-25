@@ -370,9 +370,9 @@ const bbox = [101.4,2.9,101.5,2.8];
 const cellSide = 50;
 const options = {};
 const hexGrid = turf.hexGrid(bbox, cellSide, options);
-//hexGrid.features.forEach(f => {
-//  f.properties = { density: Math.random();L.geoJson(d, {color:f.properties.fill}).addTo(map); };  
-//});
+hexGrid.features.forEach(f => {
+  f.properties = { density: Math.random()};  
+});
 }
 
 	
