@@ -358,7 +358,7 @@ tin.features.forEach(function(d){
     L.geoJson(d, {color:d.properties.fill}).addTo(map);
 });
 
-const bbox = [-96,31,-84,40];
+const bbox = [101.4,2.9,101.5,2.8];
 const cellSide = 50;
 const options = {};
 const hexGrid = turf.hexGrid(bbox, cellSide, options);
