@@ -49,6 +49,13 @@ var map = L.mapbox.map('map', 'mapbox.streets')
       Streets: L.mapbox.tileLayer('mapbox.streets'),
       Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
       Satellite: L.mapbox.tileLayer('mapbox.satellite'),
+	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+    	layers: 'nexrad-n0r-900913',
+        format: 'image/png',
+        transparent: true,
+        attribution: "Weather data © 2012 IEM Nexrad"
+    }),
+
       Esri : L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg", {
 		maxZoom: 19, attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 	}),
