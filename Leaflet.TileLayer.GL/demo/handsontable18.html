@@ -348,7 +348,7 @@ const hexGrid = turf.hexGrid(bbox, cellSide, options);
 hexGrid.features.forEach(f => {
   f.properties = { density: Math.random() };  
 });
-
+}
 map.on('load', function () {
 
     map.addLayer({
@@ -369,9 +369,6 @@ map.on('load', function () {
         }
     });
 });
-
-}
-
 	
 </script>
 </body>
