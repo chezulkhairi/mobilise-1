@@ -106,7 +106,7 @@ clip();
 var data = [{
     lon: 101.648849,
     lat: 2.798169,
-    //name: 'Kuala Langat Plant',
+    name: 'Kuala Langat Plant',
     type:'Risk',
     priority:1,
     radius: 'medium',
@@ -116,7 +116,7 @@ var data = [{
 }, {
     lon: 101.500457,
     lat: 2.878434,
-    //name: 'Klinik Jenjarom',
+    name: 'Klinik Jenjarom',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -127,7 +127,7 @@ var data = [{
    {
     lon: 101.444691,
     lat: 2.753965,
-    //name: 'Jabatan Pertahanan Awam',
+    name: 'Jabatan Pertahanan Awam',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -138,7 +138,7 @@ var data = [{
    {
     lon: 101.445616,
     lat: 2.749596,
-    //name: 'PPU MORIB',
+    name: 'PPU MORIB',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -149,7 +149,7 @@ var data = [{
    {
     lon: 101.495796,
     lat: 2.803589,
-    //name: 'Genting Sanyen Power',
+    name: 'Genting Sanyen Power',
     type:'Risk',
     priority:1,
     radius: 'large',
@@ -160,7 +160,7 @@ var data = [{
    {
     lon: 101.535794,
     lat: 2.834601,
-    //name: 'PMU BANTING',
+    name: 'PMU BANTING',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -171,7 +171,7 @@ var data = [{
   {
     lon: 101.470576,
     lat: 2.84991,
-    //name: 'Titron Rubber Industries',
+    name: 'Titron Rubber Industries',
     type:'Responder',
     priority:1,
     radius: 'medium',
@@ -182,7 +182,7 @@ var data = [{
             {
     lon: 101.494486,
     lat: 2.80495,
-    //name: 'Police headquarters',
+    name: 'Police headquarters',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -193,7 +193,7 @@ var data = [{
             {
     lon: 101.505857,
     lat: 2.81455,
-    //name: 'Banting Fire Rescue',
+    name: 'Banting Fire Rescue',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -204,7 +204,7 @@ var data = [{
             {
     lon: 101.447245,
     lat: 2.746505,
-    //name: 'Klinik Desa Morib',
+    name: 'Klinik Desa Morib',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -215,7 +215,7 @@ var data = [{
             {
     lon: 101.488591,
     lat: 2.788813,
-    //name: 'Klinik Kanchong Darat',
+    name: 'Klinik Kanchong Darat',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -226,7 +226,7 @@ var data = [{
             {
     lon: 101.444497,
     lat: 2.851134,
-    //name: 'Klinik Kampung Bandar',
+    name: 'Klinik Kampung Bandar',
     type:'Responder',
     priority:1,
     radius: 'small',
@@ -237,7 +237,7 @@ var data = [{
             {
     lon: 103.438050,
     lat: 4.225230,
-    //name: 'Pusat Komuniti Morib',
+    name: 'Pusat Komuniti Morib',
     type:'Assembly',
     priority:1,
     radius: 'small',
@@ -248,7 +248,7 @@ var data = [{
             {
     lon: 101.446250,
     lat: 2.757290,
-    //name: 'Sk Morib',
+    name: 'Sk Morib',
     type:'Assembly',
     priority:1,
     radius: 'small',
@@ -267,21 +267,22 @@ var dataLayer = L.mapbox.featureLayer().addTo(map);
 $("#table").handsontable({
   data: data,
   startRows: 15,
-  startCols: 7,
-  colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
+  startCols: 3,
+  //colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
+colHeaders: ['Type', 'Weightage', 'R_Cost', 'R_Time'],
   columnSorting: true,
   manualColumnMove: true,
   manualRowMove: true,	
-  colWidths: 50,
+  colWidths: 30,
   columns: [
-    {
-      data: 'lon',
-      type: 'numeric'
-    },
-    {
-      data: 'lat',
-      type: 'numeric'
-    },
+    //{
+      //data: 'lon',
+      //type: 'numeric'
+    //},
+    //{
+      //data: 'lat',
+      //type: 'numeric'
+    //},
     //{
     //  data: 'name',
     //},
@@ -290,10 +291,10 @@ $("#table").handsontable({
       editor: 'select',
       selectOptions: ['Responder', 'Risk', 'Assembly']
     },
-    {
-      data: 'priority',
-      type: 'numeric'
-    },
+    //{
+      //data: 'priority',
+      //type: 'numeric'
+    //},
      {
       data: 'radius',
       editor: 'select',
@@ -307,9 +308,9 @@ $("#table").handsontable({
       data: 'R_Time',
       type: 'numeric'
     },
-    {
-      data: 'color'
-    }
+    //{
+      //data: 'color'
+    //}
   ],
   minSpareRows: 1,
   // Everytime the table is changed, update the markers on the map.
@@ -328,7 +329,7 @@ function dataToMarkers() {
       geometry: {
         type: 'Point',
         coordinates: [ data[i].lon, data[i].lat],
-	      draggable: true,
+	draggable: true,
       },
       properties: {
         'marker-size': data[i].radius,
