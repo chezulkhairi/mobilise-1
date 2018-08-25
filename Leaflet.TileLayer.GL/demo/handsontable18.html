@@ -357,6 +357,14 @@ tin.features.forEach(function(d){
     // add each triangle to the map
     L.geoJson(d, {color:d.properties.fill}).addTo(map);
 });
+
+const bbox = [-96,31,-84,40];
+const cellSide = 50;
+const options = {};
+const hexGrid = turf.hexGrid(bbox, cellSide, options);
+hexGrid.features.forEach(f => {
+  f.properties = { density: Math.random();L.geoJson(d, {color:f.properties.fill}).addTo(map); };  
+});
 }
 
 	
