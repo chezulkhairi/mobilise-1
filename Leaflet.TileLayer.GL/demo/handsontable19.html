@@ -55,8 +55,8 @@ var map = L.mapbox.map('map', 'mapbox.streets')
         transparent: true,
         attribution: "Weather data © 2012 IEM Nexrad"
     }),
-    ForestCover2010: L.tileLayer('http://earthengine.google.org/static/hansen_2013/tree_alpha/{z}/{x}/{y}.png').addTo(map),
-    Loss/Extent/Gain(Red/Green/Blue): L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
+    ForestCover2010: L.tileLayer('http://earthengine.google.org/static/hansen_2013/tree_alpha/{z}/{x}/{y}.png'),
+    LossExtentGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
     ForestLoss: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss/{z}/{x}/{y}.png'),
     ForestGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/gain/{z}/{x}/{y}.png'),
 
