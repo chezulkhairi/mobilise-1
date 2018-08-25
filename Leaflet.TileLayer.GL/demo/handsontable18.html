@@ -352,7 +352,7 @@ function dataToMarkers() {
     geojson.features.push({
       type: 'Feature',
       geometry: {
-        type: 'circle',
+        type: 'Point',
 	      //'circle-radius':data[i].radius,
         coordinates: [ data[i].lon, data[i].lat],
 	draggable: true,
