@@ -18,7 +18,7 @@
   left:40px;
   z-index:100;
   font-size: 7px;
-	width:20%;
+	width:15%;
   }
     .range {
   position:absolute;
@@ -345,14 +345,14 @@ function dataToMarkers() {
     geojson.features.push({
       type: 'Feature',
       geometry: {
-        type: 'Point',
+        type: 'circle',
         coordinates: [ data[i].lon, data[i].lat],
 	draggable: true,
       },
       properties: {
         'marker-size': data[i].radius,
         'marker-color': data[i].color,
-        'title': data[i].id+data[i].type+data[i].name,
+        'title': data[i].id+': ' +data[i].type+': '+data[i].name,
         'draggable': true,
       }
     });
@@ -391,7 +391,7 @@ const options = {};
 const hexGrid = turf.hexGrid(bbox, cellSide, options);
 hexGrid.features.forEach(f => {
   f.properties = { density: Math.random()};  
-});
+}).addTo(map);
 }
 
 	
