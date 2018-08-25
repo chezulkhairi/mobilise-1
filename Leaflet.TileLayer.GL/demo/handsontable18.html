@@ -18,7 +18,7 @@
   left:40px;
   z-index:100;
   font-size: 7px;
-	width:40%;
+	width:20%;
   }
     .range {
   position:absolute;
@@ -334,7 +334,7 @@ function dataToMarkers() {
       properties: {
         'marker-size': data[i].radius,
         'marker-color': data[i].color,
-        'title': data[i].type,
+        'title': data[i].type+data[i].name,
         'draggable': true,
       }
     });
