@@ -359,13 +359,13 @@ tin.features.forEach(function(d){
     L.geoJson(d, {color:d.properties.fill}).addTo(map);
 });
 	
-L.geoJson(geojson).addTo(map);
+//L.geoJson(geojson).addTo(map); // ok 
 
-geojson.features.forEach(function(f) {
-  var lat = f.geometry.coordinates[1];
-  var lng = f.geometry.coordinates[0];
-  L.circle([lat,lng], 300).addTo(map);
-});
+//geojson.features.forEach(function(f) { // ok
+//  var lat = f.geometry.coordinates[1];
+//  var lng = f.geometry.coordinates[0];
+//  L.circle([lat,lng], 300).addTo(map);
+//});
 
 const bbox = [101.4,2.9,101.5,2.8];
 const cellSide = 50;
