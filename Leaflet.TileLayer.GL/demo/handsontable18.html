@@ -104,6 +104,7 @@ clip();
 // this copy will be modified in-place.
 // http://handsontable.com/demo/understanding_reference.html
 var data = [{
+	id:1,
     lon: 101.648849,
     lat: 2.798169,
     name: 'Kuala Langat Plant',
@@ -114,6 +115,7 @@ var data = [{
     R_Time:5,
     color: '#c091e6'
 }, {
+	id:2,
     lon: 101.500457,
     lat: 2.878434,
     name: 'Klinik Jenjarom',
@@ -125,6 +127,7 @@ var data = [{
     color: '#fa946e'
 },
    {
+	   id:3,
     lon: 101.444691,
     lat: 2.753965,
     name: 'Jabatan Pertahanan Awam',
@@ -136,6 +139,7 @@ var data = [{
     color: '#fa946e'
 },
    {
+	   id:4,
     lon: 101.445616,
     lat: 2.749596,
     name: 'PPU MORIB',
@@ -147,6 +151,7 @@ var data = [{
     color: '#fa946e'
 },
    {
+	   id:5,
     lon: 101.495796,
     lat: 2.803589,
     name: 'Genting Sanyen Power',
@@ -158,6 +163,7 @@ var data = [{
     color: '#c091e6'
 },
    {
+	   id:6,
     lon: 101.535794,
     lat: 2.834601,
     name: 'PMU BANTING',
@@ -169,6 +175,7 @@ var data = [{
     color: '#fa946e'
 },
   {
+	  id:7,
     lon: 101.470576,
     lat: 2.84991,
     name: 'Titron Rubber Industries',
@@ -180,6 +187,7 @@ var data = [{
     color: '#c091e6'
 },
             {
+		    id:8,
     lon: 101.494486,
     lat: 2.80495,
     name: 'Police headquarters',
@@ -191,6 +199,7 @@ var data = [{
     color: '#fa946e'
 },
             {
+		    id:9,
     lon: 101.505857,
     lat: 2.81455,
     name: 'Banting Fire Rescue',
@@ -202,6 +211,7 @@ var data = [{
     color: '#fa946e'
 },
             {
+		    id:10,
     lon: 101.447245,
     lat: 2.746505,
     name: 'Klinik Desa Morib',
@@ -213,6 +223,7 @@ var data = [{
     color: '#fa946e'
 },
             {
+		    id:11,
     lon: 101.488591,
     lat: 2.788813,
     name: 'Klinik Kanchong Darat',
@@ -224,6 +235,7 @@ var data = [{
     color: '#fa946e'
 },
             {
+		    id:12,
     lon: 101.444497,
     lat: 2.851134,
     name: 'Klinik Kampung Bandar',
@@ -235,6 +247,7 @@ var data = [{
     color: '#fa946e'
 },
             {
+		    id:13,
     lon: 103.438050,
     lat: 4.225230,
     name: 'Pusat Komuniti Morib',
@@ -246,6 +259,7 @@ var data = [{
     color: '#D9E650'
 },
             {
+		    id:14,
     lon: 101.446250,
     lat: 2.757290,
     name: 'Sk Morib',
@@ -269,12 +283,16 @@ $("#table").handsontable({
   startRows: 15,
   startCols: 3,
   //colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
-colHeaders: ['Type', 'Weightage', 'R_Cost', 'R_Time'],
+colHeaders: ['id','Type', 'Weightage', 'R_Cost', 'R_Time'],
   columnSorting: true,
   manualColumnMove: true,
   manualRowMove: true,	
   colWidths: 30,
   columns: [
+	   {
+      data: 'id',
+      type: 'numeric'
+    },
     //{
       //data: 'lon',
       //type: 'numeric'
@@ -334,7 +352,7 @@ function dataToMarkers() {
       properties: {
         'marker-size': data[i].radius,
         'marker-color': data[i].color,
-        'title': data[i].type+data[i].name,
+        'title': data[i].id+data[i].type+data[i].name,
         'draggable': true,
       }
     });
