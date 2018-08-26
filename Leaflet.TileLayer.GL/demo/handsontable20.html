@@ -415,7 +415,7 @@ var pointStyle = {
     style: {
         "color": "#ff7800",
         "weight": 5,
-        "opacity": 0.65
+        "opacity": 1
     }
 }
 
@@ -435,11 +435,11 @@ var crimeGridStyle = {
     style: function style(feature) {
     return {
         fillColor: getColor(feature.properties.z),
-        weight: 2,
+        weight: 5,
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 1
     };
   }
 }
@@ -460,7 +460,7 @@ points.features.forEach(function(d){
 // show the points on the map
 L.geoJson(points, pointStyle).addTo(map);
 
-var cellWidth = 0.5;
+var cellWidth = 1;
 var units = 'kilometers';
 var hexagonGrid = turf.hexGrid(mybbox, cellWidth, units);
 
