@@ -47,7 +47,7 @@ var map = L.mapbox.map('map', 'mapbox.streets')
 	    
     var layers = {
 	    median : L.tileLayer("https://earthengine.googleapis.com/map/472304aaed42c06bfa40920490870303/{z}/{x}/{y}?token=e91868c447e86cd6ce44cb1421dc2ba8", {}),
-       weatherdecisiontechnologies = L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
+       weatherdecisiontechnologies : L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
 	    
 	    Streets: L.mapbox.tileLayer('mapbox.streets'),
       Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
