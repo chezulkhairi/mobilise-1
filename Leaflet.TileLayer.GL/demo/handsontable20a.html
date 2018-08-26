@@ -108,8 +108,33 @@ OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 //  f.properties = { density: Math.random() };  
 //}).addTo(map);;
 
+function loadTurfGrid(pattern, west) {
+  var latMax = 70;
+  var bbox = [west, -latMax, west + 50, latMax]
+  var geojson = turfGrid(pattern, bbox, 500);
+  var propertyNames = ['n1', 'n2', 'n3', 'm1', 'm2', 'm3', 's1', 's2', 's3', 'f1', 'f2', 'f3', ]
+  var gridLayer = L.geoJson(geojson, {
+    style: {
+      weight: 1,
+      fillOpacity: 0
+    }
+  })
 
+  map.addLayer(gridLayer);
+}
 
+function turfGrid(pattern, extent, width) {
+  var units = 'kilometers';
+  if (pattern === 'hex') {
+    return turf.hexGrid(extent, width, units);
+  } else if (pattern === 'triangle') {
+    return turf.triangleGrid(extent, width, units);
+  } else if (pattern === 'point') {
+    return turf.pointGrid(extent, width, units);
+  }
+  return turf.squareGrid(extent, width, units);
+}
+loadTurfGrid('square', 80);
 	
   var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
   layers.Streets.addTo(map);
@@ -390,22 +415,22 @@ function dataToMarkers() {
   dataLayer.setGeoJSON(geojson);
 	
 // create a "z" value for each point
-//geojson.features.forEach(function(d){
- //   d.properties.z = ~~(Math.random() * 9);
-//});
+geojson.features.forEach(function(d){
+   d.properties.z = ~~(Math.random() * 9);
+});
 
 // calculate a tin
-//var tin = turf.tin(geojson, 'z');
+var tin = turf.tin(geojson, 'z');
 
 // add each triangle with the right color
-//tin.features.forEach(function(d){
+tin.features.forEach(function(d){
 //    // create a hex color code from the z values the 3 triangle vertices
-//    d.properties.fill = '#' + d.properties.a +
-//    d.properties.b + d.properties.c;
+    d.properties.fill = '#' + d.properties.a +
+    d.properties.b + d.properties.c;
 
     // add each triangle to the map//
- //   L.geoJson(d, {color:d.properties.fill}).addTo(map);
-//});
+    L.geoJson(d, {color:d.properties.fill}).addTo(map);
+});
 	
 //L.geoJson(geojson).addTo(map); // ok 
 
