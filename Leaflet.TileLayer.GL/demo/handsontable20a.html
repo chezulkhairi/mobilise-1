@@ -43,11 +43,13 @@
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
 var map = L.mapbox.map('map', 'mapbox.streets')
-    .setView([101.4,2.9], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
+    .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
 	    
     var layers = {
 	    median : L.tileLayer("https://earthengine.googleapis.com/map/472304aaed42c06bfa40920490870303/{z}/{x}/{y}?token=e91868c447e86cd6ce44cb1421dc2ba8", {}),
-      Streets: L.mapbox.tileLayer('mapbox.streets'),
+       weatherdecisiontechnologies = L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
+	    
+	    Streets: L.mapbox.tileLayer('mapbox.streets'),
       Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
       Satellite: L.mapbox.tileLayer('mapbox.satellite'),
 	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
@@ -96,6 +98,35 @@ OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 
   };
 
+	const bbox = [-96,31,-84,40];
+const cellSide = 50;
+const options = {};
+const hexGrid = turf.hexGrid(bbox, cellSide, options);
+hexGrid.features.forEach(f => {
+  f.properties = { density: Math.random() };  
+});
+
+map.on('load', function () {
+
+    map.addLayer({
+        'id': 'maine',
+        'type': 'fill',
+        'source': {
+            'type': 'geojson',
+            'data': hexGrid
+        },
+        'layout': {},
+        'paint': {
+            'fill-color': '#088',
+            'fill-opacity': [
+              "interpolate", ["linear"], ["get", "density"],
+              0, 0.3,
+              1, 1
+            ]
+        }
+    });
+});
+	
   var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
   layers.Streets.addTo(map);
   L.control.layers(layers).addTo(map);
