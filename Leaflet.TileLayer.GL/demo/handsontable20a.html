@@ -104,28 +104,9 @@ const options = {};
 const hexGrid = turf.hexGrid(bbox, cellSide, options);
 hexGrid.features.forEach(f => {
   f.properties = { density: Math.random() };  
-});
+}).addTo(map);;
 
-map.on('load', function () {
 
-    map.addLayer({
-        'id': 'maine',
-        'type': 'fill',
-        'source': {
-            'type': 'geojson',
-            'data': hexGrid
-        },
-        'layout': {},
-        'paint': {
-            'fill-color': '#088',
-            'fill-opacity': [
-              "interpolate", ["linear"], ["get", "density"],
-              0, 0.3,
-              1, 1
-            ]
-        }
-    });
-});
 	
   var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
   layers.Streets.addTo(map);
