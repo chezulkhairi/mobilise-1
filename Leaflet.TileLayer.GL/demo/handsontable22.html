@@ -46,22 +46,17 @@ var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
 	    
     var layers = {
-	median : L.tileLayer("https://earthengine.googleapis.com/map/472304aaed42c06bfa40920490870303/{z}/{x}/{y}?token=e91868c447e86cd6ce44cb1421dc2ba8", {}),
-       weatherdecisiontechnologies : L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
-	    
+	median : L.tileLayer("https://earthengine.googleapis.com/map/472304aaed42c06bfa40920490870303/{z}/{x}/{y}?token=e91868c447e86cd6ce44cb1421dc2ba8", {}),	    
 	Streets: L.mapbox.tileLayer('mapbox.streets'),
       Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
       Satellite: L.mapbox.tileLayer('mapbox.satellite'),
-	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
-    	layers: 'nexrad-n0r-900913',
-        format: 'image/png',
-        transparent: true,
-        attribution: "Weather data © 2012 IEM Nexrad"
-    }),
+	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {layers: 'nexrad-n0r-900913',format: 'image/png',transparent: true,attribution: "Weather data © 2012 IEM Nexrad"}),
+	    //weatherdecisiontechnologies : L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
+
     ForestCover2010: L.tileLayer('http://earthengine.google.org/static/hansen_2013/tree_alpha/{z}/{x}/{y}.png'),
-    LossExtentGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
-    ForestLoss: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss/{z}/{x}/{y}.png'),
-    ForestGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/gain/{z}/{x}/{y}.png'),
+    LossExtentGainRGB: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
+    //ForestLoss: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss/{z}/{x}/{y}.png'),
+    //ForestGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/gain/{z}/{x}/{y}.png'),
 
       Esri : L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg", {
 		maxZoom: 19, attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
@@ -109,8 +104,8 @@ OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 //}).addTo(map);;
 
 function loadTurfGrid(pattern, west) {
-  var latMax = 3;
-  var bbox = [west, -latMax, west + 1, latMax]
+  var latMax = 2.9;
+  var bbox = [west, latMax, west + 0.1, latMax+0.1]
   var geojson = turfGrid(pattern, bbox, 500);
   var propertyNames = ['n1', 'n2', 'n3', 'm1', 'm2', 'm3', 's1', 's2', 's3', 'f1', 'f2', 'f3', ]
   var gridLayer = L.geoJson(geojson, {
@@ -388,7 +383,7 @@ colHeaders: ['id','Type', 'Weightage', 'R_Cost', 'R_Time'],
   // Everytime the table is changed, update the markers on the map.
   afterChange: dataToMarkers
 });
-
+var buffered;
 function dataToMarkers() {
   // Create a new geojson object that'll represent the table values.
   var geojson = { type: 'FeatureCollection', features: [] };
@@ -402,7 +397,7 @@ function dataToMarkers() {
         type: 'Point',
 	      //'circle-radius':data[i].radius,
         coordinates: [ data[i].lon, data[i].lat],
-	draggable: true,
+
       },
       properties: {
         'marker-size': data[i].radius,
@@ -411,12 +406,18 @@ function dataToMarkers() {
         'draggable': true,
       }
     });
+	  buffered = turf.buffer(geojson, data[i].radius, {units: 'miles'});
   }
   dataLayer.setGeoJSON(geojson);
+
+
+
+//addToMap
+var addToMap = [geojson, buffered]	
 	
 // create a "z" value for each point
 geojson.features.forEach(function(d){
-   d.properties.z = d.radius; //~~(Math.random() * 9);
+   d.properties.z = ~~d.radius; //(Math.random() * 9); //d.radius
 });
 
 // calculate a tin
