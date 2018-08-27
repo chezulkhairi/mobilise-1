@@ -18,7 +18,7 @@
   left:40px;
   z-index:100;
   font-size: 7px;
-	width:18%;
+	width:17%;
   }
     .range {
   position:absolute;
@@ -109,8 +109,8 @@ OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 //}).addTo(map);;
 
 function loadTurfGrid(pattern, west) {
-  var latMax = 70;
-  var bbox = [west, -latMax, west + 50, latMax]
+  var latMax = 3;
+  var bbox = [west, -latMax, west + 1, latMax]
   var geojson = turfGrid(pattern, bbox, 500);
   var propertyNames = ['n1', 'n2', 'n3', 'm1', 'm2', 'm3', 's1', 's2', 's3', 'f1', 'f2', 'f3', ]
   var gridLayer = L.geoJson(geojson, {
@@ -134,7 +134,7 @@ function turfGrid(pattern, extent, width) {
   }
   return turf.squareGrid(extent, width, units);
 }
-loadTurfGrid('square', 80);
+loadTurfGrid('square', 101);
 	
   var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
   layers.Streets.addTo(map);
