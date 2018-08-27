@@ -41,6 +41,8 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-handsontable/0.10.2/jquery.handsontable.full.min.js'></script>
 
 <script>
+		var OWM_API_KEY = '06aac0fd4ba239a20d824ef89602f311';
+
 L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
 var map = L.mapbox.map('map', 'mapbox.streets')
     .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
@@ -73,6 +75,22 @@ var map = L.mapbox.map('map', 'mapbox.streets')
 	maxZoom: 19,
 	attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 }),
+	    // Get your own free OWM API key at https://www.openweathermap.org/appid - please do not re-use mine!
+	// You don't need an API key for this to work at the moment, but this will change eventually.
+
+	clouds : L.OWM.clouds({opacity: 0.8, legendImagePath: 'files/NT2.png', appId: OWM_API_KEY}),
+	cloudscls : L.OWM.cloudsClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	precipitation : L.OWM.precipitation( {opacity: 0.5, appId: OWM_API_KEY} ),
+	precipitationcls : L.OWM.precipitationClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	rain : L.OWM.rain({opacity: 0.5, appId: OWM_API_KEY}),
+	raincls : L.OWM.rainClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	snow : L.OWM.snow({opacity: 0.5, appId: OWM_API_KEY}),
+	pressure : L.OWM.pressure({opacity: 0.4, appId: OWM_API_KEY}),
+	pressurecntr : L.OWM.pressureContour({opacity: 0.5, appId: OWM_API_KEY}),
+	temp : L.OWM.temperature({opacity: 0.5, appId: OWM_API_KEY}),
+	wind : L.OWM.wind({opacity: 0.5, appId: OWM_API_KEY}),
+	city : L.OWM.current({intervall: 15, imageLoadingUrl: 'leaflet/owmloading.gif', lang: localLang, minZoom: 5,
+			appId: OWM_API_KEY}),
 EsriRelief :L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
 	maxZoom: 13
