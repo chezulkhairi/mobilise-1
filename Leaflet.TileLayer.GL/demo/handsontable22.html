@@ -129,7 +129,7 @@ function turfGrid(pattern, extent, width) {
   }
   return turf.squareGrid(extent, width, units);
 }
-loadTurfGrid('square', 101);
+//loadTurfGrid('square', 101);
 	
   var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
   layers.Streets.addTo(map);
@@ -406,18 +406,18 @@ function dataToMarkers() {
         'draggable': true,
       }
     });
-	  buffered = turf.buffer(geojson, data[i].radius, {units: 'miles'});
+	  //buffered = turf.buffer(geojson, data[i].radius, {units: 'miles'});
   }
   dataLayer.setGeoJSON(geojson);
 
 
 
 //addToMap
-var addToMap = [geojson, buffered]	
+//var addToMap = [geojson, buffered]	
 	
 // create a "z" value for each point
 geojson.features.forEach(function(d){
-   d.properties.z = ~~d.radius; //(Math.random() * 9); //d.radius
+   d.properties.z = ~~(Math.random() * 9); //d.radius
 });
 
 // calculate a tin
