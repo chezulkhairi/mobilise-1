@@ -84,12 +84,15 @@
 <script>
 		//var OWM_API_KEY = '06aac0fd4ba239a20d824ef89602f311';
 
-L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
-var map = L.mapbox.map('map', 'mapbox.streets')
-    .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
+//L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
+//var map = L.mapbox.map('map', 'mapbox.streets')
+//    .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
 	
 	//
-	url = 'banting102.csv';
+L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
+    map = L.mapbox.map('map', 'zetter.i73ka9hn')
+      .fitBounds([[2.978698810547412,101.392822265625],[2.7853097782494216,101.61117553710938]]);
+    url = 'banting102.csv';
     initialSelection = d3.set(['FirstResponder', 'RiskArea']);
     voronoiMap(map, url, initialSelection);
 	//
