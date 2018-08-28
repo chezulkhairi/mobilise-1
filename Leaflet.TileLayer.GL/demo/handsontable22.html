@@ -67,7 +67,7 @@ var map = L.mapbox.map('map', 'mapbox.streets')
       Satellite: L.mapbox.tileLayer('mapbox.satellite'),
 	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {layers: 'nexrad-n0r-900913',format: 'image/png',transparent: true,attribution: "Weather data © 2012 IEM Nexrad"}),
 	    //weatherdecisiontechnologies : L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
-
+	MapBoxWeather : L.tileLayer("https://tileserver.maptiler.com/weather/{z}/{x}/{y}.png"),
     ForestCover2010: L.tileLayer('http://earthengine.google.org/static/hansen_2013/tree_alpha/{z}/{x}/{y}.png'),
     LossExtentGainRGB: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
     //ForestLoss: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss/{z}/{x}/{y}.png'),
