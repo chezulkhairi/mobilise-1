@@ -49,7 +49,7 @@ voronoiMap = function(map, url, initialSelections) {
       .property('checked', function(d) {
         return initialSelections === undefined || initialSelections.has(d.type)
       })
-      .attr("value", function(d) { return d.name; })
+      .attr("value", function(d) { return d.type; })
       .on("change", drawWithLoading);
 
     labels.append("span")
@@ -57,7 +57,7 @@ voronoiMap = function(map, url, initialSelections) {
       .style('background-color', function(d) { return '#' + d.color; });
 
     labels.append("span")
-      .text(function(d) { return d.name; });
+      .text(function(d) { return d.type; });
   }
 
   var selectedTypes = function() {
