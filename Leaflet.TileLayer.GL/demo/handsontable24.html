@@ -108,7 +108,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYq
     map = L.mapbox.map('map', 'zetter.i73ka9hn')
       .fitBounds([[2.978698810547412,101.392822265625],[2.7853097782494216,101.61117553710938]]);
     url = 'ggt.csv';
-    initialSelection = d3.set(['FirstResponder', 'RiskArea']);
+    initialSelection = d3.set(['name', 'priority']);
     voronoiMap(map, url, initialSelection);
 	//
 	    
