@@ -143,7 +143,7 @@ voronoiMap = function(map, url, initialSelections) {
     svgPoints.append("circle")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .style('fill', function(d) { return '#' + d.color } )
-      .attr("r", 2);
+      .attr("r", 0.1);
   }
 
   var mapLayer = {
