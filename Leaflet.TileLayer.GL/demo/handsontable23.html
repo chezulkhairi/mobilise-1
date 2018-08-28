@@ -7,6 +7,10 @@
 <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
 	
+	//
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.3/mapbox.css' rel='stylesheet' />
+	//
+	
 	<link rel="stylesheet" type="text/css" href="leaflet-openweathermap.css" />
 	<script src="leaflet-openweathermap.js"></script>
 	
@@ -24,6 +28,15 @@
   #map { position:absolute; top:0; bottom:0; width:100%; }
 </style>
   <style>
+	  .tog {
+  background:#fff;
+  position:absolute;
+  top:10px;
+  left:40px;
+  z-index:101;
+  font-size: 7px;
+	width:17%;
+  }
 .ui-table.handsontable {
   background:#fff;
   position:absolute;
@@ -53,7 +66,7 @@
     <a href='#' class="show">Choose what supermarkets to display</a>
     <div class='content'>
       <a href='#' class="hide">Hide</a>
-      <div id="toggles">
+      <div id="toggles" class="tog">
       </div>
     </div>
   </div>
@@ -72,7 +85,9 @@
   </div>
 	//
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+	<script src="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
 	<script src="voronoi_map.js"></script>
+	
 	//
 	
 <!-- jQuery is required for this example. -->
