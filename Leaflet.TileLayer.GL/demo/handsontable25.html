@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Editable table controlling marker data</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+	
+	//
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.3/mapbox.css' rel='stylesheet' />
+	//
+	
+	<link rel="stylesheet" type="text/css" href="leaflet-openweathermap.css" />
+	<script src="leaflet-openweathermap.js"></script>
+	
+	
+	//<script src="leaflet/Permalink.Overlay.js"></script>
+	//<script src="leaflet-openweathermap.js"></script>
+	//<link rel="stylesheet" type="text/css" href="leaflet/leaflet-languageselector.css" />
+	//<script src="leaflet/leaflet-languageselector.js"></script>
+	//<script src="files/map_i18n.js"></script>
+	//<script src="files/map.js"></script>
+	
+	
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+  <style>
+	  .tog {
+  background:#fff;
+  position:absolute;
+  top:10px;
+  left:40px;
+  z-index:101;
+  font-size: 7px;
+	width:17%;
+  }
+.ui-table.handsontable {
+  background:#fff;
+  position:absolute;
+  top:10px;
+  left:40px;
+  z-index:100;
+  font-size: 7px;
+	width:17%;
+  }
+    .range {
+  position:absolute;
+  width:100%;
+  }
+</style>
+</head>
+<body>
+
+<script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"></script>
+	
+	
+<div id='table' class='ui-table'></div>
+<div id='map'></div>
+<input id='range' class='range' type='range' min='0' max='1.0' step='any' />
+	
+	//
+	<div id='selections' class="selections">
+    <a href='#' class="show">Choose what supermarkets to display</a>
+    <div class='content'>
+      <a href='#' class="hide">Hide</a>
+      <div id="toggles" class="tog">
+      </div>
+    </div>
+  </div>
+  <div id='loading'>
+  </div>
+  <div id='selected'>
+    <h1>Explore supermarkets in the UK</h1>
+  </div>
+  <div id='about'>
+    <a href='#' class="show">About</a>
+    <p class='content'>
+      Explore UK supermarkets using a voronoi diagram. Created by <a href="http://chriszetter.com">Chris Zetter</a>, powered by data from <a href="http://www.superlocate.net/">SuperLocate</a>, maps copyright
+      <a href='https://www.mapbox.com/about/maps/' target='_blank'>Mapbox and OpenStreetMap</a>.
+      <a href='#' class="hide">Hide</a>
+    </div>
+  </div>
+	//
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+	<script src="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
+	<script src="voronoi_map.js"></script>
+	
+	//
+	
+<!-- jQuery is required for this example. -->
+<script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
+<script src='https://code.jquery.com/jquery-migrate-1.2.1.min.js'></script>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/jquery-handsontable/0.10.2/jquery.handsontable.full.min.css' rel='stylesheet' />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-handsontable/0.10.2/jquery.handsontable.full.min.js'></script>
+
+<script>
+		//var OWM_API_KEY = '06aac0fd4ba239a20d824ef89602f311';
+
+//L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
+//var map = L.mapbox.map('map', 'mapbox.streets')
+//    .setView([2.9,101.4], 11);	//101.4,2.9  //.setView([2.798169,101.648849], 11);
+	
+	//
+L.mapbox.accessToken = 'pk.eyJ1IjoiemV0dGVyIiwiYSI6ImVvQ3FGVlEifQ.jGp_PWb6xineYqezpSd7wA';
+    map = L.mapbox.map('map', 'zetter.i73ka9hn')
+      .fitBounds([[2.978698810547412,101.392822265625],[2.7853097782494216,101.61117553710938]]);
+    url = 'ggt2018z.csv';
+    initialSelection = d3.set(['name', 'priority']);
+    voronoiMap(map, url, initialSelection);
+	//
+	    
+    var layers = {
+	median : L.tileLayer("https://earthengine.googleapis.com/map/472304aaed42c06bfa40920490870303/{z}/{x}/{y}?token=e91868c447e86cd6ce44cb1421dc2ba8", {}),	    
+	Streets: L.mapbox.tileLayer('mapbox.streets'),
+      Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
+      Satellite: L.mapbox.tileLayer('mapbox.satellite'),
+	Weather:L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {layers: 'nexrad-n0r-900913',format: 'image/png',transparent: true,attribution: "Weather data © 2012 IEM Nexrad"}),
+	    //weatherdecisiontechnologies : L.tileLayer('https://api.mapbox.com/v4/weatherdecisiontechnologies.map-liq6plhu/{z}/{x}/{y}.png'),
+	MapBoxWeather : L.tileLayer("https://tileserver.maptiler.com/weather/{z}/{x}/{y}.png"),
+    ForestCover2010: L.tileLayer('http://earthengine.google.org/static/hansen_2013/tree_alpha/{z}/{x}/{y}.png'),
+    LossExtentGainRGB: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss_forest_gain/{z}/{x}/{y}.png'),
+    //ForestLoss: L.tileLayer('http://earthengine.google.org/static/hansen_2013/loss/{z}/{x}/{y}.png'),
+    //ForestGain: L.tileLayer('http://earthengine.google.org/static/hansen_2013/gain/{z}/{x}/{y}.png'),
+
+      Esri : L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg", {
+		maxZoom: 19, attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+	}),
+      OpenInfraMap_Power : L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+	}),
+  OpenInfraMap_Telecom : L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+	maxZoom: 18,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+	}),
+  OpenRailwayMap : L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+}),
+	    // Get your own free OWM API key at https://www.openweathermap.org/appid - please do not re-use mine!
+	// You don't need an API key for this to work at the moment, but this will change eventually.
+
+	//clouds : L.OWM.clouds({opacity: 0.8, legendImagePath: 'files/NT2.png', appId: OWM_API_KEY}),
+	//cloudscls : L.OWM.cloudsClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	//precipitation : L.OWM.precipitation( {opacity: 0.5, appId: OWM_API_KEY} ),
+	//precipitationcls : L.OWM.precipitationClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	//rain : L.OWM.rain({opacity: 0.5, appId: OWM_API_KEY}),
+	//raincls : L.OWM.rainClassic({opacity: 0.5, appId: OWM_API_KEY}),
+	//snow : L.OWM.snow({opacity: 0.5, appId: OWM_API_KEY}),
+	//pressure : L.OWM.pressure({opacity: 0.4, appId: OWM_API_KEY}),
+	//pressurecntr : L.OWM.pressureContour({opacity: 0.5, appId: OWM_API_KEY}),
+	//temp : L.OWM.temperature({opacity: 0.5, appId: OWM_API_KEY}),
+	//wind : L.OWM.wind({opacity: 0.5, appId: OWM_API_KEY}),
+	//city : L.OWM.current({intervall: 15, imageLoadingUrl: 'leaflet/owmloading.gif', lang: localLang, minZoom: 5,appId: OWM_API_KEY}),
+EsriRelief :L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
+	maxZoom: 13
+}),
+EsriTopoMap : L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+}),
+OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	maxZoom: 17,
+	attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+}),
+	OpenStreetMap_HOT : L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+}),
+	baseLayer : L.tileLayer("https://api.tiles.mapbox.com/v4/wri.c974eefc/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid3JpIiwiYSI6IjU3NWNiNGI4Njc4ODk4MmIyODFkYmJmM2NhNDgxMWJjIn0.v1tciCeBElMdpnrikGDrPg", {}),
+	labelLayer : L.tileLayer("https://api.tiles.mapbox.com/v4/wri.acf5a04e/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid3JpIiwiYSI6IjU3NWNiNGI4Njc4ODk4MmIyODFkYmJmM2NhNDgxMWJjIn0.v1tciCeBElMdpnrikGDrPg", {})
+
+  };
+
+	
+
+//const bbox = [-96,31,-84,40];
+//const cellSide = 50;
+//const options = {};
+//const hexGrid = turf.hexGrid(bbox, cellSide, options);
+//hexGrid.features.forEach(f => {
+//  f.properties = { density: Math.random() };  
+//}).addTo(map);;
+
+function loadTurfGrid(pattern, west) {
+  var latMax = 2.9;
+  var bbox = [west, latMax, west + 0.1, latMax+0.1]
+  var geojson = turfGrid(pattern, bbox, 500);
+  var propertyNames = ['n1', 'n2', 'n3', 'm1', 'm2', 'm3', 's1', 's2', 's3', 'f1', 'f2', 'f3', ]
+  var gridLayer = L.geoJson(geojson, {
+    style: {
+      weight: 1,
+      fillOpacity: 0
+    }
+  })
+
+  map.addLayer(gridLayer);
+}
+
+function turfGrid(pattern, extent, width) {
+  var units = 'kilometers';
+  if (pattern === 'hex') {
+    return turf.hexGrid(extent, width, units);
+  } else if (pattern === 'triangle') {
+    return turf.triangleGrid(extent, width, units);
+  } else if (pattern === 'point') {
+    return turf.pointGrid(extent, width, units);
+  }
+  return turf.squareGrid(extent, width, units);
+}
+//loadTurfGrid('square', 101);
+	
+  var overlay = L.mapbox.tileLayer('mapbox.outdoors').addTo(map);
+  layers.Streets.addTo(map);
+  L.control.layers(layers).addTo(map);
+  
+var range = document.getElementById('range');
+
+function clip() {
+  var nw = map.containerPointToLayerPoint([0, 0]),
+      se = map.containerPointToLayerPoint(map.getSize()),
+      clipX = nw.x + (se.x - nw.x) * range.value;
+
+  overlay.getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+}
+
+range['oninput' in range ? 'oninput' : 'onchange'] = clip;
+map.on('move', clip);
+clip();
+
+// Handsontable changes this data by reference, so when it is edited,
+// this copy will be modified in-place.
+// http://handsontable.com/demo/understanding_reference.html
+var data = [{
+        "id": 1,
+        "name": "Pos PGA PDRM Tanjung Layang",
+        "type": "firstreposnder",
+        "priority": 5,
+        "radius": "large",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4878149,
+         "lat": 2.6898823,
+    color: '#fa946e'
+},{
+        "id": 2,
+        "name": "Balai Polis Banting",
+        "type": "firstreposnder",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4939241,
+         "lat": 2.8051208,
+    color: '#fa946e'
+    },
+    {
+        "id": 3,
+        "name": "Aes Camera Dengkil",
+        "type": "firstreposnder",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 3,
+        "lon":101.6383081,
+         "lat":  2.8684083,
+    color: '#fa946e'
+    },
+    {
+        "id": 4,
+        "name": "Jenjarom Police Station",
+        "type": "firstreposnder",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4986113,
+         "lat":   2.8760219,
+    color: '#fa946e'
+    },
+    {
+        "id": 5,
+        "name": "Hospital Banting",
+        "type": "firstreposnder",
+        "priority": 5,
+        "radius": "large",
+        "R_Time": 2,
+        "R_Cost": 2,
+        "lon": 101.492443,
+         "lat":   2.8033724,
+    color: '#fa946e'
+    },
+    {
+        "id": 6,
+        "name": "Klinik Kesihatan Bukit Changgang",
+        "type": "firstreposnder",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 2,
+        "R_Cost": 1,
+        "lon": 101.62,
+          "lat":  2.82731,
+    color: '#fa946e'
+    },
+    {
+        "id": 7,
+        "name": "Banting Fire and Rescue Station",
+        "type": "firstreposnder",
+        "priority": 5,
+        "radius": "large",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.5058569,
+         "lat":  2.8145504,
+    color: '#fa946e'
+    },
+    {
+        "id": 8,
+        "name": "Pmu Olak Lempit",
+        "type": "substation",
+        "priority": 1,
+        "radius": "medium",
+        "R_Time": 1,
+        "R_Cost": 5,
+        "lon": 101.5790202,
+         "lat":  2.8460588,
+    color: '#c091e6'
+    },
+    {
+        "id": 9,
+        "name": "PMU BANTING",
+        "type": "substation",
+        "priority": 1,
+        "radius": "medium",
+        "R_Time": 1,
+        "R_Cost": 5,
+        "lon": 101.5357937,
+         "lat":  2.8346014,
+    color: '#c091e6'
+    },
+    {
+        "id": 10,
+        "name": "Genting Sanyen Power Sdn Bhd",
+        "type": "substation",
+        "priority": 5,
+        "radius": "large",
+        "R_Time": 3,
+        "R_Cost": 5,
+        "lon": 101.495796,
+         "lat":  2.803589,
+    color: '#c091e6'
+    },
+    {
+        "id": 11,
+        "name": "PPU MORIB",
+        "type": "substation",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4456159,
+          "lat": 2.7495956,
+    color: '#c091e6'
+    },
+    {
+        "id": 12,
+        "name": "Petron Banting",
+        "type": "risk",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 3,
+        "R_Cost": 4,
+        "lon": 101.50329,
+         "lat": 2.81336,
+    color: '#c091e6'
+    },
+    {
+        "id": 13,
+        "name": "Eng Hong Palm Oil Mill Sdn Bhd",
+        "type": "risk",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 3,
+        "R_Cost": 5,
+        "lon": 101.4766976,
+         "lat": 2.8598597,
+    color: '#c091e6'
+    },
+    {
+        "id": 14,
+        "name": "Soon Lee Huat Palm Oil Mill Sdn. Bhd.",
+        "type": "risk",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 3,
+        "R_Cost": 5,
+        "lon": 101.488188,
+         "lat": 2.793948,
+    color: '#c091e6'
+    },
+    {
+        "id": 15,
+        "name": "Yuwang Palm Oil Mill Sdn. Bhd.",
+        "type": "risk",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 3,
+        "R_Cost": 4,
+        "lon": 101.535649,
+          "lat":2.824528,
+    color: '#c091e6'
+    },
+    {
+        "id": 16,
+        "name": "Pusat Komuniti Taman Seri Bayu Morib",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4452348,
+         "lat": 2.750329,
+    color: '#D9E650'
+    },
+    {
+        "id": 17,
+        "name": "Pusat Pemulihan Dalam Komuniti (PDK) Telok Datok",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.5226641,
+          "lat": 2.8172589,
+    color: '#D9E650'
+    },
+    {
+        "id": 18,
+        "name": "Balai Raya Simpang Sg. Raba, Kampung Seri Jugra",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "medium",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.4488664,
+         "lat": 2.8179561,
+    color: '#D9E650'
+    },
+    {
+        "id": 19,
+        "name": "Pusat Jalur Lebar Komuniti",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 3,
+        "R_Cost": 3,
+        "lon": 101.4963935,
+         "lat": 2.7760371,
+    color: '#D9E650'
+    },
+    {
+        "id": 20,
+        "name": "Pusat Komuniti Taman Kemuning",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "small",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.499606,
+         "lat": 2.803854,
+    color: '#D9E650'
+    },
+    {
+        "id": 21,
+        "name": "Balai Raya Teluk Bunut",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "medium",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon": 101.5103909,
+         "lat": 2.822184,
+    color: '#D9E650'
+    },
+    {
+        "id": 22,
+        "name": "Balai Raya Lama Kampung Olak Lempit, Jalan Banting",
+        "type": "assembly",
+        "priority": 1,
+        "radius": "medium",
+        "R_Time": 1,
+        "R_Cost": 1,
+        "lon":101.594428,
+         "lat": 2.835534,
+    color: '#D9E650'
+},
+           ];
+
+// Create the layer that will contain these markers: this is used in the
+// dataToMarkers function below with .setGeoJSON to update marker data.
+var dataLayer = L.mapbox.featureLayer().addTo(map);
+
+// Create the table: see full documentation for this call at
+// http://handsontable.com/index.html
+$("#table").handsontable({
+  data: data,
+  startRows: 23,
+  startCols: 3,
+  //colHeaders: ['Lon', 'Lat', 'Type', 'Priority', 'Radius', 'R_Cost', 'R_Time','Color'],
+colHeaders: ['id','Type', 'Weightage', 'R_Cost', 'R_Time'],
+  columnSorting: true,
+  manualColumnMove: true,
+  manualRowMove: true,	
+  colWidths: 30,
+  columns: [
+	   {
+      data: 'id',
+      type: 'numeric'
+    },
+    //{
+      //data: 'lon',
+      //type: 'numeric'
+    //},
+    //{
+      //data: 'lat',
+      //type: 'numeric'
+    //},
+    //{
+    //  data: 'name',
+    //},
+    {
+      data: 'type',
+      editor: 'select',
+      selectOptions: ['Responder', 'Risk', 'Assembly']
+    },
+    //{
+      //data: 'priority',
+      //type: 'numeric'
+    //},
+     {
+      data: 'radius',
+      editor: 'select',
+      selectOptions: ['small', 'medium', 'large']
+    },
+    {
+      data: 'R_Cost',
+      type: 'numeric'
+    },
+    {
+      data: 'R_Time',
+      type: 'numeric'
+    },
+    //{
+      //data: 'color'
+    //}
+  ],
+  minSpareRows: 1,
+  // Everytime the table is changed, update the markers on the map.
+  afterChange: dataToMarkers
+});
+var buffered;
+function dataToMarkers() {
+  // Create a new geojson object that'll represent the table values.
+  var geojson = { type: 'FeatureCollection', features: [] };
+  // For each table row, create a marker.
+  for (var i = 0; i < data.length; i++) {
+    // Blank rows shouldn't be included - they're easy to detect and skip.
+    if (data[i].lon === null || data[i].lat === null) continue;
+    geojson.features.push({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+	      //'circle-radius':data[i].radius,
+        coordinates: [ data[i].lon, data[i].lat],
+
+      },
+      properties: {
+        'marker-size': data[i].radius,
+        'marker-color': data[i].color,
+        'title': data[i].id+data[i].type+data[i].name,
+        'draggable': true,
+      }
+    });
+	  //buffered = turf.buffer(geojson, data[i].radius, {units: 'miles'});
+  }
+  dataLayer.setGeoJSON(geojson);
+
+
+
+//addToMap
+//var addToMap = [geojson, buffered]	
+	
+// create a "z" value for each point
+geojson.features.forEach(function(d){
+   d.properties.z = ~~(Math.random() * 9); //d.radius
+});
+
+// calculate a tin
+var tin = turf.tin(geojson, 'z');
+
+// add each triangle with the right color
+tin.features.forEach(function(d){
+//    // create a hex color code from the z values the 3 triangle vertices
+    d.properties.fill = '#' + d.properties.a +
+    d.properties.b + d.properties.c;
+
+    // add each triangle to the map//
+    L.geoJson(d, {color:d.properties.fill}).addTo(map);
+});
+L.geoJson(geojson, {
+    onEachFeature: function (feature, layer) {
+        layer.bindLabel(feature.properties.name, {noHide: true});
+    }
+}).addTo(map);	
+//L.geoJson(geojson).addTo(map); // ok 
+
+
+	
+}
+
+	
+</script>
+</body>
+</html>
