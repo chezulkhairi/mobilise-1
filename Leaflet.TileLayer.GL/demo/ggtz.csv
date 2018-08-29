@@ -1,0 +1,23 @@
+id,name,type,RecoveryCapacity,RecoveryTime,RecoveryCost,priority,radius,lon,lat
+1,Pos PGA PDRM Tanjung Layang,firstreposnder,1,1,1,5,large,101.4878149,2.6898823
+2,Balai Polis Banting,firstreposnder,1,1,1,1,small,101.4939241,2.8051208
+3,Aes Camera Dengkil,firstreposnder,1,1,3,1,small,101.6383081,2.8684083
+4,Jenjarom Police Station,firstreposnder,1,1,1,1,small,101.4986113,2.8760219
+5,Hospital Banting,firstreposnder,2,2,2,5,large,101.492443,2.8033724
+6,Klinik Kesihatan Bukit Changgang,firstreposnder,2,2,1,1,small,101.62,2.82731
+7,Banting Fire and Rescue Station,firstreposnder,1,1,1,5,large,101.5058569,2.8145504
+8,Pmu Olak Lempit,substation,1,1,5,1,medium,101.5790202,2.8460588
+9,PMU BANTING,substation,1,1,5,1,medium,101.5357937,2.8346014
+10,Genting Sanyen Power Sdn Bhd,substation,3,3,5,5,large,101.495796,2.803589
+11,PPU MORIB,substation,1,1,1,1,small,101.4456159,2.7495956
+12,Petron Banting,risk,3,3,4,1,small,101.50329,2.81336
+13,Eng Hong Palm Oil Mill Sdn Bhd,risk,3,3,5,1,small,101.4766976,2.8598597
+14,Soon Lee Huat Palm Oil Mill Sdn. Bhd.,risk,3,3,5,1,small,101.488188,2.793948
+15,Yuwang Palm Oil Mill Sdn. Bhd.,risk,3,3,4,1,small,101.535649,2.824528
+16,Pusat Komuniti Taman Seri Bayu Morib,assembly,1,1,1,1,small,101.4452348,2.750329
+17,Pusat Pemulihan Dalam Komuniti (PDK) Telok Datok,assembly,1,1,1,1,small,101.5226641,2.8172589
+18,"Balai Raya Simpang Sg. Raba, Kampung Seri Jugra",assembly,1,1,1,1,medium,101.4488664,2.8179561
+19,Pusat Jalur Lebar Komuniti,assembly,3,3,3,1,small,101.4963935,2.7760371
+20,Pusat Komuniti Taman Kemuning,assembly,1,1,1,1,small,101.499606,2.803854
+21,Balai Raya Teluk Bunut,assembly,1,1,1,1,medium,101.5103909,2.822184
+22,"Balai Raya Lama Kampung Olak Lempit, Jalan Banting",assembly,1,1,1,1,medium,101.594428,2.835534
