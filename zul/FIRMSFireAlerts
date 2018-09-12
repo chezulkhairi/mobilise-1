@@ -1,0 +1,15 @@
+// Showing counts of high-confidence FIRMS fire alerts
+
+var firms = ee.ImageCollection('FIRMS');
+var firms2011 = firms.filterDate('2011-01-01', '2011-12-31');
+
+
+var confidenceFunction = function(image) {
+  var highValue = image.select(['confidence']).gt(50);
+  return highValue.mask(highValue);
+};
+
+
+var confidentFirms2011 = firms2011.map(confidenceFunction);
+var countImage = confidentFirms2011.count();
+Map.addLayer(countImage, {min:0, max:10}, "High confidence FIRMS counts in 2011");

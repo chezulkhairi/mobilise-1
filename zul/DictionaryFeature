@@ -1,0 +1,31 @@
+// Make a feature and set some properties.
+var feature = ee.Feature(ee.Geometry.Point([-122.22599, 37.17605]))
+  .set('genus', 'Sequoia').set('species', 'sempervirens');
+
+// Get a property from the feature.
+var species = feature.get('species');
+print(species);
+
+// Set a new property.
+feature = feature.set('presence', 1);
+
+// Overwrite the old properties with a new dictionary.
+var newDict = {genus: 'Brachyramphus', species: 'marmoratus'};
+var feature = feature.set(newDict);
+
+// Check the result.
+print(feature);
+
+
+
+//////////////////////////////////////////////////////////////
+
+// Create a dictionary of properties, some of which may be computed values.
+var dict = {foo: ee.Number(8).add(88), bar: 'nihao'};
+
+// Create a null geometry feature with the dictionary of properties.
+var nowhereFeature = ee.Feature(null, dict);
+      
+
+      
+      

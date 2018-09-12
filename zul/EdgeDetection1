@@ -1,0 +1,57 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            101.50217056274414,
+            2.812057012206429
+          ]
+        },
+        {
+          "type": "LineString",
+          "coordinates": [
+            [
+              101.40439499169588,
+              2.9928436580488245
+            ],
+            [
+              101.40466589480639,
+              2.992842653592342
+            ]
+          ],
+          "geodesic": true
+        }
+      ],
+      "coordinates": []
+    });
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Load a Landsat 8 image, select the panchromatic band.
+var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select('B8');
+Map.addLayer(image, {max: 12000});
+
+// Define a "fat" Gaussian kernel.
+var fat = ee.Kernel.gaussian({
+  radius: 3,
+  sigma: 3,
+  units: 'pixels',
+  normalize: true,
+  magnitude: -1
+});
+
+// Define a "skinny" Gaussian kernel.
+var skinny = ee.Kernel.gaussian({
+  radius: 3,
+  sigma: 1,
+  units: 'pixels',
+  normalize: true,
+});
+
+// Compute a difference-of-Gaussians (DOG) kernel.
+var dog = fat.add(skinny);
+
+// Compute the zero crossings of the second derivative, display.
+var zeroXings = image.convolve(dog).zeroCrossing();
+Map.setCenter(-122.054, 37.7295, 10);
+Map.addLayer(zeroXings.updateMask(zeroXings), {palette: 'FF0000'}, 'zero crossings');

@@ -1,0 +1,59 @@
+// Load a FeatureCollection from a Fusion Table: 'global 200' ecoregions.
+var g200 = ee.FeatureCollection('ft:11SfWB6oBS1iWGiQxEOqF_wUgBJL7Bux-pWU-mqd5');
+
+// Display as default and with a custom color.
+Map.addLayer(g200, {}, 'default display');
+Map.addLayer(g200, {color: 'FF0000'}, 'colored');
+    
+    
+Map.addLayer(g200.draw({color: '006600', strokeWidth: 5}), {}, 'drawn');
+    
+///////////////////////////////////////////////////////////////////////////////
+    
+// Create an empty image into which to paint the features, cast to byte.
+var empty = ee.Image().byte();
+
+// Paint all the polygon edges with the same number and width, display.
+var outline = empty.paint({
+  featureCollection: g200,
+  color: 1,
+  width: 3
+});
+Map.addLayer(outline, {palette: 'FF0000'}, 'edges');
+
+
+///////////////////////////////////
+
+// Paint the edges with different colors, display.
+var outlines = empty.paint({
+  featureCollection: g200,
+  color: 'G200_NUM',
+  width: 4
+});
+var palette = ['FF0000', '00FF00', '0000FF'];
+Map.addLayer(outlines, {palette: palette}, 'different color edges');
+    
+    
+////////////////////////////////////
+// Paint the edges with different colors and widths.
+var outlines = empty.paint({
+  featureCollection: g200,
+  color: 'G200_NUM',
+  width: 'G200_BIOME'
+});
+Map.addLayer(outlines, {palette: palette}, 'different color, width edges');
+    
+/////////////////////////////////////
+// Paint the interior of the polygons with different colors.
+var fills = empty.paint({
+  featureCollection: g200,
+  color: 'G200_NUM',
+});
+Map.addLayer(fills, {palette: palette}, 'colored fills');
+    
+/////////////////////////////////////////
+// Paint both the fill and the edges.
+var filledOutlines = empty.paint(g200, 'G200_NUM').paint(g200, 0, 2);
+Map.addLayer(filledOutlines, {palette: ['000000'].concat(palette)}, 'edges and fills');
+    
+    

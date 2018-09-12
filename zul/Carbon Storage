@@ -1,0 +1,83 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var npp = ee.ImageCollection("MODIS/006/MOD17A3H"),
+    gpp = ee.ImageCollection("MODIS/006/MYD17A2H");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://mygeoblog.com/2016/11/02/calculate-carbon-storage-forin-a-watershed/#more-1195
+// Carbon Storage
+
+
+// import the sub basins as a fusion table
+var Da = ee.FeatureCollection('ft:15ytieQkq3UH8DPJPFmB_YnbvhSEhOQLtLIXa6kxA').geometry();
+
+// set location and zoom level
+Map.centerObject(Da,6);
+
+// add the layer
+Map.addLayer(Da,false,"The Da basin");
+
+
+// Define period 
+var startdate = ee.Date.fromYMD(2006,1,1);
+var enddate = ee.Date.fromYMD(2006,12,31);
+
+// filter npp
+var nppCollection = npp.filterDate(startdate, enddate)
+                       .filterBounds(Da)
+                       .select("Npp");
+// filter gpp                       
+var gppCollection = gpp.filterDate(startdate, enddate)
+                       .filterBounds(Da)
+                       .select("Gpp");
+
+
+// calculate the npp8
+var myNpp = function(myimg){
+     // get date
+     var d = ee.Date(myimg.get('system:time_start'))
+     // get year
+     var y = d.get('year').toInt();
+     
+     // filter for year for GPP and NPP
+     var GPPy = ee.Image(gppCollection.filter(ee.Filter.calendarRange(y, y, 'year')).sum());
+     var NPPy = ee.Image(nppCollection.filter(ee.Filter.calendarRange(y, y, 'year')).mean());
+     var npp8 = myimg.expression('(GGP8 / GPPy) * NPPy', 
+    {
+        GGP8: myimg,
+        GPPy: GPPy,
+        NPPy: NPPy
+    });
+     
+     // multiply with scale factor
+     npp8 = npp8.multiply(0.0001);
+  
+  return npp8.copyProperties(myimg,['system:time_start'])
+}
+
+  var npp8Collection = ee.ImageCollection(gppCollection.map(myNpp));
+
+// create vizualtion settings 
+var npp_viz = {min:0.0, max:2, palette:"ff0000,f0ff00,004717"};
+
+// add the image
+Map.addLayer(npp8Collection.sum().clip(Da),npp_viz,"npp")
+
+// Predefine the chart titles.
+var title = {
+  title: 'C storage over time',
+  hAxis: {title: 'Time'},
+  vAxis: {title: 'Amount of C (kg/m2)'},
+};
+
+print(npp8Collection)
+ 
+// print the chart
+print(Chart.image.seriesByRegion(npp8Collection,
+                                 Da,
+                                ee.Reducer.mean(),
+                                'Gpp',
+                                500,
+                                'system:time_start',
+                                'PROJECT').setOptions(title));
+                                
+var catchment_area = Da.area().divide(1000 * 1000);
+print('Da Catchment area (km2)', catchment_area); 

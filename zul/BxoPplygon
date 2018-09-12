@@ -1,0 +1,13 @@
+// Create a geodesic polygon.
+var polygon = ee.Geometry.Polygon([
+  [[-5, 40], [65, 40], [65, 60], [-5, 60], [-5, 60]]
+]);
+
+// Compute a buffer of the polygon.
+var buffer = polygon.buffer(1000000);
+
+// Compute the centroid of the polygon.
+var centroid = polygon.centroid();
+Map.addLayer(buffer, {}, 'buffer');
+Map.addLayer(centroid, {}, 'centroid');
+    

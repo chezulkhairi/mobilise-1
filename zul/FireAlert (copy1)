@@ -1,0 +1,114 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(),
+    roi = /* color: #98ff00 */ee.Geometry.Point([101.502685546875, 2.8148002836743853]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Comparing SAD, FORMA, and UMD  
+// https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+// https://www.google.com/fusiontables/DataSource?docid=1Tc47H7gsJYCNIR9Zz-74QP5AuQFmK9aUQdR28ul9
+// 1Tc47H7gsJYCNIR9Zz-74QP5AuQFmK9aUQdR28ul9
+var fc = ee.FeatureCollection('ft:13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI');
+print(fc)
+var Crisis = fc.filterMetadata('Type', 'equals', 'Crisis');
+//Map.addLayer(Crisis, {min:0, max:4, palette:'green, blue, black, cyan, white'}, 'Crisis');
+var FirstResponder = fc.filterMetadata('Type', 'equals', 'FirstResponder');
+//Map.addLayer(FirstResponder, {min:0, max:4, palette:'green, blue, black, cyan, white'}, 'FirstResponder');
+
+Map.addLayer(Crisis, {color: 'FF00FF'}, 'Crisis',true);
+Map.addLayer(FirstResponder, {color: 'FF0000'}, 'FirstResponder',true);
+
+var start = new Date('2011-01-01').getTime() / 1000;
+var end = new Date('2011-12-31').getTime() / 1000;
+var region = ee.Geometry.Rectangle(-59.81163, -9.43348, -59.27561, -9.22818);
+
+// Load up FORMA and get 2011
+var forma = ee.Image('FORMA/FORMA_500m');
+forma = forma.gte(start).and(forma.lte(end));
+//forma = forma.clip(region);
+
+// Load up SAD and get 2011
+var sad = ee.FeatureCollection('ft:12o809OPJe4E5JAhFDPoSYKdO6TDuIsUItbqzbk0');
+sad = sad.filterMetadata('date', 'greater_than', start * 1000);
+sad = sad.filterMetadata('date', 'less_than', end * 1000);
+sad= sad.filterBounds(region);
+sad = ee.Image(0).mask(0).int().paint(sad, 1);
+
+// Load up Hansen/UMD/Google/NASA/USGS Global Forest Change
+// and get change in 2011
+var gfc = ee.Image('UMD/hansen/global_forest_change_2013');//).clip(region);
+var gfc = gfc.select(['lossyear']).eq(11);
+
+var gfc_sad = gfc.eq(1).and(sad.eq(1));
+var gfc_forma = gfc.eq(1).and(forma.eq(1));
+var forma_sad = forma.eq(1).and(sad.eq(1));
+
+var gfc_forma_sad = gfc.eq(1).and(forma.eq(1).and(sad.eq(1)));
+
+Map.addLayer(forma.mask(forma), {palette:["00FF00"]}, 'Forma (green)');
+Map.addLayer(sad, {palette:'0000FF'}, 'SAD (blue)');
+Map.addLayer(gfc.mask(gfc), {palette:'FF0000'}, 'Hansen (red)');
+
+Map.addLayer(gfc_forma.mask(gfc_forma), {palette:'FFFF00'}, "Hansen & FORMA (yellow)");
+Map.addLayer(gfc_sad.mask(gfc_sad), {palette:'FF00FF'}, "Hansen & SAD (magenta)");
+Map.addLayer(forma_sad.mask(forma_sad), {palette:'00FFFF'}, "FORMA & SAD (cyan)");
+
+Map.addLayer(gfc_forma_sad.mask(gfc_forma_sad), {palette:'FFFFFF'}, "HANSEN & FORMA & SAD (white)");
+//Map.setCenter( -59.58813,-9.36439, 11);
+
+
+Map.centerObject(roi, 6);
+
+// Showing counts of high-confidence FIRMS fire alerts
+
+var firms = ee.ImageCollection('FIRMS');
+var firms2011 = firms.filterDate('2011-01-01', '2011-12-31');
+
+
+var confidenceFunction = function(image) {
+  var highValue = image.select(['confidence']).gt(50);
+  return highValue.mask(highValue);
+};
+
+
+var confidentFirms2011 = firms2011.map(confidenceFunction);
+var countImage = confidentFirms2011.count();
+Map.addLayer(countImage, {min:0, max:10}, "High confidence FIRMS counts in 2011");
+
+
+/////////////////////////////////////////////////////////
+/////// VULNERABILITY TO PUBLIC /////////////////////////
+// Load a Japan boundary from a Fusion Table.
+var banting = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  .filter(ee.Filter.eq('Country', 'Malaysia'));
+
+// Load a 2012 nightlights image, clipped to the Japan border.
+var nl2012 = ee.Image('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012')
+  .select('stable_lights')
+  .clipToCollection(banting);
+
+// Define arbitrary thresholds on the 6-bit nightlights image.
+var zones = nl2012.gt(30).add(nl2012.gt(55)).add(nl2012.gt(62));
+zones = zones.updateMask(zones.neq(0));
+
+// Convert the zones of the thresholded nightlights to vectors.
+var vectors = zones.addBands(nl2012).reduceToVectors({
+  geometry: banting,
+  crs: nl2012.projection(),
+  scale: 1000,
+  geometryType: 'polygon',
+  eightConnected: false,
+  labelProperty: 'zone',
+  reducer: ee.Reducer.mean()
+});
+
+// Display the thresholds.
+//Map.setCenter(139.6225, 35.712, 9);
+Map.addLayer(zones, {min: 1, max: 3, palette: ['0000FF', '00FF00', 'FF0000'],opacity: 0.23}, 'raster',false);
+
+// Make a display image for the vectors, add it to the map.
+var display = ee.Image(0).updateMask(0).paint(vectors, '000000', 3);
+Map.addLayer(display, {palette: '000000',opacity: 0.25}, 'vectors',false);
+    
+
+
+/////////////////////////////////////////////////////////
+/////// VULNERABILITY TO PUBLIC /////////////////////////

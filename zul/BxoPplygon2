@@ -1,0 +1,67 @@
+// Create a geodesic polygon.
+var polygon = ee.Geometry.Polygon([
+  [[-5, 40], [65, 40], [65, 60], [-5, 60], [-5, 60]]
+]);
+
+// Compute a buffer of the polygon.
+var buffer = polygon.buffer(1000000);
+
+// Compute the centroid of the polygon.
+var centroid = polygon.centroid();
+Map.addLayer(buffer, {}, 'buffer');
+Map.addLayer(centroid, {}, 'centroid');
+Map.setCenter(101.50638, 2.81223, 10);
+
+
+///////////////////////////////
+
+
+// Create a right-inside polygon.
+var holePoly = ee.Geometry.Polygon({
+  coords: [
+    [[-35, -10], [-35, 10], [35, 10], [35, -10], [-35, -10]]
+  ],
+  evenOdd: false
+});
+
+// Create an even-odd version of the polygon.
+var evenOddPoly = ee.Geometry({
+  geoJson: holePoly,
+  evenOdd: true
+});
+
+// Create a point to test the insideness of the polygon.
+var pt = ee.Geometry.Point([1.5, 1.5]);
+
+// Check insideness with a contains operator.
+print(holePoly.contains(pt));       // false
+print(evenOddPoly.contains(pt));    // true
+
+/////////////////////////////////////////
+
+// Create two circular geometries.
+var poly1 = ee.Geometry.Point([-50, 30]).buffer(1e6);
+var poly2 = ee.Geometry.Point([-40, 30]).buffer(1e6);
+
+// Display polygon 1 in red and polygon 2 in blue.
+Map.setCenter(-45, 30);
+Map.addLayer(poly1, {color: 'FF0000'}, 'poly1');
+Map.addLayer(poly2, {color: '0000FF'}, 'poly2');
+
+// Compute the intersection, display it in blue.
+var intersection = poly1.intersection(poly2, ee.ErrorMargin(1));
+Map.addLayer(intersection, {color: '00FF00'}, 'intersection');
+
+// Compute the union, display it in magenta.
+var union = poly1.union(poly2, ee.ErrorMargin(1));
+Map.addLayer(union, {color: 'FF00FF'}, 'union');
+
+// Compute the difference, display in yellow.
+var diff1 = poly1.difference(poly2, ee.ErrorMargin(1));
+Map.addLayer(diff1, {color: 'FFFF00'}, 'diff1');
+
+// Compute symmetric difference, display in black.
+var symDiff = poly1.symmetricDifference(poly2, ee.ErrorMargin(1));
+Map.addLayer(symDiff, {color: '000000'}, 'symmetric difference');
+    
+    

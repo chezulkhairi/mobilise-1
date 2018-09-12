@@ -1,0 +1,4 @@
+var serverBoolean=true
+var serverConditional = ee.Algorithms.If(serverBoolean, 'True!', 'False!');
+print('Should be false:', serverConditional);  // False!
+    

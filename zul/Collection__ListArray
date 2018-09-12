@@ -1,0 +1,11 @@
+// var listOfImages = myCollection.toList(myCollection.size());
+// var img1 = listOfImages[0];
+// var img2 = listOfImages[1];
+
+///////////////////////////////////////////
+
+// var listOfImages = myCollection.toList(myCollection.size());
+// var firstImage = listOfImages.get(0)
+// var secondImage = listOfImages.get(1)
+// var lastImage = listOfImages.get(listOfImages.length().subtract(1))
+

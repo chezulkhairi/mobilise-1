@@ -1,0 +1,28 @@
+// Load the primary collection: a California polygon.
+var cali = ee.FeatureCollection('ft:1fRY18cjsHzDgGiJiS2nnpUU3v9JPDc2HNaR7Xk8')
+  .filter(ee.Filter.eq('Name', 'California'));
+
+// Load the secondary collection: WRS-2 polygons.
+var wrs = ee.FeatureCollection('ft:1_RZgjlcqixp-L9hyS6NYGqLaKOlnhSC35AB5M5Ll');
+
+// Define a spatial filter as geometries that intersect.
+var spatialFilter = ee.Filter.intersects({
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a save all join.
+var saveAllJoin = ee.Join.saveAll({
+  matchesKey: 'scenes',
+});
+
+// Apply the join.
+var intersectJoined = saveAllJoin.apply(cali, wrs, spatialFilter);
+
+// Get the result and display it.
+var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
+Map.centerObject(cali);
+Map.addLayer(intersected, {}, 'WRS-2 polygons');
+Map.addLayer(cali, {color: 'FF0000'}, 'California polygon');
+    

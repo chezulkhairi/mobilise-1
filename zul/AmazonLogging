@@ -1,0 +1,26 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(),
+    region = /* color: #a19990 */ee.Geometry.Polygon(
+        [[[-60.59888978593659, -12.408179558784587],
+          [-56.43998677533858, -12.11930027345761],
+          [-56.37663092161483, -9.086159589468245],
+          [-61.20887586875847, -8.96464542125995]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var start = new Date('2011-01-01').getTime();
+var end = new Date('2011-12-31').getTime();
+//var region = ee.Geometry.Rectangle(-59.81163, -9.43348, -59.27561,-9.22818);
+
+// Load up SAD and get 2011
+var sad = ee.FeatureCollection('ft:12o809OPJe4E5JAhFDPoSYKdO6TDuIsUItbqzbk0');
+var sad2011 = sad.filterMetadata('date', 'greater_than', start);
+sad2011 = sad2011.filterMetadata('date', 'less_than', end);
+
+// Find just the polygons that intersect the region of interest and display them
+sad2011 = sad2011.filterBounds(region);
+Map.addLayer(sad2011, {'color':'FF0000'}, 'SAD');
+Map.setCenter( -59.57199,-9.35829, 11);
+
+var union = sad2011.union();
+var first = ee.Feature(union.first());
+var area = first.area();
+print(area.getInfo());

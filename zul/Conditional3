@@ -1,0 +1,30 @@
+var lst = ee.ImageCollection("MODIS/MYD11A2").sort("system:time_start");
+
+// Use an iterating function passing as first argument a list
+// containing: [empty list, switch value]
+
+var filtered = lst.iterate(function(img, it_var){
+
+  // cast and get iteration values
+  var newcol = ee.List(ee.List(it_var).get(0))
+  var swich = ee.Number(ee.List(it_var).get(1))
+
+  // change swich
+  swich = ee.Number(ee.Algorithms.If(swich, 0, 1))
+
+  // get the img only if swich is 0
+  var filter = ee.List(ee.Algorithms.If(swich, newcol, newcol.add(img)))
+
+  // cast and return
+  return ee.List([filter, swich])
+
+}, ee.List([ee.List([]), 1]))
+
+// cast result
+var result = ee.List(filtered)
+
+// get acual ImageCollection from result
+var filtered_col = ee.ImageCollection(result.get(0))
+
+// print results
+print(filtered_col)

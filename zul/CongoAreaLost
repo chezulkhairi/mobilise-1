@@ -1,0 +1,39 @@
+// Calculating area lost in the Congo Republic in 2012 compared to loss
+// in concessions.
+
+// Get a feature collection with just the Congo feature
+var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
+var congo = countries.filterMetadata('Country', 'equals', 'Congo');
+
+// Load up the oil palm concessions
+var oilPalm = ee.FeatureCollection('ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw', 'geometry');
+
+// Load up the fiber concessions
+var fiber = ee.FeatureCollection('ft:1uqBi75K8AtJa3q4C-DuKUPYRMGvFHtp0c7E-VTA', 'geometry');
+
+// Create a feature collection that is just oil palm and fiber concessions inside Congo
+var oilPalmInCongo = oilPalm.filterBounds(congo);
+var fiberInCongo = fiber.filterBounds(congo);
+var combined = oilPalmInCongo.merge(fiberInCongo);
+ 
+// Get the loss image
+var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
+var lossIn2012 = gfcImage.select(['lossyear']).eq(12);
+var areaImage = lossIn2012.multiply(ee.Image.pixelArea());
+
+// Calculate the area loss pixels in Congo
+var stats = areaImage.reduceRegion(
+  {
+    'reducer': ee.Reducer.sum(),
+    'geometry': congo,
+    'maxPixels': 5e9
+  });
+print('area lost in the Congo Republic: ' + stats.getInfo().lossyear + ' square meters');
+
+// Calculate the area loss pixels in the concessions
+var stats = areaImage.reduceRegion(
+  {
+    'reducer': ee.Reducer.sum(),
+    'geometry': combined,
+  });
+print('area lost in concessions: ' + stats.getInfo().lossyear + ' square meters');

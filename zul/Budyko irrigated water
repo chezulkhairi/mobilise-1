@@ -1,0 +1,105 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gldas2 = ee.ImageCollection("NASA/GLDAS/V20/NOAH/G025/T3H"),
+    chirps = ee.ImageCollection("UCSB-CHG/CHIRPS/PENTAD");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+// import actual ET data
+var aET = ee.ImageCollection("users/atepoortinga/etdata");
+
+// polygon for the Ca basin
+var Ca = ee.FeatureCollection('ft:11uQewh4u7NFXneH99YPs6P9F1Au6wxBq959BZWt_','geometry');
+// https://mygeoblog.com/2016/11/28/the-budyko-curve/#more-1520
+// Budyko irrigated water
+// define start and end date
+var startdate = ee.Date.fromYMD(2003,1,1);
+var enddate = ee.Date.fromYMD(2003,12,31);
+
+// select precipitation for time range
+var P = chirps.filterDate(startdate, enddate)
+  .sort('system:time_start', false)
+  .filterBounds(Ca);
+
+// select et for time range
+var aet = aET.filterDate(startdate, enddate)
+   .sort('system:time_start', false)
+   .filterBounds(Ca);
+
+// select PET for time range
+var PET = gldas2.filterDate(startdate, enddate)
+  .sort('system:time_start', false)
+  .select("PotEvap_tavg")
+  .filterBounds(Ca);
+
+// Calculate yearly values
+var yearly_P = P.sum();
+var yearly_aET = aet.sum();
+var yearly_PET = PET.mean().multiply(31536000).divide(1000).divide(2256);
+
+// set vizualization parameters
+var viz_p = {min:1000.0, max:2000, palette:"56ff00,00ecff,240098,d001ea"};
+var viz_et = {min:500.0, max:2500, palette:"0011ff,f0ff00,ff0000"};
+
+// add layers to map
+Map.addLayer(yearly_P.clip(Ca),viz_p,"yearly P");
+Map.addLayer(yearly_aET.clip(Ca),viz_et,"yearly aet");
+Map.addLayer(yearly_PET.clip(Ca),viz_et,"yearly PET");
+
+// set center
+Map.centerObject(Ca,8);
+
+// calculate pet/p
+var pet_p = yearly_PET.divide(yearly_P);
+// calculate et/p
+var aet_p = yearly_aET.divide(yearly_P);
+
+// updatemasks to make sure we are comparing the same areas
+aet_p = aet_p.updateMask(pet_p);
+pet_p = pet_p.updateMask(aet_p);
+
+// set viz parameters
+var viz_budyko = {min:0.0, max:2, palette:"56ff00,00ecff,240098,d001ea"};
+
+// add layers to map
+Map.addLayer(pet_p.clip(Ca),viz_budyko,"PET / P");
+Map.addLayer(aet_p.clip(Ca),viz_budyko,"aET / P");
+
+var xValues = pet_p.toArray().reduceRegion(ee.Reducer.toList(),Ca, 2500).get('array');
+var yValues = aet_p.toArray().reduceRegion(ee.Reducer.toList(),Ca, 2500).get('array');
+
+print(xValues);
+print(yValues);
+
+//  Create the chart 
+var mychart = ui.Chart.array.values(yValues,0, xValues)
+    .setChartType('LineChart')
+    .setOptions({
+      title: 'Budyco curve',
+      vAxis: {'title': 'aET/P'},
+      hAxis: {'title': 'PET/P'}
+});
+print(mychart);
+
+
+
+// Get PET and aET data
+var aET_mean = aET.mean();
+var PET_mean = PET.mean();
+
+// updatemasks to make sure we are comparing the same areas
+aET_mean = aET_mean.updateMask(PET_mean);
+PET_mean = PET_mean.updateMask(aET_mean);
+
+
+// graph PET and aET
+var xPET = aET_mean.toArray().reduceRegion(ee.Reducer.toList(),Ca, 2500).get('array');
+var yaET = PET_mean.toArray().reduceRegion(ee.Reducer.toList(),Ca, 2500).get('array');
+
+//  Create the chart 
+var mychart = ui.Chart.array.values(xPET,0, yaET)
+    .setChartType('LineChart')
+    .setOptions({
+      title: 'PET versus aET',
+      vAxis: {'title': 'aET'},
+      hAxis: {'title': 'PET'}
+});
+print(mychart);

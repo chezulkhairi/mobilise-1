@@ -1,0 +1,23 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #f3ffdc */ee.Geometry.Polygon(
+        [[[101.414794921875, 2.7382970454463775],
+          [101.6180419921875, 2.723207998202716],
+          [101.60430908203125, 2.8713466622983166],
+          [101.4093017578125, 2.880947590171211]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Load a landsat image and select three bands.
+var landsat = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_123032_20140515')
+  .select(['B4', 'B3', 'B2']);
+
+// Create a geometry representing an export region.
+//var geometry = ee.Geometry.Rectangle([116.2621, 39.8412, 116.4849, 40.01236]);
+
+// Export the image, specifying scale and region.
+Export.image.toDrive({
+  image: landsat,
+  description: 'imageToDriveExample',
+  scale: 30,
+  region: geometry
+});
+
+Map.addLayer(landsat)

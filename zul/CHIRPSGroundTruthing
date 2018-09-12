@@ -1,0 +1,78 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var chirps = ee.ImageCollection("UCSB-CHG/CHIRPS/PENTAD");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://mygeoblog.com/2016/11/23/point-sampling-with-gee/#more-1329
+// CHIRPS rainfalls GROUND TRUTHING
+
+// import rainfall stations
+var Rainfallstations = ee.FeatureCollection('ft:1vnNFgZt4avuVXjYm2gYsqr-25hzVefHUq3TCwUCu','geometry');
+
+// Define time range
+var startyear = 2000;
+var endyear = 2005;
+
+// Set date in ee date format
+var startdate = ee.Date.fromYMD(startyear,1,1);
+var enddate = ee.Date.fromYMD(endyear,12,31)
+
+// create list for years
+var years = ee.List.sequence(startyear,endyear);
+
+// make a list with months
+var months = ee.List.sequence(1,12);
+
+// Filter chirps
+var Pchirps = chirps.filterDate(startdate, enddate)
+  // Sort chronologically in descending order.
+  .sort('system:time_start', false)
+  .filterBounds(Rainfallstations)
+  .select("precipitation");
+
+
+// calculate the P for each month
+var MonthlyChirps =  ee.ImageCollection.fromImages(
+  years.map(function (y) {
+  return months.map(function(m){
+    var w = Pchirps.filter(ee.Filter.calendarRange(y, y, 'year'))
+             .filter(ee.Filter.calendarRange(m, m, 'month'))
+             .sum();
+    return w.set('year', y)
+             .set('month', m)
+             .set('system:time_start',ee.Date.fromYMD(y,m,1)) 
+             .set('date', ee.Date.fromYMD(y,m,1))
+});
+}).flatten());
+
+
+// sample points
+var mySample = ee.FeatureCollection(MonthlyChirps.map(function(img){
+  var myimg = img.reproject('EPSG:32648',null,5000); 
+  var time = myimg.get('date');
+  var ft =  ee.Image(myimg).sampleRegions
+  ({
+     collection: Rainfallstations,
+     properties : ['Stations'],
+     scale: 5000
+  }).map(function(f) {return f.set('date', img.get('date'))})
+  return ft;
+})).flatten();
+
+
+// Add stations to map
+Map.centerObject(Rainfallstations,8);
+Map.addLayer(Rainfallstations,false,"rainfall stations");
+
+// Predefine the chart titles.
+var title = {
+  title: 'Rainfall',
+  hAxis: {title: 'Time'},
+  vAxis: {title: 'P (mm)'},
+};
+
+// create a chart with a reducer
+var chart = ui.Chart.image.seriesByRegion(
+  MonthlyChirps, Rainfallstations, ee.Reducer.mean(), 'precipitation', 5000, 'system:time_start', 'station')
+    .setOptions(title);
+
+// print the results
+print(chart)

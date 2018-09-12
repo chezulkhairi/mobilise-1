@@ -1,0 +1,53 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var polygon = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[-119.33364769821117, 46.05123532178373],
+          [-119.3233620672313, 45.869732769408905],
+          [-119.04111088542663, 45.873079023065166],
+          [-119.0396574679861, 46.045448840018565]]]),
+    landsat8 = ee.ImageCollection("LANDSAT/LC8_L1T_TOA_FMASK");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//
+// Masking Clouds with Fmask
+//
+ 
+var PIXEL_SCALE = 30; // Meters. Resolution of most Landsat 8 bands
+var PIXEL_AREA = PIXEL_SCALE * PIXEL_SCALE; // Square meters.
+
+// Fmask classification values
+var FMASK_CLEAR_GROUND = 0;
+var FMASK_WATER = 1;
+var FMASK_CLOUD_SHADOW = 2;
+var FMASK_SNOW = 3;
+var FMASK_CLOUD = 4;
+
+var mosaic = landsat8
+  .filterBounds(polygon)
+  .filterDate('2016-08-01', '2016-08-30')
+  .mosaic();
+
+// Update the mask on our mosaic to mask cloud and cloud shadow pixels
+var fmask = mosaic.select('fmask');
+var cloudMask = fmask.neq(FMASK_CLOUD).and(fmask.neq(FMASK_CLOUD_SHADOW));
+var maskedMosaic = mosaic.updateMask(cloudMask);
+
+
+Map.addLayer(fmask, {min:0, max:4, palette:'green, blue, black, cyan, white'}, 'Fmask');
+Map.addLayer(maskedMosaic.select('B4'), {min:0, max:0.5, palette:'yellow, green'}, 'Masked NIR');
+Map.setCenter(-119.34, 45.97, 8);
+
+//
+// Calculating Region Cover Statistics
+//
+
+// Calculate the number of pixels of each classification in our polygon
+var regionCoverHistogram = mosaic.select('fmask')
+  .reduceRegion(ee.Reducer.frequencyHistogram(), polygon, PIXEL_SCALE);
+print('Fmask class pixel count within region', regionCoverHistogram);
+
+
+var waterPixelCount = ee.Dictionary(regionCoverHistogram.get('fmask'))
+  .get(FMASK_WATER.toString());
+  
+var waterArea = ee.Number(waterPixelCount).multiply(PIXEL_AREA);
+print('Water Area (sq meters) in region', waterArea);
+

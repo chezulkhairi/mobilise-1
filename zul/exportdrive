@@ -1,0 +1,39 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var S2 = ee.ImageCollection("COPERNICUS/S2"),
+    geometry = /* color: #98ff00 */ee.Geometry.Polygon(
+        [[[104.2547607421875, 19.572730037355573],
+          [104.24102783203125, 19.173707101602126],
+          [105.20233154296875, 19.137384001472565],
+          [105.205078125, 19.559790136497412]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Feature Collection ("description" is attribute of kml file (name of districts)
+var fc = ee.FeatureCollection('ft:19b9lU0WPVJqqH1Z40RsMZnRMwmLUJcz1t_HMf4pt') 
+
+var S2_2017 = S2.filterDate('2016-01-04', '2017-05-10').filterBounds(geometry);
+var img = S2_2017.select('B4','B3','B2');
+var composite = ['B4','B3','B2']
+
+Map.addLayer(img, {bands: composite, max: 2000}, 'S2')
+Map.centerObject(img, 9);
+////////////// EXPORTING ///////////////////////
+var featlist = fc.getInfo()["features"]
+//print (featlist)
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f])
+  var dis = feat.get("description")
+  var disS = dis.getInfo()
+  var name = "IMG_NAME_"  
+
+  //export images
+
+  Export.image.toDrive({
+    image: img,
+    description: name+disS,//.toString(),
+    folder: "SENTINEL_VN",
+    fileNamePrefix: name+disS,//.toString(),
+    region: feat.geometry().bounds(),
+    maxPixels:1e13,
+    scale: 10
+    
+  })
+}

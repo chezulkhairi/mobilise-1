@@ -1,0 +1,68 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[-98.15185546875, 49.453842594330716],
+          [-97.470703125, 49.475263243037986],
+          [-97.481689453125, 49.76707407366792],
+          [-98.140869140625, 49.781264058178344]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// ******************************************
+// Front End for Sequential Omnibus Algorithm
+// ******************************************
+var omb = require('users/mortcanty/changedetection:omnibus');
+
+// Input data
+var significance = 0.01;
+var relorbitnumber = 'any';
+var orbitpass = 'ASCENDING';
+var startDate = '2016-04-01';
+var endDate = '2016-11-01';
+var median = true;
+var assetid = 'users/mortcanty/omnibus/test2';
+var jet = ['black','blue','cyan', 'yellow','red'];
+                
+var collection = ee.ImageCollection('COPERNICUS/S1_GRD') 
+                   .filterBounds(geometry) 
+                   .filterDate(ee.Date(startDate), ee.Date(endDate)) 
+                   .filter(ee.Filter.eq('transmitterReceiverPolarisation', ['VV','VH'])) 
+                   .filter(ee.Filter.eq('resolution_meters', 10)) 
+                   .filter(ee.Filter.eq('instrumentMode', 'IW'))
+                   .filter(ee.Filter.eq('orbitProperties_pass', orbitpass)); 
+if (relorbitnumber != 'any'){
+      collection = collection.filter(ee.Filter.eq('relativeOrbitNumber_start', relorbitnumber));                        
+} 
+var collection = collection.sort('system:time_start');  
+var acquisition_times = ee.List(collection.aggregate_array('system:time_start'));
+var count = acquisition_times.length().getInfo();
+if (count===0){ print('No images found')}
+else{
+  var vis = {min:0, max:count, palette:jet};
+  var vis2 = {min:0, max:Math.round(count/2), palette:jet};
+
+// Create a list of clipped images
+  var pList = collection.map(omb.get_vvvh).toList(count);
+  var first = ee.Dictionary({imlist:ee.List([]),geom:geometry});
+  var imList = ee.List(ee.Dictionary(pList.iterate(omb.clipList,first)).get('imlist')); 
+
+// run the algorithm
+  var result = ee.Dictionary(omb.omnibus(imList,significance,median));
+  var cmap = ee.Image(result.get('cmap')).byte();
+  var smap = ee.Image(result.get('smap')).byte();
+  var fmap = ee.Image(result.get('fmap')).byte();
+  var bmap = ee.Image(result.get('bmap')).byte();
+
+// export result
+  var cnames = ['cmap','smap','fmap'];
+  for (var i = 1; i < count; i++){
+    cnames = cnames.concat(['bmap'.concat(i.toString())]);
+} 
+  var cmaps = ee.Image.cat(cmap,smap,fmap,bmap).rename(cnames);
+  var exportTask = Export.image.toAsset({image:cmaps,assetId:assetid,scale:10,maxPixels:1e9});
+  Map.centerObject(cmap,10);
+  Map.addLayer(cmaps.select('cmap'),vis,'cmap');
+//Map.addLayer(smap,vis,'smap');
+//Map.addLayer(fmap,vis2,'fmap');  
+}
+
+
+
+

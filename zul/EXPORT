@@ -1,0 +1,218 @@
+// Load a landsat image and select three bands.
+var landsat = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_123032_20140515')
+  .select(['B4', 'B3', 'B2']);
+
+// Create a geometry representing an export region.
+var geometry = ee.Geometry.Rectangle([116.2621, 39.8412, 116.4849, 40.01236]);
+
+// Export the image, specifying scale and region.
+Export.image.toDrive({
+  image: landsat,
+  description: 'imageToDriveExample',
+  scale: 30,
+  region: geometry
+});
+
+// Export the image to Cloud Storage.
+Export.image.toCloudStorage({
+  image: landsat,
+  description: 'imageToCloudExample',
+  bucket: 'ee-docs-demos',
+  fileNamePrefix: 'exampleExport',
+  scale: 30,
+  region: geometry
+});
+
+// Get band 4 from the Landsat image, copy it.
+var band4 = landsat.select('B4').rename('b4_mean')
+  .addBands(landsat.select('B4').rename('b4_sample'))
+  .addBands(landsat.select('B4').rename('b4_max'));
+
+// Export the image to an Earth Engine asset.
+Export.image.toAsset({
+  image: band4,
+  description: 'imageToAssetExample',
+  assetId: 'exampleExport',
+  scale: 30,
+  region: geometry,
+  pyramidingPolicy: {
+    'b4_mean': 'mean',
+    'b4_sample': 'sample',
+    'b4_max': 'max'
+  }
+});
+
+// Export a cloud-optimized GeoTIFF.
+Export.image.toDrive({
+  image: landsat,
+  description: 'imageToCOGeoTiffExample',
+  scale: 30,
+  region: geometry,
+  fileFormat: 'GeoTIFF',
+  formatOptions: {
+    cloudOptimized: true
+  }
+});
+
+// Make a collection of points.
+var features = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(30.41, 59.933), {name: 'Voronoi'}),
+  ee.Feature(ee.Geometry.Point(-73.96, 40.781), {name: 'Thiessen'}),
+  ee.Feature(ee.Geometry.Point(6.4806, 50.8012), {name: 'Dirichlet'})
+]);
+
+// Export the FeatureCollection to a KML file.
+Export.table.toDrive({
+  collection: features,
+  description:'vectorsToDriveExample',
+  fileFormat: 'KML'
+});
+
+// Load a Landsat TOA image.
+var image = ee.Image('LANDSAT/LC08/T1_TOA/LC08_044034_20140318');
+
+// Create an arbitrary rectangle.
+var region = ee.Geometry.Rectangle(-122.2806, 37.1209, -122.0554, 37.2413);
+
+// Get a dictionary of means in the region.
+var means = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: region,
+  scale: 30
+});
+
+// Make a feature without geometry and set the properties to the dictionary of means.
+var feature = ee.Feature(null, means);
+
+// Wrap the Feature in a FeatureCollection for export.
+var featureCollection = ee.FeatureCollection([feature]);
+
+// Export the FeatureCollection.
+Export.table.toDrive({
+  collection: featureCollection,
+  description: 'exportTableExample',
+  fileFormat: 'CSV'
+});
+
+// Export a KML file to Cloud Storage.
+Export.table.toCloudStorage({
+  collection: features,
+  description:'vectorsToCloudStorageExample',
+  bucket: 'ee-docs-demos',
+  fileNamePrefix: 'exampleTableExport',
+  fileFormat: 'KML'
+});
+      
+ // Export an ee.FeatureCollection as an Earth Engine asset.
+Export.table.toAsset({
+  collection: features,
+  description:'exportToTableAssetExample',
+  assetId: 'exampleAssetId',
+});
+      
+// Load a Landsat 5 image collection.
+var collection = ee.ImageCollection('LANDSAT/LT05/C01/T1_TOA')
+  // San Francisco Bay.
+  .filter(ee.Filter.eq('WRS_PATH', 44))
+  .filter(ee.Filter.eq('WRS_ROW', 34))
+  // Filter cloudy scenes.
+  .filter(ee.Filter.lt('CLOUD_COVER', 30))
+  // Get 20 years of imagery.
+  .filterDate('1991-01-01','2011-12-30')
+  // Need to have 3-band imagery for the video.
+  .select(['B4', 'B3', 'B2'])
+  // Need to make the data 8-bit.
+  .map(function(image) {
+    return image.multiply(512).uint8();
+  });
+
+// Define an area to export.
+var polygon = ee.Geometry.Rectangle([-122.7286, 37.6325, -122.0241, 37.9592]);
+
+// Export (change dimensions or scale for higher quality).
+Export.video.toDrive({
+  collection: collection,
+  description: 'sfVideoExample',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+});
+
+// Export video to cloud storage.
+Export.video.toCloudStorage({
+  collection: collection,
+  description: 'sfVideoExampleToCloud',
+  bucket: 'ee-docs-demos',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+});
+
+// Load the global Accessibility to Cities image.
+var accessibility = ee.Image('Oxford/MAP/accessibility_to_cities_2015_v1_0');
+
+// Color palette for visualizing accessibility data.
+var accessibilityPalette = ['f2fef8', 'defce1', 'c9f3bc', 'cbeca7', 'd6e793',
+  'e2d87b', 'd4a561', 'c46c49', 'ab3a38', '922f4b', '7d285d', '672069',
+  '3a1453', '1b0c3c', '050526', '00030f', '000000'];
+
+// Apply the color palette to the log of travel time.
+var accessibilityVis = {min: 0, max: 10, palette: accessibilityPalette};
+var logAccessibility =
+    accessibility.where(accessibility.gt(0), accessibility.log());
+var accessibilityRgb = logAccessibility.visualize(accessibilityVis);
+
+// Composite onto a solid-color background to fill in the oceans.
+var background = ee.Image(0).visualize({palette: ['11101e']});
+var accessibilityBlended = background.blend(accessibilityRgb).updateMask(1);
+
+// Check the visualization.
+Map.addLayer(accessibilityBlended, {}, 'accessibilityBlended');
+
+// Define an export region.
+var exportRegion = ee.Geometry.Rectangle([34, -3, 40, 1]);
+Map.centerObject(exportRegion);
+Map.addLayer(exportRegion, {}, 'exportRegion');
+
+// Export the visualization image as map tiles.
+Export.map.toCloudStorage({
+  // All tiles that intersect the region get exported in their entirety.
+  // Clip the image to prevent low resolution tiles from appearing outside
+  // of the region.
+  image: accessibilityBlended.clip(exportRegion),
+  description: 'mapToCloudExample',
+  bucket: 'ee-docs-demos',
+  maxZoom: 13,
+  region: exportRegion
+});
+
+
+
+//Zoom Level	Pixel Size (at equator)
+//0	156 km
+//1	78 km
+//2	39 km
+//3	20 km
+//4	10 km
+//5	4.9 km
+//6	2.4 km
+//7	1.2 km
+//8	611 m
+//9	305 m
+//10	152 m
+//11	76 m
+//12	38 m
+//13	19 m
+//14	9.6 m
+//15	4.8 m
+//16	2.4 m
+//17	1.2 m
+//18	0.6 m
+//19	0.3 m
+//20	0.15 m
+           
+      
+
+
+
+

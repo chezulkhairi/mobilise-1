@@ -1,0 +1,333 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(),
+    roi = /* color: #98ff00 */ee.Geometry.Point([101.502685546875, 2.8148002836743853]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Comparing SAD, FORMA, and UMD  
+// https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+// https://www.google.com/fusiontables/DataSource?docid=1Tc47H7gsJYCNIR9Zz-74QP5AuQFmK9aUQdR28ul9
+// 1Tc47H7gsJYCNIR9Zz-74QP5AuQFmK9aUQdR28ul9
+
+//var fc = ee.FeatureCollection('ft:13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI');
+//print(fc)
+//var Crisis = fc.filterMetadata('Type', 'equals', 'Crisis');
+//Map.addLayer(Crisis, {min:0, max:4, palette:'green, blue, black, cyan, white'}, 'Crisis');
+//var FirstResponder = fc.filterMetadata('Type', 'equals', 'FirstResponder');
+//Map.addLayer(Crisis, {color: 'FF00FF'}, 'Crisis',true);
+//Map.addLayer(FirstResponder, {color: 'FF0000'}, 'FirstResponder',true);
+
+
+
+//Map.addLayer(FirstResponder, {min:0, max:4, palette:'green, blue, black, cyan, white'}, 'FirstResponder');
+//var tt=Crisis-FirstResponder
+//Map.addLayer(tt, {color: 'FF00F'}, 'tt',true);
+
+/***
+ * Computes ln(AGB)=5.349+0.96*ln(D^2H) 
+ */
+ 
+// YearBuilt BuildingMaterial AnticipatedProblem Impact
+// Reccurences RecoveryTime RecoveryCost RecoveryCapacity
+function computeProperty(feature) {
+  var lat=ee.Number(feature.get('lat'))
+  var long=ee.Number(feature.get('long'))
+  //var point = ee.Geometry.Point([1.5, 1.5]);
+  //var pt1 = geometries.get(0);
+  // f['geometry']['coordinates'][0]
+  var a = ee.Number(feature.get('RecoveryTime'))
+  var b = ee.Number(feature.get('RecoveryCost')) 
+  var c = ee.Number(feature.get('RecoveryCapacity')) 
+  // 1WRx1UyoVQ0TSyE8zuD41JzShjnP1GWWTwYF0FD59
+  //return feature.set({ d,v,v: d.add(h) })
+  //Map.addLayer(v)
+  //var newDict = {lat: d, long: h,v: d.add(h)};
+  //var feature = feature.set(newDict);
+  //f['geometry']['coordinates'][0]
+  //ee.Geometry.Point([-122.22599, 37.17605])
+  // ee.Feature(feature.first()).getInfo().geometry.coordinates[0]
+  //var polyFeature = ee.Feature(ee.Geometry.Point(ee.Feature(feature.first()).getInfo().geometry.coordinates[0],ee.Feature(feature.first()).getInfo().geometry.coordinates[1]), {v: d.add(h)});
+  //print(loc)
+ // var polyFeature = ee.Feature(ee.Geometry.Point([lat,long]) , {v: d.add(h)})
+ 
+ //var newDict = {v: d.add(h), w: d.add(h)};
+ // var polyFeature = ee.Feature(ee.Geometry.Point([feature.get('lat').getInfo().geometry.coordinates[0],feature.get('lat').getInfo().geometry.coordinates[0]])).set(newDict);
+  //var polyFeature = ee.Feature(ee.Geometry.Point(Feature(feature.get('lat').getInfo().geometry.coordinates[0],ee.Feature(feature.get('lat').getInfo().geometry.coordinates[1]));
+  //var polyFeature = ee.Feature(ee.Geometry.Point([lat,long]) , {v: a.add(b).add(c.multiply(20))})
+  
+  var condition1 //={location: ee.Geometry.Point([0,0]) , v:a.add(0).add(0)};
+  var zmul=2
+  var zlimit=0
+  var value =a.add(b).add(c.multiply(zmul))
+  var newDict = {location: ee.Geometry.Point([lat,long]) , v: a.add(b).add(c.multiply(2))};
+  var cond = ee.Number(a.add(b).add(c.multiply(2)))>0
+  //print(cond)
+  //return ee.Feature(ee.Algorithms.If(cond,newDict,zlimit1))
+  //newDict.set(ee.Geometry.Point([lat,long]) , {v: d.add(h)}), newDict))
+  //var conditional =ee.ImageCollection(ee.Algorithms.If(size.mod(2).eq(0),load_L5.merge(allone_col),load_L5));
+  // var landsat5=ee.ImageCollection(ee.Algorithms.If(size.mod(2).eq(0),load_L5.merge(allone_col),load_L5));
+  
+  // // Make the mosaic
+  //var image = ee.Image(filtered.mosaic())
+
+  // Add the mosaic to a list only if the collection has images
+  //return ee.List(ee.Algorithms.If(filtered.size(), newlist.add(image), newlist))
+}
+  
+  
+  
+  //var conditional = ee.Feature(ee.Algorithms.If(value.eq(10),(ee.Geometry.Point([lat,long]) , {v: value}),(ee.Geometry.Point([0,0]),{v:0}))
+  //return conditional
+
+  //var condition1 = ee.Feature(ee.Geometry.Point([lat,long]) , {v: value})
+  //return ee.Algorithms.If(cond,newDict.set(condition1))
+  
+  //var conditional = ee.Algorithms.If(value>zlimit);
+  //var condition1 = ee.Feature(ee.Geometry.Point([lat,long]) , {v: value})
+  //return conditional
+  //Map.addLayer(polyFeature, {palette: 'FFFF00',opacity: 1}, 'polyFeature',false);
+  //return feature.set({ v: d.pow(h.multiply(2)).log().multiply(0.96).add(5.349) })
+//}
+// return feature.set({ v: d.pow(h.multiply(2)).log().multiply(0.96).add(5.349) });
+
+//////////>>>>>>>> Buffer 
+//////////>>>>>>>> Buffer 
+var bufferBy = function(size) {
+  return function(feature) {
+    return feature.buffer(size);   
+  };
+};
+//var bufferedPolys100 = polygons.map(bufferBy(100));
+//var bufferedPolys200 = polygons.map(bufferBy(200));
+
+
+//////////////////@@@@@@@@@@@@@@@@@@@@@@@
+//////////////////@@@@@@@@@@@@@@@@@@@@@@@
+//Creation of vector
+//var vectors = zones.addBands(T21).reduceToVectors({
+// geometry: region,
+// crs: T21.projection(),
+// scale: 500,
+// geometryType: 'polygon',
+// eightConnected: false,
+// labelProperty: 'zone',
+// reducer: ee.Reducer.mean()});
+//////////////////@@@@@@@@@@@@@@@@@@@@@@@
+//////////////////@@@@@@@@@@@@@@@@@@@@@@@
+
+
+/*'aec3d4', // water
+  '152106', '225129', '369b47', '30eb5b', '387242', // forest
+  '6a2325', 'c3aa69', 'b76031', 'd9903d', '91af40',  // shrub, grass
+  '111149', // wetlands
+  'cdb33b', // croplands
+  'cc0013', // urban
+  '33280d', // crop mosaic
+  'd7cdcc', // snow and ice
+  'f7e084', // barren
+  '6f6f6f'  // tundra
+*/
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+// Make a feature and set some properties.
+//var feature = ee.Feature(ee.Geometry.Point([-122.22599, 37.17605]))  .set('genus', 'Sequoia').set('species', 'sempervirens');
+
+// Get a property from the feature.
+//var species = feature.get('species');
+//print(species);
+
+// Set a new property.
+//feature = feature.set('presence', 1);
+
+// Overwrite the old properties with a new dictionary.
+//var newDict = {genus: 'Brachyramphus', species: 'marmoratus'};
+//var feature = feature.set(newDict);
+
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+// Create an ee.Geometry.
+//var polygon = ee.Geometry.Polygon([  [[-35, -10], [35, -10], [35, 10], [-35, 10], [-35, -10]]
+//]);
+
+// Create a Feature from the Geometry.
+//var polyFeature = ee.Feature(polygon, {foo: 42, bar: 'tart'});
+
+//print(polyFeature);
+//Map.addLayer(polyFeature, {}, 'feature');
+
+// Create a dictionary of properties, some of which may be computed values.
+//var dict = {foo: ee.Number(8).add(88), bar: 'nihao'};
+
+// Create a null geometry feature with the dictionary of properties.
+//var nowhereFeature = ee.Feature(null, dict);
+
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+//////////////// FEATURE DICT ///////////////////////////// >>>>>>>>>>>>>>>>
+
+// var msavi = (nir.add(1).multiply(2).subtract(sqrt(pow(nir.add(1).multiply(2),2)).subtract((nir.subtract(red)).multiply(2)))).divide(2).rename('MSAVI')
+
+
+//https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+//var features = ee.FeatureCollection('ft:13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI')
+
+// generate a new property for all features
+// https://www.google.com/fusiontables/DataSource?docid=1XS2V3P48hx8HT7fpHL5VPdUICeUlR4YXgsx3_Eu-
+//https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+
+// https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+//https://www.google.com/fusiontables/DataSource?docid=13UaAm3wteDv-JjqZf8cHhYdHf6ekzkNGnMAzdnoI
+// https://www.google.com/fusiontables/DataSource?docid=1WRx1UyoVQ0TSyE8zuD41JzShjnP1GWWTwYF0FD59
+var fd = ee.FeatureCollection('ft:1WRx1UyoVQ0TSyE8zuD41JzShjnP1GWWTwYF0FD59');
+fd = fd.map(computeProperty)
+
+// show new property values
+print(fd)
+Map.addLayer(fd, {palette: 'aec3d4',opacity: 1}, 'fd',true);
+//Map.addLayer(fd.aggregate_array('v'))
+
+//////////>>>>>>>> Buffer //////////>>>>>>>> Buffer 
+//////////>>>>>>>> Buffer 
+// Create a function for Buffering a feature, using the buffer_size
+// property of the feature.
+var BufferFeature = function(f) {
+  f = ee.Feature(f);
+  var buffer_size = f.get('buffer_size');
+  return f.buffer(buffer_size);   
+};
+
+var BufferFeaturesByDistance = function (fc, buffer_size) {
+
+  // Set a buffer_size property on a feature. Note that this function needs
+  // to be defined within the BufferFeaturesByDistance function, so it can
+  // make use of the buffer_size parameter.
+  var SetBufferSize = function(f) {
+    return f.set({'buffer_size': buffer_size});
+  };
+
+  return fd.map(SetBufferSize).map(BufferFeature);
+};
+
+var buffered1 = BufferFeaturesByDistance(fd, 1000);
+var buffered2 = BufferFeaturesByDistance(fd, 2000);
+
+//Map.addLayer(fd, {}, 'polys');
+Map.addLayer(buffered1, {color:'red'}, 'buffered1');
+Map.addLayer(buffered2, {color:'green'}, 'buffered2');
+
+// ee.Algorithms
+
+//////////>>>>>>>> Buffer 
+//////////>>>>>>>> Buffer 
+
+
+
+
+var start = new Date('2011-01-01').getTime() / 1000;
+var end = new Date('2011-12-31').getTime() / 1000;
+var region = ee.Geometry.Rectangle(-59.81163, -9.43348, -59.27561, -9.22818);
+
+// Load up FORMA and get 2011
+var forma = ee.Image('FORMA/FORMA_500m');
+forma = forma.gte(start).and(forma.lte(end));
+//forma = forma.clip(region);
+
+// Load up SAD and get 2011
+var sad = ee.FeatureCollection('ft:12o809OPJe4E5JAhFDPoSYKdO6TDuIsUItbqzbk0');
+sad = sad.filterMetadata('date', 'greater_than', start * 1000);
+sad = sad.filterMetadata('date', 'less_than', end * 1000);
+sad= sad.filterBounds(region);
+sad = ee.Image(0).mask(0).int().paint(sad, 1);
+
+// Load up Hansen/UMD/Google/NASA/USGS Global Forest Change
+// and get change in 2011
+var gfc = ee.Image('UMD/hansen/global_forest_change_2013');//).clip(region);
+var gfc = gfc.select(['lossyear']).eq(11);
+
+var gfc_sad = gfc.eq(1).and(sad.eq(1));
+var gfc_forma = gfc.eq(1).and(forma.eq(1));
+var forma_sad = forma.eq(1).and(sad.eq(1));
+
+var gfc_forma_sad = gfc.eq(1).and(forma.eq(1).and(sad.eq(1)));
+
+Map.addLayer(forma.mask(forma), {palette:["00FF00"]}, 'Forma (green)',false);
+Map.addLayer(sad, {palette:'0000FF'}, 'SAD (blue)',false);
+Map.addLayer(gfc.mask(gfc), {palette:'FF0000'}, 'Hansen (red),false');
+
+Map.addLayer(gfc_forma.mask(gfc_forma), {palette:'FFFF00'}, "Hansen & FORMA (yellow)",false);
+Map.addLayer(gfc_sad.mask(gfc_sad), {palette:'FF00FF'}, "Hansen & SAD (magenta)",false);
+Map.addLayer(forma_sad.mask(forma_sad), {palette:'00FFFF'}, "FORMA & SAD (cyan)",false);
+
+Map.addLayer(gfc_forma_sad.mask(gfc_forma_sad), {palette:'FFFFFF'}, "HANSEN & FORMA & SAD (white)",false);
+//Map.setCenter( -59.58813,-9.36439, 11);
+
+
+Map.centerObject(roi, 12);
+
+// Showing counts of high-confidence FIRMS fire alerts
+
+var firms = ee.ImageCollection('FIRMS');
+var firms2011 = firms.filterDate('2011-01-01', '2011-12-31');
+
+
+var confidenceFunction = function(image) {
+  var highValue = image.select(['confidence']).gt(50);
+  return highValue.mask(highValue);
+};
+
+
+var confidentFirms2011 = firms2011.map(confidenceFunction);
+var countImage = confidentFirms2011.count();
+Map.addLayer(countImage, {min:0, max:10}, "High confidence FIRMS counts in 2011");
+
+
+/////////////////////////////////////////////////////////
+/////// VULNERABILITY TO PUBLIC /////////////////////////
+// Load a Japan boundary from a Fusion Table.
+var banting = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  .filter(ee.Filter.eq('Country', 'Malaysia'));
+
+// Load a 2012 nightlights image, clipped to the Japan border.
+var nl2012 = ee.Image('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012')
+  .select('stable_lights')
+  .clipToCollection(banting);
+
+// Define arbitrary thresholds on the 6-bit nightlights image.
+var zones = nl2012.gt(30).add(nl2012.gt(55)).add(nl2012.gt(62));
+zones = zones.updateMask(zones.neq(0));
+
+// Convert the zones of the thresholded nightlights to vectors.
+var vectors = zones.addBands(nl2012).reduceToVectors({
+  geometry: banting,
+  crs: nl2012.projection(),
+  scale: 1000,
+  geometryType: 'polygon',
+  eightConnected: false,
+  labelProperty: 'zone',
+  reducer: ee.Reducer.mean()
+});
+
+// Display the thresholds.
+//Map.setCenter(139.6225, 35.712, 9);
+Map.addLayer(zones, {min: 1, max: 3, palette: ['0000FF', '00FF00', 'FF0000'],opacity: 0.23}, 'raster',false);
+
+// Make a display image for the vectors, add it to the map.
+var display = ee.Image(0).updateMask(0).paint(vectors, '000000', 3);
+Map.addLayer(display, {palette: '000000',opacity: 0.25}, 'vectors',false);
+    
+
+
+/////////////////////////////////////////////////////////
+/////// VULNERABILITY TO PUBLIC /////////////////////////
+
+
+// Load a Landsat 8 image.
+//var image = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318');
+
+// Compute the EVI using an expression.
+//var evi = image.expression(
+//    '2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))', {
+//      'NIR': image.select('B5'),
+//      'RED': image.select('B4'),
+//      'BLUE': image.select('B2')
+//});
+
+//Map.centerObject(image, 9);
+//Map.addLayer(evi, {min: -1, max: 1, palette: ['FF0000', '00FF00']});

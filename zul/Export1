@@ -1,0 +1,62 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            101.50217056274414,
+            2.812057012206429
+          ]
+        },
+        {
+          "type": "LineString",
+          "coordinates": [
+            [
+              101.40439499169588,
+              2.9928436580488245
+            ],
+            [
+              101.40466589480639,
+              2.992842653592342
+            ]
+          ],
+          "geodesic": true
+        }
+      ],
+      "coordinates": []
+    });
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Load a landsat image and select three bands.
+var landsat = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_123032_20140515')
+  .select(['B4', 'B3', 'B2']);
+
+// Create a geometry representing an export region.
+var geometry = ee.Geometry.Rectangle([116.2621, 39.8412, 116.4849, 40.01236]);
+
+// Export the image, specifying scale and region.
+Export.image.toDrive({
+  image: landsat,
+  description: 'imageToDriveExample',
+  scale: 30,
+  region: geometry
+});
+
+// Get band 4 from the Landsat image, copy it.
+var band4 = landsat.select('B4').rename('b4_mean')
+  .addBands(landsat.select('B4').rename('b4_sample'))
+  .addBands(landsat.select('B4').rename('b4_max'));
+
+// Export the image to an Earth Engine asset.
+Export.image.toAsset({
+  image: band4,
+  description: 'imageToAssetExample',
+  assetId: 'exampleExport',
+  scale: 30,
+  region: geometry,
+  pyramidingPolicy: {
+    'b4_mean': 'mean',
+    'b4_sample': 'sample',
+    'b4_max': 'max'
+  }
+});

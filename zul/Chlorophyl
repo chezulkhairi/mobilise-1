@@ -1,0 +1,71 @@
+     //filter for only L.Manyara images 
+     //define polygon 
+    var AOI = /** color: #d63000 */ee.Geometry.Polygon(
+     [[[35.7962, -3.3818],
+     [35.8868, -3.414],
+     [35.8175, -3.8334],
+     [35.7021, -3.841]
+     ]]);
+
+   //create landsat 7 iamge collection 
+    var collection =ee.ImageCollection('LANDSAT/LE07/C01/T1_TOA')
+   //.filterDate('2000-04-01', '2018-01-02).
+   .filterBounds(AOI);
+
+  //Chorophyll function
+
+  var mask_chl = function(image) {
+ //Define area of interest
+  var AOI = /* color: #d63000 */ee.Geometry.Polygon(
+    [[[35.6204, -3.2996],
+    [36.1862, -3.3434],
+    [35.9885, -4.0108],
+    [35.3334, -3.8547]
+    ]]);
+
+  //clip image based on AOI polygon
+ var image = image.clip(AOI)
+
+// Compute the chl using an expression.
+var chl = image.expression(
+  '-135 + 451* (NIR/RED)', {
+    'NIR': image.select('B4'),
+    'RED': image.select('B3'),
+});
+
+var chl = chl.set('system:time_start', image.get('system:time_start'))
+
+//mask clouds 
+var chl_masked = chl.mask(image.select('BQA').eq(672));
+
+//get image data from landsat image metadata
+ var eedate = ee.Date(image.get('DATE_ACQUIRED'));
+ var start = ee.Date(eedate.advance(-15, "day"))
+ var end = ee.Date(eedate.advance(15, "day"))
+ var imageCollection = ee.ImageCollection("JRC/GSW1_0/MonthlyHistory")
+  .filterDate(start, end);
+
+// Pull out the first image in the collection and clip to AOI
+ var LandWaterMask = ee.Image(imageCollection.first()).clip(AOI).eq(2);
+ // Mask the non-watery parts of the image
+  var chlMapMasked = 
+ chl.updateMask(LandWaterMask.neq(0)).set('system:time_start', 
+ image.get('system:time_start'));
+
+ return chl_masked
+};
+
+ // Apply function to collection
+ var chl_collection = collection.map(mask_chl);
+ var Viz = {min: 500, max: 0, palette: ['00FFFF', '0000FF']};
+ Map.addLayer(chl_collection, Viz)
+Map.centerObject(AOI)
+print(chl_collection)
+// Define a region of interest as a buffer around a point.
+var geom = ee.Geometry.Point(35.8175, -3.5902).buffer(50);
+
+
+ // Create and print the chart.
+ print(ui.Chart.image.series(chl_collection, geom, ee.Reducer.mean(), 1));
+
+Map.addLayer(geometry)

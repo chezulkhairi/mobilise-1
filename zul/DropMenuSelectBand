@@ -1,0 +1,32 @@
+// Load some images.
+var srtm = ee.Image('CGIAR/SRTM90_V4');
+var landsat8 = ee.Image('LANDSAT/LC8_L1T_32DAY_TOA/20130407');
+
+// Make a drop-down menu of bands.
+var bandSelect = ui.Select({
+  onChange: function(value) {
+    var layer = ui.Map.Layer(imageSelect.getValue().select(value));
+    // Use set() instead of add() so the previous layer (if any) is overwritten.
+    Map.layers().set(0, layer);
+  }
+});
+
+// Make a drop down menu of images.
+var imageSelect = ui.Select({
+  items: [
+    {label: 'SRTM', value: srtm},
+    {label: 'Landsat 8', value: landsat8}
+  ],
+  onChange: function(value) {
+    // Asynchronously get the list of band names.
+    value.bandNames().evaluate(function(bands) {
+      // Display the bands of the selected image.
+      bandSelect.items().reset(bands);
+      // Set the first band to the selected band.
+      bandSelect.setValue(bandSelect.items().get(0));
+    });
+  }
+});
+
+print(imageSelect);
+print(bandSelect);

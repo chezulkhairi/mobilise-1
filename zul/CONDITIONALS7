@@ -1,0 +1,43 @@
+/***
+ * Computes ln(AGB)=5.349+0.96*ln(D^2H)
+ */
+function computeProperty(feature) {
+  var d = ee.Number(feature.get('DBH (m)'))
+  var h = ee.Number(feature.get('Height (m)'))
+  //  t = ee.Number(d.pow(h.multiply(2)).log().multiply(0.96).add(5.349))>0
+  // print(t)
+  return feature.set({ d:d,h:h,v: d.pow(h.multiply(2)).log().multiply(0.96).add(5.349) })
+}
+
+var features = ee.FeatureCollection('ft:1tuVLITArmX663I8wGZ3l6h-hAN9_q6wO_5papUwi')
+
+// generate a new property for all features
+features = features.map(computeProperty)
+
+print(features.aggregate_array('d'))
+print(features.aggregate_array('h'))
+print(features.aggregate_array('v'))
+
+
+// show new property values
+//print(features.aggregate_array('v'))
+// print(d,h,v))
+
+function computeProperty2(feature) {
+  var d = ee.Number(feature[0])
+  var h = ee.Number(feature[1])
+  var t = ee.Number(feature[2])
+  return ee.List(ee.Algorithms.If(t>5,ee.Geometry.Point([lat,long]),ee.Geometry.Point([0,0])))
+  //  t = ee.Number(d.pow(h.multiply(2)).log().multiply(0.96).add(5.349))>0
+  // print(t)
+  //return feature.set({ v: d.pow(h.multiply(2)).log().multiply(0.96).add(5.349) })
+}
+
+// generate a new property for all features
+//var feat = feat.List(computeProperty)
+//var serverConditional = ee.Algorithms.If(serverBoolean, 'True!', 'False!');
+//print('Should be false:', serverConditional);  // False!
+
+var feat = ee.Algorithms.If(ee.Number(features[2])>5,ee.Geometry.Point([ee.Number(features[0]),ee.Number(features[1])]),ee.Geometry.Point([0,0]))
+      
+print(feat)

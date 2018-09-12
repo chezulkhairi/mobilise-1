@@ -1,0 +1,33 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var roi = /* color: #0b4a8b */ee.Geometry.Point([110.29792785644531, 1.6538992965003494]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Load a primary collection: Landsat imagery.
+var primary = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+    .filterDate('2014-04-01', '2014-06-01')
+    .filterBounds(ee.Geometry.Point(-122.09, 37.42));
+
+// Load a secondary collection: FLUXNET points in a Fusion Table.
+var fluxnet = ee.FeatureCollection('ft:1f85fvccyKSlaZJiAta8ojlXGhgf-LPPNmICG9kQ');
+
+// Define a spatial filter, with distance 100 km.
+var distFilter = ee.Filter.withinDistance({
+  distance: 10,
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a saveAll join.
+var distSaveAll = ee.Join.saveAll({
+  matchesKey: 'points',
+  measureKey: 'distance'
+});
+
+// Apply the join.
+var spatialJoined = distSaveAll.apply(primary, fluxnet, distFilter);
+
+// Print the result.
+print(spatialJoined);
+Map.addLayer(spatialJoined);
+Map.centerObject(ee.Geometry.Point(-122.09, 37.42), 9);
+    

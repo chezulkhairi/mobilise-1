@@ -1,0 +1,55 @@
+// Reference a Landsat scene.
+var image_30m = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20170614');
+
+// Define visualization parameters for a true color image.
+var vizParams = {'bands': 'B4,B3,B2',
+                 'min': 5000,
+                 'max': 30000,
+                 'gamma': 1.6};
+Map.addLayer(image_30m, vizParams, 'image_30m');
+
+// Get the projection information for a band.
+var band2 = image_30m.select('B2');
+print('CRS:', band2.projection().crs());
+
+// Display a bilinear resampled image with 10m pixel spacing.
+var image_10m = image_30m.resample('bilinear').reproject({
+  crs: band2.projection().crs(),
+  scale: 10
+});
+Map.addLayer(image_10m, vizParams, 'image_10m');
+//If you want even more control over the projection, you can manually change the CRS transform (crsTransform) parameter:
+
+// Reference a Landsat scene.
+var image_30m = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20170614');
+// Define visualization parameters for a true color image.
+var vizParams = {'bands': 'B4,B3,B2',
+                 'min': 5000,
+                 'max': 30000,
+                 'gamma': 1.6};
+Map.addLayer(image_30m, vizParams, 'image_30m');
+
+// Get the projection information for a band.
+var band2 = image_30m.select('B2');
+var proj = band2.projection().getInfo();
+print('CRS:', proj.crs);
+print('original CRS transform:', proj.transform);
+
+// Construct a new CRS transform, using 10m spacing.
+var transform_new = [
+  10,
+  proj.transform[1],
+  proj.transform[2],
+  proj.transform[3],
+  -10,
+  proj.transform[5],
+];
+print('new CRS transform:', transform_new);
+
+// Display a bilinear resampled image with 10m pixel spacing.
+var image_10m = image_30m.resample('bilinear').reproject(
+  {
+  crs: proj.crs,
+  crsTransform: transform_new
+});
+Map.addLayer(image_10m, vizParams, 'image_10m');

@@ -1,0 +1,34 @@
+// Load Vietnam shapefile 
+var lsib = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+var vn_shape = lsib.filterMetadata('country_na', 'equals', 'Malaysia');
+print (vn_shape);
+
+// Load fire counts image
+var fire = ee.ImageCollection('FIRMS')
+             .filterBounds(vn_shape)
+             .filterDate('2010', '2011');
+
+// Filter fire with more than 50% confidence and add a new band representing areas where confidence of fire > 50%
+var filterConfidence = function(image) {
+  var line_number = image.select('line_number');
+  var confidence = image.select('confidence');
+  var conf_50 = confidence.gt(50).rename('confidence_50');
+  var count_band = line_number.updateMask(conf_50).rename('count');
+  return image.addBands(count_band);
+};
+var fire_conf = fire.map(filterConfidence);
+print('fire_conf', fire_conf);
+
+// Count for individual image.
+var countIndividualImg = function(image) {
+  var countObject = image.reduceRegion({
+    reducer: ee.Reducer.countDistinct(),
+    scale: 1000,
+    geometry: vn_shape
+  });
+  return image.set(countObject);
+};
+var fire_ind_count = fire_conf.map(countIndividualImg);
+print('fire_ind_count', fire_ind_count);
+
+print('Total fire count', fire_ind_count.aggregate_sum('count'));
